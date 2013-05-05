@@ -1,0 +1,675 @@
+<?php
+/*
+  TODO:
+  Plugin Name: AM Events
+  Plugin URI: http://URI_Of_Page_Describing_Plugin_and_Updates
+  Description: Adds a post type for events and a customizable widget for displaying upcoming events.
+  Version: 1.0.0
+  Author: Atte Moisio
+  Author URI: http://attemoisio.fi
+  License: GPL2
+ */
+
+/******************************************************************************
+ * =COPYRIGHT
+ * ****************************************************************************/
+
+/*  Copyright 2013  Atte Moisio  (email : atte.moisio@attemoisio.fi)
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License, version 2, as
+  published by the Free Software Foundation.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+
+
+
+
+/******************************************************************************
+ * VARIABLE NAMES, TAXONOMY NAMES ETC. FOR REFERENCE
+ * 
+ * Custom post type name: 
+ * 
+ *              'am_event'
+ * 
+ * Meta: 
+ * 
+ *              'am_startdate'
+ *              'am_enddate'
+ *              
+ * 
+ * Taxonomies: 
+ *              
+ *              'am_venues'
+ *              'am_event_categories'
+ * 
+ * Widget template tags:
+ *             
+ *              {{start_day_name}} 
+ *              {{start_date}}
+ *              {{start_time}}
+ *              {{end_day_name}}
+ *              {{end_date}}
+ *              {{end_time}}
+ *              {{title}}
+ *              {{event_category}}
+ *              {{venue}}
+ *
+ */
+
+
+
+/******************************************************************************
+ * =ACTION HOOKS
+ * *************************************************************************** */
+
+/**
+ * INIT
+ */
+// Custom Post Type
+add_action('init', 'am_cpt_init');
+// Language files
+add_action('plugins_loaded', 'am_load_language_files');
+add_action('init', 'am_load_language_files');
+
+
+/**
+ * SAVE_POST
+ */
+// Save custom meta
+add_action('save_post', 'am_save_custom_meta');
+add_action('add_meta_boxes', 'am_add_custom_meta_box');
+
+/**
+ * SCRIPT AND STYLE
+ */
+add_action('admin_print_styles-post-new.php', 'am_custom_css');
+add_action('admin_print_styles-post.php', 'am_custom_css');
+add_action('admin_print_scripts-post-new.php', 'am_custom_script');
+add_action('admin_print_scripts-post.php', 'am_custom_script');
+
+/**
+ * WIDGET
+ */
+add_action('widgets_init', function() {
+            register_widget('AM_Upcoming_Events_Widget');
+        });
+
+
+/**
+ * INCLUDES
+ */
+require_once dirname(__FILE__) . '/widget-upcoming-events.php';
+
+
+add_action('restrict_manage_posts', 'am_restrict_events_by_category');
+add_action('manage_am_event_posts_custom_column', 'am_custom_event_column');
+//Only run our customization on the 'edit.php' page in the admin. */
+add_action('load-edit.php', 'am_edit_event_load');
+
+
+/* * ****************************************************************************
+ * =SCRIPT
+ * *************************************************************************** */
+
+function am_custom_script() {
+    global $post;
+    if ($post->post_type === 'am_event' && is_admin()) {
+
+
+
+        wp_enqueue_script(
+                'jquery-custom', plugins_url('/script/jquery-ui-1.10.2.custom.min.js', __FILE__)
+        );
+
+        // JQuery time picker from http://trentrichardson.com/examples/timepicker/
+        wp_enqueue_script(
+                'jquery-ui-timepicker', plugins_url('/script/jquery-ui-timepicker-addon.js', __FILE__), array('jquery-custom')
+        );
+
+        // Custom script for assigning jquery to inputs
+        wp_enqueue_script(
+                'am_custom_script', plugins_url('/script/am-events.js', __FILE__), array('jquery-custom')
+        );
+    }
+}
+
+function am_custom_css() {
+    // Date picker styles
+    wp_enqueue_style(
+            'jquery.ui.theme', plugins_url('/css/jquery-ui-1.10.2.custom.css', __FILE__)
+    );
+
+    // Time picker styles
+    wp_enqueue_style(
+            'jquery.ui.timepicker', plugins_url('/css/jquery-ui-timepicker-addon.css', __FILE__));
+
+    // Other styles
+    wp_enqueue_style(
+            'am-events', plugins_url('/css/am-events.css', __FILE__));
+}
+
+/* * ****************************************************************************
+ * =META BOX
+ * *************************************************************************** */
+
+/**
+ * Custom meta box for events
+ */
+function am_add_custom_meta_box() {
+
+    /*
+     * Add a meta box in event edit
+     * context: normal (display meta box under content)
+     * priority: high
+     * callback: am_meta_box_content()
+     * parameters: null
+     */
+    add_meta_box('am_metabox', __('Event Details', 'am-events'), 'am_meta_box_content', 'am_event', 'normal', 'high', null);
+}
+
+function am_meta_box_content($post) {
+
+    // Nonce for verification.
+    if (function_exists('am_nonce'))
+        wp_nonce_field(plugin_basename(__FILE__), 'am_nonce');
+
+
+    // The actual fields for data entry
+    // Use get_post_meta to retrieve an existing value from the database and use the value for the form
+    // DATE FIELDS
+    $metaStartDate = get_post_meta($post->ID, 'am_startdate', true);
+    $metaEndDate = get_post_meta($post->ID, 'am_enddate', true);
+
+    //Convert dates from 0000-00-00 00:00:00 to 00.00.0000 00:00
+    $startDate = '';
+    $endDate = '';
+    if ($metaStartDate !== '')
+        $startDate = date('d.m.Y H:i', strtotime($metaStartDate));
+    if ($metaEndDate !== '')
+        $endDate = date('d.m.Y H:i', strtotime($metaEndDate));
+    
+    // Echo content of the meta box
+    ?>
+    <table>
+        <tr>
+            <td align="right">
+                <label for="am_startdate"> 
+                    <?php _e("Start Date:", 'am-events') ?>
+                </label>
+            </td>
+            <td>
+                <input type="text" id="am_startdate" name="am_startdate" value="<?php echo esc_attr($startDate) ?>" />
+            </td>
+        </tr>
+        <tr>
+            <td align="right">
+                <label for="am_enddate"><?php _e("End Date:", 'am-events') ?></label>
+            </td>
+            <td>
+                <input type="text" id="am_enddate" name="am_enddate" value="<?php echo esc_attr($endDate) ?>" />
+            </td>
+        </tr>
+    </table>
+
+    <p style="margin: 20px 0 5px 0"><strong> <?php _e('Additional options:', 'am-events') ?></strong></p>
+    <input style="margin-right:5px" type="checkbox" id="am_recurrent" name="am_recurrent" value="yes" />
+    <label for="am_recurrent"><?php _e('Recurrent event:', 'am-events') ?></label>
+
+    <div id="am_recurrent_fields" style="display: none">
+        <br />
+
+        <input type="radio" name="am_recurrence_type" value="am_weekly" checked /><span><?php _e('weekly', 'am-events') ?></span><br />
+        <input type="radio" name="am_recurrence_type" value="am_biweekly" /><span><?php _e('every two weeks', 'am-events') ?></span><br />
+        
+        <br />
+
+        <input style="width: 60px" name="am_recurrent_amount" type="number" min="1" max="99" id="am_recurrent_amount"></input>
+        <span> <?php _e('times', 'am-events') ?></span>
+
+        <p style="color: Red"> <?php _e('Recurrent events are created when the event is saved or updated.', 'am-events') ?> </p>
+
+    </div>
+
+
+    <?php
+}
+
+/**
+ * Process the custom metabox fields
+ */
+function am_save_custom_meta($post_id) {
+    global $post;
+
+    // Verification check.
+    if ( isset($_POST['am_nonce']) && !wp_verify_nonce( $_POST['am_nonce'], plugin_basename(__FILE__) ) )
+          return;
+    
+    // And they're of the right level?
+    if (!current_user_can('edit_posts'))
+        return;
+    /*
+     * check if the $_POST variable is set, 
+     * meaning that the form been submitted, 
+     * and if so then update our post meta options using update_post_meta().
+     */
+    if ($_POST && get_post_type($post) === 'am_event') {
+
+        // Has the field been used?
+        $temp1 = trim($_POST['am_startdate']);
+        if (empty($temp1))
+            return;
+
+        //Convert startdate from 00.00.0000 00:00 to 0000-00-00 00:00:00
+        $startdate = date('Y-m-d H:i:s', strtotime($temp1));
+        //Check if conversion succeeded
+        if ($startdate != FALSE)
+            update_post_meta($post_id, 'am_startdate', $startdate);
+        else
+            return;
+
+
+        // Has the field been used?
+        $temp2 = trim($_POST['am_enddate']);
+        if (empty($temp2))
+            return;
+
+        //Convert enddate from 00.00.0000 00:00 to 0000-00-00 00:00:00
+        $enddate = date('Y-m-d H:i:s', strtotime($temp2));
+        if ($enddate != FALSE)
+            update_post_meta($post_id, 'am_enddate', $enddate);
+        else
+            return;
+        
+    }
+}
+
+add_action('save_post', 'am_save_event');
+
+/**
+ * Save event meta and create recurring events.
+ * @return type
+ */
+function am_save_event() {
+
+
+    // Remove save_post action to avoid infinite loop when calling wp_insert_posts
+    remove_action('save_post', 'am_save_event');
+
+    
+    if (!isset($_POST['post_ID']))
+        return;
+    
+    $post_id = $_POST['post_ID'];
+    $post = get_post($post_id);
+    if ($_POST && get_post_type($post) === 'am_event') {
+
+        // Determine if the specified post is a not revision or auto-save
+        if (!( wp_is_post_revision($post_id) && wp_is_post_autosave($post_id) )) {
+
+            // Check if 'Recurrent Event' has been checked
+            $recurrent = $_POST['am_recurrent'];
+            if ($recurrent === 'yes') { // If so, create the events
+                $recurrent_amount = $_POST['am_recurrent_amount'];
+                $recurrenceSelection = $_POST['am_recurrence_type'];
+
+                // Check if event category and venue have not been selected
+                $taxonomies = get_post_taxonomies($post_id);
+                if (!in_array('am_event_categories', $taxonomies, true)
+                        || !in_array('am_venues', $taxonomies, true)) {
+                    return; // do not create recurrent events.
+                }
+
+                if ($recurrent_amount < 2 || $recurrent_amount > 99) {
+                    return;
+                }
+
+                $startdate = get_post_meta($post_id, 'am_startdate', true);
+                $enddate = get_post_meta($post_id, 'am_enddate', true);
+
+                $start = DateTime::createFromFormat('Y-m-d H:i:s', $startdate);
+                $end = DateTime::createFromFormat('Y-m-d H:i:s', $enddate);
+
+                for ($i = 1; $i < $recurrent_amount; $i++) {
+                    $new_post = array(
+                        'post_title' => $post->post_title,
+                        'post_content' => $post->post_content,
+                        'post_status' => $post->post_status,
+                        'post_date' => $post->post_date,
+                        'post_author' => $post->post_author,
+                        'post_type' => $post->post_type,
+                        'post_category' => $post->post_category,
+                    );
+                    $new_post_id = wp_insert_post($new_post);
+
+                    switch ($recurrenceSelection) {
+                        case 'am_weekly':
+                            $start->modify('+7 days');
+                            $end->modify('+7 days');
+                            break;
+                        case 'am_biweekly':
+                            $start->modify('+14 days');
+                            $end->modify('+14 days');
+                            break;
+                        default:
+                            return;
+                    }
+
+                    update_post_meta($new_post_id, 'am_startdate', $start->format('Y-m-d H:i:s'));
+                    update_post_meta($new_post_id, 'am_enddate', $end->format('Y-m-d H:i:s'));
+
+                    $eventCategories = wp_get_post_terms($post_id, 'am_event_categories');
+                    $venues = wp_get_post_terms($post_id, 'am_venues');
+                    foreach ($eventCategories as $c) {
+                        wp_set_post_terms($new_post_id, $c->term_id, 'am_event_categories', true);
+                    }
+                    foreach ($venues as $v) {
+                        wp_set_post_terms($new_post_id, $v->term_id, 'am_venues', true);
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Add columns to event list in administration
+ * @param type $columns
+ * @return type
+ */
+function am_add_event_columns($columns) {
+    return array_merge($columns, array('am_startdate' => __('Start Date', 'am-events'),
+                'am_enddate' => __('End Date', 'am-events')));
+}
+add_filter('manage_am_event_posts_columns', 'am_add_event_columns');
+
+function am_custom_event_column($column) {
+    global $post;
+    $post_id = $post->ID;
+    switch ($column) {
+        case 'am_startdate':
+            echo get_post_meta($post_id, 'am_startdate', true);
+            break;
+        case 'am_enddate':
+            echo get_post_meta($post_id, 'am_enddate', true);
+            break;
+    }
+}
+
+/**
+ *  Register the column as sortable
+ */
+function register_sortable_columns($columns) {
+    $columns['am_startdate'] = 'am_startdate';
+    return $columns;
+}
+
+add_filter('manage_edit-am_event_sortable_columns', 'register_sortable_columns');
+
+function am_edit_event_load() {
+    add_filter('request', 'am_sort_events');
+}
+
+/**
+ *  Sorts the events. 
+ */
+function am_sort_events($vars) {
+
+    /* Check if we're viewing the 'movie' post type. */
+    if (isset($vars['post_type']) && 'am_event' === $vars['post_type']) {
+
+        /* Check if 'orderby' is set to 'am_startdate'. */
+        if (isset($vars['orderby']) && 'am_startdate' === $vars['orderby']) {
+
+            /* Merge the query vars with our custom variables. */
+            $vars = array_merge(
+                    $vars, array(
+                'meta_key' => 'am_startdate',
+                'orderby' => 'meta_value'
+                    )
+            );
+        }
+    }
+
+    return $vars;
+}
+
+/* * ****************************************************************************
+ * =LANGUAGE FILES
+ * *************************************************************************** */
+
+/**
+ * Loads the language files
+ */
+function am_load_language_files() {
+    load_plugin_textdomain('am-events', false, dirname(plugin_basename(__FILE__)) . '/languages/');
+}
+
+/* * ****************************************************************************
+ * =CPT, CUSTOM POST TYPE
+ * *************************************************************************** */
+
+/**
+ * Registers new post type am_event
+ */
+function am_register_post_type() {
+
+    $labels = array(
+        'name' => __('Events', 'am-events'),
+        'singular_name' => __('Event', 'am-events'),
+        'menu_name' => __('Events', 'am-events'),
+        'all_items' => __('All Events', 'am-events'),
+        'add_new' => __('Add New Event', 'am-events'),
+        'add_new_item' => __('Event', 'am-events'),
+        'edit_item' => __('Edit Event', 'am-events'),
+        'new_item' => __('New Event', 'am-events'),
+        'view_item' => __('View Events', 'am-events'),
+        'search_items' => __('Search Events', 'am-events'),
+        'not_found' => __('No Events Found', 'am-events'),
+        'not_found_in_trash' => __('No Events Found', 'am-events'),
+    );
+
+    $args = array(
+        'label' => __('Event', 'am-events'),
+        'public' => true,
+        'publicly_queryable' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'menu_position' => 5, //Below Posts
+        'has_archive' => true,
+        'category_name' => 'etusivu',
+        'labels' => $labels,
+        'description' => __('Type for events', 'am-events'),
+        'supports' => array('title', 'editor'),
+        'taxonomies' => array('am_event_category', 'am_venue'),
+    );
+
+    register_post_type('am_event', $args);
+}
+
+/*
+ * Register custom taxonomy 'am_venues'
+ */
+function am_register_taxonomy_venues() {
+
+    $labels = array(
+        'name' => __('Venues', 'am-events'),
+        'singular_name' => __('Venue', 'am-events'),
+        'search_items' => __('Search Venues', 'am-events'),
+        'popular_items' => __('Popular Venues', 'am-events'),
+        'all_items' => __('All Venues', 'am-events'),
+        'parent_item' => __('Parent Venue', 'am-events'),
+        'parent_item_colon' => __('Parent Venue:', 'am-events'),
+        'edit_item' => __('Edit Venue', 'am-events'),
+        'update_item' => __('Update Venue', 'am-events'),
+        'add_new_item' => __('Add New Venue', 'am-events'),
+        'new_item_name' => __('New Venue', 'am-events'),
+        'separate_items_with_commas' => __('Separate venues with commas', 'am-events'),
+        'add_or_remove_items' => __('Add or remove venues', 'am-events'),
+        'choose_from_most_used' => __('Choose from the most used venues', 'am-events'),
+        'menu_name' => __('Venues', 'am-events'),
+    );
+
+    $args = array(
+        'labels' => $labels,
+        'public' => true,
+        'show_in_nav_menus' => true,
+        'show_ui' => true,
+        'show_tagcloud' => true,
+        'show_admin_column' => false,
+        'hierarchical' => true,
+        'rewrite' => true,
+        'query_var' => true
+    );
+
+    register_taxonomy('am_venues', array('am_event'), $args);
+}
+
+/**
+ * Registers custom taxonomy 'am_event_categories'
+ */
+function am_register_taxonomy_event_categories() {
+
+    $labels = array(
+        'name' => __('Event Categories', 'am-events'),
+        'singular_name' => __('Event Category', 'am-events'),
+        'search_items' => __('Search Event Categories', 'am-events'),
+        'popular_items' => __('Popular Event Categories', 'am-events'),
+        'all_items' => __('All Event Categories', 'am-events'),
+        'parent_item' => __('Parent Event Category', 'am-events'),
+        'parent_item_colon' => __('Parent Event Category:', 'am-events'),
+        'edit_item' => __('Edit Event Category', 'am-events'),
+        'update_item' => __('Update Event Category', 'am-events'),
+        'add_new_item' => __('Add New Event Category', 'am-events'),
+        'new_item_name' => __('New Event Category', 'am-events'),
+        'separate_items_with_commas' => __('Separate event categories with commas', 'am-events'),
+        'add_or_remove_items' => __('Add or remove event categories', 'am-events'),
+        'choose_from_most_used' => __('Choose from the most used event categories', 'am-events'),
+        'menu_name' => __('Event Categories', 'am-events'),
+    );
+
+    $args = array(
+        'labels' => $labels,
+        'public' => true,
+        'show_in_nav_menus' => true,
+        'show_ui' => true,
+        'show_tagcloud' => true,
+        'show_admin_column' => false,
+        'hierarchical' => true,
+        'rewrite' => true,
+        'query_var' => true
+    );
+
+    register_taxonomy('am_event_categories', array('am_event'), $args);
+}
+
+/**
+ * Add filter to ensure the text Event, or event, is displayed when user updates an event.
+ */
+function am_event_updated_messages($messages) {
+    global $post, $post_ID;
+
+    $messages['am_event'] = array(
+        0 => '', // Unused. Messages start at index 1.
+        1 => sprintf(__('Event updated. <a href="%s">View event</a>', 'am-events'), esc_url(get_permalink($post_ID))),
+        2 => __('Custom field updated.', 'am-events'),
+        3 => __('Custom field deleted.', 'am-events'),
+        4 => __('Event updated.', 'am-events'),
+        /* translators: %s: date and time of the revision */
+        5 => isset($_GET['revision']) ? sprintf(__('Event restored to revision from %s', 'am-events'), wp_post_revision_title((int) $_GET['revision'], false)) : false,
+        6 => sprintf(__('Event published. <a href="%s">View event</a>', 'am-events'), esc_url(get_permalink($post_ID))),
+        7 => __('Event saved.', 'am-events'),
+        8 => sprintf(__('Event submitted. <a target="_blank" href="%s">Preview event</a>', 'am-events'), esc_url(add_query_arg('preview', 'true', get_permalink($post_ID)))),
+        9 => sprintf(__('Event scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview event</a>', 'am-events'),
+                // translators: Publish box date format, see http://php.net/date
+                date_i18n(__('d.m.Y G:i'), strtotime($post->post_date)), esc_url(get_permalink($post_ID))),
+        10 => sprintf(__('Event draft updated. <a target="_blank" href="%s">Preview event</a>', 'am-events'), esc_url(add_query_arg('preview', 'true', get_permalink($post_ID)))),
+    );
+
+    return $messages;
+}
+
+add_filter('post_updated_messages', 'am_event_updated_messages');
+
+/**
+ * Init custom post type (CPT)
+ */
+function am_cpt_init() {
+    am_register_post_type();
+    am_register_taxonomy_venues();
+    am_register_taxonomy_event_categories();
+}
+
+/**
+ * Function used to get permalinks to work when you activate the plugin.
+ * Pay attention to how am_cpt_init is called in the register_activation_hook callback:
+ */
+function am_rewrite_flush() {
+    // First, we "add" the custom post type via the above written function.
+    // Note: "add" is written with quotes, as CPTs don't get added to the DB,
+    // They are only referenced in the post_type column with a post entry, 
+    // when you add a post of this CPT.
+    am_cpt_init();
+
+    // ATTENTION: This is *only* done during plugin activation hook in this example!
+    // You should *NEVER EVER* do this on every page load!!
+    flush_rewrite_rules();
+}
+
+register_activation_hook(__FILE__, 'am_rewrite_flush');
+
+/* * ****************************************************************************
+ * =TAXONOMY FILTER 
+ * *************************************************************************** */
+
+/**
+ * Add event category filtering to the event listing in administration.
+ */
+function am_restrict_events_by_category() {
+    remove_action('save_post', 'my_metabox_save');
+    global $typenow;
+    $post_type = 'am_event';
+    $taxonomy = 'am_event_categories';
+    if ($typenow == $post_type) {
+        $selected = isset($_GET[$taxonomy]) ? $_GET[$taxonomy] : '';
+        $info_taxonomy = get_taxonomy($taxonomy);
+        wp_dropdown_categories(array(
+            'show_option_all' => __("Show All {$info_taxonomy->label}", 'am-events'),
+            'taxonomy' => $taxonomy,
+            'name' => $taxonomy,
+            'orderby' => 'name',
+            'selected' => $selected,
+            'show_count' => true,
+            'hide_empty' => false,
+        ));
+    };
+}
+
+function am_convert_id_to_term_in_query($query) {
+    global $pagenow;
+    $post_type = 'am_event';
+    $taxonomy = 'am_event_categories';
+    $q_vars = &$query->query_vars;
+    if ($pagenow == 'edit.php' && isset($q_vars['post_type']) && $q_vars['post_type'] == $post_type && isset($q_vars[$taxonomy]) && is_numeric($q_vars[$taxonomy]) && $q_vars[$taxonomy] != 0) {
+        $term = get_term_by('id', $q_vars[$taxonomy], $taxonomy);
+        $q_vars[$taxonomy] = $term->slug;
+    }
+}
+
+add_filter('parse_query', 'am_convert_id_to_term_in_query');
+
+
+
+
+
+
+?>

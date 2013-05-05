@@ -1,0 +1,382 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: am-events\n"
+"POT-Creation-Date: 2013-05-05 19:39+0200\n"
+"PO-Revision-Date: 2013-05-05 19:52+0200\n"
+"Last-Translator: Atte Moisio <atte.moisio@attemoisio.fi>\n"
+"Language-Team: \n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-KeywordsList: _x;_e;__\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: am-events.php:177
+msgid "Event Details"
+msgstr "Tapahtuman tiedot"
+
+#: am-events.php:207
+msgid "Start Date:"
+msgstr "Alkamisaika:"
+
+#: am-events.php:216
+msgid "End Date:"
+msgstr "Päättymisaika"
+
+#: am-events.php:224
+msgid "Additional options:"
+msgstr "Lisävalinnat:"
+
+#: am-events.php:226
+msgid "Recurrent event:"
+msgstr "Toistuva tapahtuma:"
+
+#: am-events.php:231
+msgid "weekly"
+msgstr "joka viikko"
+
+#: am-events.php:232
+msgid "every two weeks"
+msgstr "joka toinen viikko"
+
+#: am-events.php:237
+msgid "times"
+msgstr "kertaa"
+
+#: am-events.php:239
+msgid "Recurrent events are created when the event is saved or updated."
+msgstr ""
+"Huom! Toistuvat tapahtumat luodaan, kun julkaiset tai päivität tapahtuman."
+
+#: am-events.php:390
+msgid "Start Date"
+msgstr "Alkamisaika"
+
+#: am-events.php:391
+msgid "End Date"
+msgstr "Päättymisaika"
+
+#: am-events.php:467 am-events.php:469
+msgid "Events"
+msgstr "Tapahtumat"
+
+#: am-events.php:468 am-events.php:472 am-events.php:482
+msgid "Event"
+msgstr "Tapahtuma"
+
+#: am-events.php:470
+msgid "All Events"
+msgstr "Kaikki tapahtumat"
+
+#: am-events.php:471
+msgid "Add New Event"
+msgstr "Lisää uusi"
+
+#: am-events.php:473
+msgid "Edit Event"
+msgstr "Muokkaa"
+
+#: am-events.php:474
+msgid "New Event"
+msgstr "Uusi tapahtuma"
+
+#: am-events.php:475
+msgid "View Events"
+msgstr "Näytä tapahtumat"
+
+#: am-events.php:476
+msgid "Search Events"
+msgstr "Etsi tapahtumista"
+
+#: am-events.php:477 am-events.php:478
+msgid "No Events Found"
+msgstr "Tapahtumia ei löytynyt"
+
+#: am-events.php:491
+msgid "Type for events"
+msgstr "Tapahtumien tyyppi"
+
+#: am-events.php:505 am-events.php:519
+msgid "Venues"
+msgstr "Tapahtumapaikat"
+
+#: am-events.php:506 am-events.php:819
+msgid "Venue"
+msgstr "Paikka"
+
+#: am-events.php:507
+msgid "Search Venues"
+msgstr "Etsi tapahtumista"
+
+#: am-events.php:508
+msgid "Popular Venues"
+msgstr "Yleisimmät tapahtumapaikat"
+
+#: am-events.php:509
+msgid "All Venues"
+msgstr "Kaikki"
+
+#: am-events.php:510
+msgid "Parent Venue"
+msgstr "Ylempi tapahtumapaikka"
+
+#: am-events.php:511
+msgid "Parent Venue:"
+msgstr "Ylempi tapahtumapaikka:"
+
+#: am-events.php:512
+msgid "Edit Venue"
+msgstr "Muokkaa"
+
+#: am-events.php:513
+msgid "Update Venue"
+msgstr "Päivitä tapahtumapaikka"
+
+#: am-events.php:514
+msgid "Add New Venue"
+msgstr "Lisää uusi"
+
+#: am-events.php:515
+msgid "New Venue"
+msgstr "Uusi tapahtumapaikka"
+
+#: am-events.php:516
+msgid "Separate venues with commas"
+msgstr "Erota tapahtumapaikat pilkuilla"
+
+#: am-events.php:517
+msgid "Add or remove venues"
+msgstr "Lisää tai poista tapahtumapaikkoja"
+
+#: am-events.php:518
+msgid "Choose from the most used venues"
+msgstr "Valitse yleisimmistä tapahtumapaikoista"
+
+#: am-events.php:543 am-events.php:557
+msgid "Event Categories"
+msgstr "Tapahtumatyypit"
+
+#: am-events.php:544
+msgid "Event Category"
+msgstr "Tapahtumatyyppi"
+
+#: am-events.php:545
+msgid "Search Event Categories"
+msgstr "Etsi tapahtumatyyppiä"
+
+#: am-events.php:546
+msgid "Popular Event Categories"
+msgstr "Yleisimmät tapahtumatyypit"
+
+#: am-events.php:547
+msgid "All Event Categories"
+msgstr "Kaikki tapahtumatyypit"
+
+#: am-events.php:548
+msgid "Parent Event Category"
+msgstr "Ylätyyppi"
+
+#: am-events.php:549
+msgid "Parent Event Category:"
+msgstr "Ylätyyppi:"
+
+#: am-events.php:550
+msgid "Edit Event Category"
+msgstr "Muokkaa tapahtumatyyppiä:"
+
+#: am-events.php:551
+msgid "Update Event Category"
+msgstr "Päivitä tapahtumatyyppi"
+
+#: am-events.php:552
+msgid "Add New Event Category"
+msgstr "Lisää uusi"
+
+#: am-events.php:553
+msgid "New Event Category"
+msgstr "Uusi tapahtumatyyppi"
+
+#: am-events.php:554
+msgid "Separate event categories with commas"
+msgstr "Erota tapahtumatyypit pilkuilla"
+
+#: am-events.php:555
+msgid "Add or remove event categories"
+msgstr "Lisää tai poista tapahtumatyyppejä"
+
+#: am-events.php:556
+msgid "Choose from the most used event categories"
+msgstr "Valitse yleisimmistä tapahtumatyypeistä"
+
+#: am-events.php:583
+#, php-format
+msgid "Event updated. <a href=\"%s\">View event</a>"
+msgstr "Tapahtuma päivitetty <a href=\"%s\">Näytä</a>"
+
+#: am-events.php:584
+msgid "Custom field updated."
+msgstr "Kenttä päivitetty."
+
+#: am-events.php:585
+msgid "Custom field deleted."
+msgstr "Kenttä poistettu"
+
+#: am-events.php:586
+msgid "Event updated."
+msgstr "Tapahtuma päivitetty."
+
+#: am-events.php:588
+#, php-format
+msgid "Event restored to revision from %s"
+msgstr "Tapahtuma palautettu versiosta %s"
+
+#: am-events.php:589
+#, php-format
+msgid "Event published. <a href=\"%s\">View event</a>"
+msgstr "Tapahtum julkaistu. <a href=\"%s\">Näytä</a>"
+
+#: am-events.php:590
+msgid "Event saved."
+msgstr "Tapahtuma tallennettu."
+
+#: am-events.php:591
+#, php-format
+msgid "Event submitted. <a target=\"_blank\" href=\"%s\">Preview event</a>"
+msgstr "Tapahtuma luotu. <a target=\"_blank\" href=\"%s\">Näytä</a>"
+
+#: am-events.php:592
+#, php-format
+msgid ""
+"Event scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s"
+"\">Preview event</a>"
+msgstr ""
+"Tapahtuman julkaisuaika: <strong>%1$s</strong>. <a target=\"_blank\" href="
+"\"%2$s\">Esikatsele</a>"
+
+#: am-events.php:594
+msgid "d.m.Y G:i"
+msgstr "d.m.Y G:i"
+
+#: am-events.php:595
+#, php-format
+msgid "Event draft updated. <a target=\"_blank\" href=\"%s\">Preview event</a>"
+msgstr ""
+"Tapahtuman luonnos päivitetty. <a target=\"_blank\" href=\"%s\">Esikatsele</"
+"a>"
+
+#: am-events.php:795
+msgid "No upcoming events."
+msgstr "Ei tulevia tapahtumia."
+
+#: am-events.php:817
+msgid "Date"
+msgstr "Päivämäärä"
+
+#: am-events.php:818
+msgid "Title"
+msgstr "Otsikko"
+
+#: am-events.php:820
+msgid "Category"
+msgstr "Kategoria"
+
+#: am-events.php:832
+msgid "first page"
+msgstr "ensimmäinen"
+
+#: am-events.php:833
+msgid "previous page"
+msgstr "edellinen"
+
+#: am-events.php:839
+msgid "next page"
+msgstr "seuraava"
+
+#: am-events.php:840
+msgid "last page"
+msgstr "viimeinen"
+
+#: widget-upcoming-events.php:29
+msgid "Display upcoming events"
+msgstr "Näytä tulevat tapahtumat"
+
+#: widget-upcoming-events.php:196
+msgid "Upcoming Events"
+msgstr "Tulevat tapahtumat"
+
+#: widget-upcoming-events.php:196
+msgid "See More Events ->"
+msgstr "Näytä lisää tapahtumia ->"
+
+#: widget-upcoming-events.php:217
+msgid "Title:"
+msgstr "Otsikko:"
+
+#: widget-upcoming-events.php:223
+msgid "Select Event category:"
+msgstr "Valitse tapahtuman tyyppi:"
+
+#: widget-upcoming-events.php:225 widget-upcoming-events.php:237
+msgid "All"
+msgstr "Kaikki"
+
+#: widget-upcoming-events.php:235
+msgid "Select Venue:"
+msgstr "Valitse tapahtumapaikka:"
+
+#: widget-upcoming-events.php:246
+msgid "Number of events:"
+msgstr "Tapahtumien määrä:"
+
+#: widget-upcoming-events.php:251
+msgid "Display before events:"
+msgstr "Näytä ennen tapahtumia:"
+
+#: widget-upcoming-events.php:256
+msgid "Template for single event:"
+msgstr "Yksittäisen tapahtuman muotoilu:"
+
+#: widget-upcoming-events.php:261
+msgid "Display after events:"
+msgstr "Näytä tapahtuman jälkeen:"
+
+#: widget-upcoming-events.php:301
+msgid "Mon"
+msgstr "Ma"
+
+#: widget-upcoming-events.php:302
+msgid "Tue"
+msgstr "Ti"
+
+#: widget-upcoming-events.php:303
+msgid "Wed"
+msgstr "Ke"
+
+#: widget-upcoming-events.php:304
+msgid "Thu"
+msgstr "To"
+
+#: widget-upcoming-events.php:305
+msgid "Fri"
+msgstr "Pe"
+
+#: widget-upcoming-events.php:306
+msgid "Sat"
+msgstr "La"
+
+#: widget-upcoming-events.php:307
+msgid "Sun"
+msgstr "Su"
+
+#~ msgid "AM Events Options"
+#~ msgstr "Tapahtumat"
+
+#~ msgid "AM Events"
+#~ msgstr "Tapahtumat"
+
+#~ msgid "You do not have sufficient permissions to access this page."
+#~ msgstr "Sinulla ei ole riittävästi oikeuksia sivun tarkasteluun."
