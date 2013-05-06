@@ -2,7 +2,7 @@
 /*
   TODO:
   Plugin Name: AM Events
-  Plugin URI: http://URI_Of_Page_Describing_Plugin_and_Updates
+  Plugin URI: http://wordpress.org/extend/plugins/am-events/
   Description: Adds a post type for events and a customizable widget for displaying upcoming events.
   Version: 1.0.0
   Author: Atte Moisio
