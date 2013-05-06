@@ -19,7 +19,7 @@ There are no special functions or template tags to add events on pages or posts.
 
 As an extra feature, the plugin also includes a widget for showing upcoming events. It uses a very simple template system for full control of the layout.
 
-The plugin is fully translatable. The only available languages at the moment are English(default) and Finnish.
+The plugin is fully translatable. The only available languages at the moment are English(default) and Finnish. Feel free to send me additional translations.
 
 == Installation ==
 
@@ -53,11 +53,9 @@ Here are all the tags that can be used in the upcoming events widget template. D
  * {{title}}
  * {{event_category}}
  * {{venue}}
-
  * {{start_day_name}}
  * {{start_date}} 
  * {{start_time}}
-
  * {{end_day_name}}
  * {{end_date}}
  * {{end_time}}
