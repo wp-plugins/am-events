@@ -39,6 +39,13 @@ Feel free to mail me at atte.moisio@attemoisio.fi
 1. Widget administration.
 2. Creating an event
 
+== Changelog ==
+
+= 1.0.0 =
+* First released/stable version
+
+== Upgrade Notice ==
+
 == Other Notes ==
 
 = Widget =
@@ -60,10 +67,3 @@ Here are all the tags that can be used in the upcoming events widget template. D
 = Examples =
 
 The plugin folder contains a file "examples.php", which contains example functions for displaying events.
-
-== Changelog ==
-
-= 1.0.0 =
-* First released/stable version
-
-
