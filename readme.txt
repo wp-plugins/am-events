@@ -41,10 +41,17 @@ Feel free to mail me at atte.moisio@attemoisio.fi
 
 == Changelog ==
 
+= 1.0.1 =
+* Fixed bugs in the upcoming events -widget
+* Added missing examples.php
+
 = 1.0.0 =
 * First released/stable version
 
 == Upgrade Notice ==
+
+= 1.0.1 =
+* Fixes bugs in the upcoming events -widget
 
 == Widget ==
 
