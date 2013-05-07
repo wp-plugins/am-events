@@ -4,6 +4,8 @@
  */
 ?>
 
+<?php
+
 /**
  * Echo all upcoming events in a paged table
  * 
@@ -164,3 +166,5 @@ function am_print_event_list_pagination($the_query) {
         
     echo '</div>';
 }
+
+?>
