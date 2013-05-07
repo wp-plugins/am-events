@@ -19,6 +19,10 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+?>
+ 
+ 
+<?php
 
 class AM_Upcoming_Events_Widget extends WP_Widget {
    
@@ -89,13 +93,14 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             'meta_key' => 'am_startdate',
             'orderby' => 'meta_value',
             'order' => 'ASC',
-            'meta_query' => array(
-                'key' => 'startdate',
-                 // display events with a start time greater than 
-                 // current time - 24hrs
+            'meta_query' => array( array(
+                'key' => 'am_enddate',
+                 // display events with an end date greater than 
+                 // the current time - 24hrs
                 'value' => date('Y-m-d H:i:s', time() - (60 * 60 * 24)),                
                 'compare' => ">" // startdate > value
-            )
+				),
+            ),
             
         );
         
