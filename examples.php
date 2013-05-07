@@ -57,7 +57,7 @@ function am_upcoming_events_list($posts_per_page, $event_category = 'all', $venu
              // display events with a start time greater than 
              // current time - 24hrs
             'value' => date('Y-m-d H:i:s', time() - (60 * 60 * 24)),                
-            'compare' => ">" //, end aadate > value
+            'compare' => ">"
             ),
         ),
         'tax_query' => array( // taxonomy and term filter
