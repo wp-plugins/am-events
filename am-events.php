@@ -35,7 +35,7 @@
 
 
 /******************************************************************************
- * VARIABLE NAMES, TAXONOMY NAMES ETC. FOR REFERENCE
+ * VARIABLE NAMES, TAXONOMY NAMES AND WIDGET TAGS FOR REFERENCE
  * 
  * Custom post type name: 
  * 
@@ -85,9 +85,9 @@ add_action('init', 'am_load_language_files');
 /**
  * SAVE_POST
  */
-// Save custom meta
 add_action('save_post', 'am_save_custom_meta');
 add_action('add_meta_boxes', 'am_add_custom_meta_box');
+add_action('save_post', 'am_save_event');
 
 /**
  * SCRIPT AND STYLE
@@ -153,7 +153,7 @@ function am_custom_css() {
     wp_enqueue_style(
             'jquery.ui.timepicker', plugins_url('/css/jquery-ui-timepicker-addon.css', __FILE__));
 
-    // Other styles
+    // Other styles (for metabox etc.)
     wp_enqueue_style(
             'am-events', plugins_url('/css/am-events.css', __FILE__));
 }
@@ -190,7 +190,7 @@ function am_meta_box_content($post) {
     $metaStartDate = get_post_meta($post->ID, 'am_startdate', true);
     $metaEndDate = get_post_meta($post->ID, 'am_enddate', true);
 
-    //Convert dates from 0000-00-00 00:00:00 to 00.00.0000 00:00
+    // Convert dates from 0000-00-00 00:00:00 to 00.00.0000 00:00
     $startDate = '';
     $endDate = '';
     if ($metaStartDate !== '')
@@ -198,7 +198,7 @@ function am_meta_box_content($post) {
     if ($metaEndDate !== '')
         $endDate = date('d.m.Y H:i', strtotime($metaEndDate));
     
-    // Echo content of the meta box
+    // Content of the meta box
     ?>
     <table>
         <tr>
@@ -293,7 +293,6 @@ function am_save_custom_meta($post_id) {
     }
 }
 
-add_action('save_post', 'am_save_event');
 
 /**
  * Save event meta and create recurring events.
@@ -420,7 +419,7 @@ function am_edit_event_load() {
 }
 
 /**
- *  Sorts the events. 
+ *  Used to sorts the events in the administration. 
  */
 function am_sort_events($vars) {
 
@@ -459,7 +458,7 @@ function am_load_language_files() {
  * *************************************************************************** */
 
 /**
- * Registers new post type am_event
+ * Registers new post type 'am_event'
  */
 function am_register_post_type() {
 
@@ -666,10 +665,5 @@ function am_convert_id_to_term_in_query($query) {
 }
 
 add_filter('parse_query', 'am_convert_id_to_term_in_query');
-
-
-
-
-
 
 ?>
