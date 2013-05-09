@@ -129,11 +129,11 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             $timestamp_end = strtotime($meta_enddate);
             
             //get all the widget template data
-            $template_startdate = date('d.m.Y', $timestamp_start);
-            $template_enddate = date('d.m.Y', $timestamp_end);
+            $template_startdate = date(_x('m/d/Y', 'upcoming events widget', 'am-events'), $timestamp_start);
+            $template_enddate = date(_x('m/d/Y', 'upcoming events widget', 'am-events'), $timestamp_end);
 
-            $template_starttime = date( 'H:i', $timestamp_start);
-            $template_endtime = date( 'H:i', $timestamp_end);
+            $template_starttime = date( _x('H:i', 'upcoming events widget', 'am-events'), $timestamp_start);
+            $template_endtime = date( _x('H:i', 'upcoming events widget', 'am-events'), $timestamp_end);
 
             $template_startdayname = getWeekDay(date('N', $timestamp_start));
             $template_enddayname = getWeekDay(date('N', $timestamp_end));

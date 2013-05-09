@@ -248,9 +248,9 @@ function am_meta_box_content($post) {
     $startDate = '';
     $endDate = '';
     if ($metaStartDate !== '')
-        $startDate = date('d.m.Y H:i', strtotime($metaStartDate));
+        $startDate = date(_x('m/d/Y H:i','administration', 'am-events'), strtotime($metaStartDate));
     if ($metaEndDate !== '')
-        $endDate = date('d.m.Y H:i', strtotime($metaEndDate));
+        $endDate = date(_x('m/d/Y H:i','administration', 'am-events'), strtotime($metaEndDate));
     
     // Content of the meta box
     ?>
@@ -644,7 +644,7 @@ function am_event_updated_messages($messages) {
         8 => sprintf(__('Event submitted. <a target="_blank" href="%s">Preview event</a>', 'am-events'), esc_url(add_query_arg('preview', 'true', get_permalink($post_ID)))),
         9 => sprintf(__('Event scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview event</a>', 'am-events'),
                 // translators: Publish box date format, see http://php.net/date
-                date_i18n(__('d.m.Y G:i'), strtotime($post->post_date)), esc_url(get_permalink($post_ID))),
+                date_i18n(_x('d.m.Y G:i', 'Publish box, see http://php.net/date', 'am-events'), strtotime($post->post_date)), esc_url(get_permalink($post_ID))),
         10 => sprintf(__('Event draft updated. <a target="_blank" href="%s">Preview event</a>', 'am-events'), esc_url(add_query_arg('preview', 'true', get_permalink($post_ID)))),
     );
 

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: am-events\n"
-"POT-Creation-Date: 2013-05-09 22:04+0200\n"
-"PO-Revision-Date: 2013-05-09 22:05+0200\n"
+"POT-Creation-Date: 2013-05-09 22:30+0200\n"
+"PO-Revision-Date: 2013-05-09 22:30+0200\n"
 "Last-Translator: Atte Moisio <atte.moisio@attemoisio.fi>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,770 +18,666 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPath-1: ..\n"
 
-#: am-events.php:138 ../trunk/am-events.php:138
+#: ../am-events.php:138
 msgctxt "date picker"
 msgid "Clear"
 msgstr ""
 
-#: am-events.php:139 ../trunk/am-events.php:139
+#: ../am-events.php:139
 msgctxt "date picker"
 msgid "Erase the current date"
 msgstr ""
 
-#: am-events.php:140 ../trunk/am-events.php:140
+#: ../am-events.php:140
 msgctxt "date picker"
 msgid "Close"
 msgstr ""
 
-#: am-events.php:141 ../trunk/am-events.php:141
+#: ../am-events.php:141
 msgctxt "date picker"
 msgid "Close without change"
 msgstr ""
 
-#: am-events.php:142 ../trunk/am-events.php:142
+#: ../am-events.php:142
 msgctxt "date picker"
 msgid "<Prev"
 msgstr ""
 
-#: am-events.php:143 ../trunk/am-events.php:143
+#: ../am-events.php:143
 msgctxt "date picker"
 msgid "<<"
 msgstr ""
 
-#: am-events.php:144 ../trunk/am-events.php:144
+#: ../am-events.php:144
 msgctxt "date picker"
 msgid "Show the previous month"
 msgstr ""
 
-#: am-events.php:145 ../trunk/am-events.php:145
+#: ../am-events.php:145
 msgctxt "date picker"
 msgid "Show the previous year"
 msgstr ""
 
-#: am-events.php:146 ../trunk/am-events.php:146
+#: ../am-events.php:146
 msgctxt "date picker"
 msgid "Next>"
 msgstr ""
 
-#: am-events.php:147 ../trunk/am-events.php:147
+#: ../am-events.php:147
 msgctxt "date picker"
 msgid ">>"
 msgstr ""
 
-#: am-events.php:148 ../trunk/am-events.php:148
+#: ../am-events.php:148
 msgctxt "date picker"
 msgid "Show the next month"
 msgstr ""
 
-#: am-events.php:149 ../trunk/am-events.php:149
+#: ../am-events.php:149
 msgctxt "date picker"
 msgid "Show the next year"
 msgstr ""
 
-#: am-events.php:150 ../trunk/am-events.php:150
+#: ../am-events.php:150
 msgctxt "date picker"
 msgid "Today"
 msgstr ""
 
-#: am-events.php:151 ../trunk/am-events.php:151
+#: ../am-events.php:151
 msgctxt "date picker"
 msgid "Show the current month"
 msgstr ""
 
-#: am-events.php:152 ../trunk/am-events.php:152
+#: ../am-events.php:152
 msgid "January"
 msgstr ""
 
-#: am-events.php:152 ../trunk/am-events.php:152
+#: ../am-events.php:152
 msgid "February"
 msgstr ""
 
-#: am-events.php:152 ../trunk/am-events.php:152
+#: ../am-events.php:152
 msgid "March"
 msgstr ""
 
-#: am-events.php:152 ../trunk/am-events.php:152
+#: ../am-events.php:152
 msgid "April"
 msgstr ""
 
-#: am-events.php:152 am-events.php:153 ../trunk/am-events.php:152
-#: ../trunk/am-events.php:153
+#: ../am-events.php:152 ../am-events.php:153
 msgid "May"
 msgstr ""
 
-#: am-events.php:152 ../trunk/am-events.php:152
+#: ../am-events.php:152
 msgid "June"
 msgstr ""
 
-#: am-events.php:152 ../trunk/am-events.php:152
+#: ../am-events.php:152
 msgid "July"
 msgstr ""
 
-#: am-events.php:152 ../trunk/am-events.php:152
+#: ../am-events.php:152
 msgid "August"
 msgstr ""
 
-#: am-events.php:152 ../trunk/am-events.php:152
+#: ../am-events.php:152
 msgid "September"
 msgstr ""
 
-#: am-events.php:152 ../trunk/am-events.php:152
+#: ../am-events.php:152
 msgid "October"
 msgstr ""
 
-#: am-events.php:152 ../trunk/am-events.php:152
+#: ../am-events.php:152
 msgid "November"
 msgstr ""
 
-#: am-events.php:152 ../trunk/am-events.php:152
+#: ../am-events.php:152
 msgid "December"
 msgstr ""
 
-#: am-events.php:153 ../trunk/am-events.php:153
+#: ../am-events.php:153
 msgid "Jan"
 msgstr ""
 
-#: am-events.php:153 ../trunk/am-events.php:153
+#: ../am-events.php:153
 msgid "Feb"
 msgstr ""
 
-#: am-events.php:153 ../trunk/am-events.php:153
+#: ../am-events.php:153
 msgid "Mar"
 msgstr ""
 
-#: am-events.php:153 ../trunk/am-events.php:153
+#: ../am-events.php:153
 msgid "Apr"
 msgstr ""
 
-#: am-events.php:153 ../trunk/am-events.php:153
+#: ../am-events.php:153
 msgid "Jun"
 msgstr ""
 
-#: am-events.php:153 ../trunk/am-events.php:153
+#: ../am-events.php:153
 msgid "Jul"
 msgstr ""
 
-#: am-events.php:153 ../trunk/am-events.php:153
+#: ../am-events.php:153
 msgid "Aug"
 msgstr ""
 
-#: am-events.php:153 ../trunk/am-events.php:153
+#: ../am-events.php:153
 msgid "Sep"
 msgstr ""
 
-#: am-events.php:153 ../trunk/am-events.php:153
+#: ../am-events.php:153
 msgid "Oct"
 msgstr ""
 
-#: am-events.php:153 ../trunk/am-events.php:153
+#: ../am-events.php:153
 msgid "Nov"
 msgstr ""
 
-#: am-events.php:153 ../trunk/am-events.php:153
+#: ../am-events.php:153
 msgid "Dec"
 msgstr ""
 
-#: am-events.php:154 ../trunk/am-events.php:154
+#: ../am-events.php:154
 msgctxt "date picker"
 msgid "Show a different month"
 msgstr ""
 
-#: am-events.php:155 ../trunk/am-events.php:155
+#: ../am-events.php:155
 msgctxt "date picker"
 msgid "Show a different year"
 msgstr ""
 
-#: am-events.php:156 ../trunk/am-events.php:156
+#: ../am-events.php:156
 msgctxt "date picker"
 msgid "Wk"
 msgstr ""
 
-#: am-events.php:157 ../trunk/am-events.php:157
+#: ../am-events.php:157
 msgctxt "date picker"
 msgid "Week of the year"
 msgstr ""
 
-#: am-events.php:158 ../trunk/am-events.php:158
+#: ../am-events.php:158
 msgid "Monday"
 msgstr ""
 
-#: am-events.php:158 ../trunk/am-events.php:158
+#: ../am-events.php:158
 msgid "Tuesday"
 msgstr ""
 
-#: am-events.php:158 ../trunk/am-events.php:158
+#: ../am-events.php:158
 msgid "Wednesday"
 msgstr ""
 
-#: am-events.php:158 ../trunk/am-events.php:158
+#: ../am-events.php:158
 msgid "Thursday"
 msgstr ""
 
-#: am-events.php:158 ../trunk/am-events.php:158
+#: ../am-events.php:158
 msgid "Friday"
 msgstr ""
 
-#: am-events.php:158 ../trunk/am-events.php:158
+#: ../am-events.php:158
 msgid "Saturday"
 msgstr ""
 
-#: am-events.php:158 ../trunk/am-events.php:158
+#: ../am-events.php:158
 msgid "Sunday"
 msgstr ""
 
-#: am-events.php:159 widget-upcoming-events.php:306
-#: ../tags/1.0.0/widget-upcoming-events.php:301
-#: ../tags/1.0.1/widget-upcoming-events.php:306 ../trunk/am-events.php:159
-#: ../trunk/widget-upcoming-events.php:306
+#: ../am-events.php:159 ../widget-upcoming-events.php:306
 msgid "Mon"
 msgstr ""
 
-#: am-events.php:159 widget-upcoming-events.php:307
-#: ../tags/1.0.0/widget-upcoming-events.php:302
-#: ../tags/1.0.1/widget-upcoming-events.php:307 ../trunk/am-events.php:159
-#: ../trunk/widget-upcoming-events.php:307
+#: ../am-events.php:159 ../widget-upcoming-events.php:307
 msgid "Tue"
 msgstr ""
 
-#: am-events.php:159 widget-upcoming-events.php:308
-#: ../tags/1.0.0/widget-upcoming-events.php:303
-#: ../tags/1.0.1/widget-upcoming-events.php:308 ../trunk/am-events.php:159
-#: ../trunk/widget-upcoming-events.php:308
+#: ../am-events.php:159 ../widget-upcoming-events.php:308
 msgid "Wed"
 msgstr ""
 
-#: am-events.php:159 widget-upcoming-events.php:309
-#: ../tags/1.0.0/widget-upcoming-events.php:304
-#: ../tags/1.0.1/widget-upcoming-events.php:309 ../trunk/am-events.php:159
-#: ../trunk/widget-upcoming-events.php:309
+#: ../am-events.php:159 ../widget-upcoming-events.php:309
 msgid "Thu"
 msgstr ""
 
-#: am-events.php:159 widget-upcoming-events.php:310
-#: ../tags/1.0.0/widget-upcoming-events.php:305
-#: ../tags/1.0.1/widget-upcoming-events.php:310 ../trunk/am-events.php:159
-#: ../trunk/widget-upcoming-events.php:310
+#: ../am-events.php:159 ../widget-upcoming-events.php:310
 msgid "Fri"
 msgstr ""
 
-#: am-events.php:159 widget-upcoming-events.php:311
-#: ../tags/1.0.0/widget-upcoming-events.php:306
-#: ../tags/1.0.1/widget-upcoming-events.php:311 ../trunk/am-events.php:159
-#: ../trunk/widget-upcoming-events.php:311
+#: ../am-events.php:159 ../widget-upcoming-events.php:311
 msgid "Sat"
 msgstr ""
 
-#: am-events.php:159 widget-upcoming-events.php:312
-#: ../tags/1.0.0/widget-upcoming-events.php:307
-#: ../tags/1.0.1/widget-upcoming-events.php:312 ../trunk/am-events.php:159
-#: ../trunk/widget-upcoming-events.php:312
+#: ../am-events.php:159 ../widget-upcoming-events.php:312
 msgid "Sun"
 msgstr ""
 
-#: am-events.php:160 ../trunk/am-events.php:160
+#: ../am-events.php:160
 msgid "Mo"
 msgstr ""
 
-#: am-events.php:160 ../trunk/am-events.php:160
+#: ../am-events.php:160
 msgid "Tu"
 msgstr ""
 
-#: am-events.php:160 ../trunk/am-events.php:160
+#: ../am-events.php:160
 msgid "We"
 msgstr ""
 
-#: am-events.php:160 ../trunk/am-events.php:160
+#: ../am-events.php:160
 msgid "Th"
 msgstr ""
 
-#: am-events.php:160 ../trunk/am-events.php:160
+#: ../am-events.php:160
 msgid "Fr"
 msgstr ""
 
-#: am-events.php:160 ../trunk/am-events.php:160
+#: ../am-events.php:160
 msgid "Sa"
 msgstr ""
 
-#: am-events.php:160 ../trunk/am-events.php:160
+#: ../am-events.php:160
 msgid "Su"
 msgstr ""
 
-#: am-events.php:161 ../trunk/am-events.php:161
+#: ../am-events.php:161
 msgctxt "date picker"
 msgid "Set DD as first week day"
 msgstr ""
 
-#: am-events.php:162 ../trunk/am-events.php:162
+#: ../am-events.php:162
 msgctxt "date picker"
 msgid "Select D, M d"
 msgstr ""
 
-#: am-events.php:163 ../trunk/am-events.php:163
+#: ../am-events.php:163
 msgctxt "date picker, see format options on parseDate"
-msgid "dd.MM.yyyy"
+msgid "mm/dd/yy"
 msgstr ""
 
-#: am-events.php:165 ../trunk/am-events.php:165
+#: ../am-events.php:165
 msgctxt "date picker"
 msgid "Select a date"
 msgstr ""
 
-#: am-events.php:169 ../trunk/am-events.php:169
+#: ../am-events.php:169
 msgctxt "time picker"
 msgid "Now"
 msgstr ""
 
-#: am-events.php:170 ../trunk/am-events.php:170
+#: ../am-events.php:170
 msgctxt "time picker"
 msgid "Done"
 msgstr ""
 
-#: am-events.php:171 ../trunk/am-events.php:171
+#: ../am-events.php:171
 msgctxt "time picker"
 msgid "AM"
 msgstr ""
 
-#: am-events.php:172 ../trunk/am-events.php:172
+#: ../am-events.php:172
 msgctxt "time picker"
 msgid "A"
 msgstr ""
 
-#: am-events.php:173 ../trunk/am-events.php:173
+#: ../am-events.php:173
 msgctxt "time picker"
 msgid "PM"
 msgstr ""
 
-#: am-events.php:174 ../trunk/am-events.php:174
+#: ../am-events.php:174
 msgctxt "time picker"
 msgid "P"
 msgstr ""
 
-#: am-events.php:175 ../trunk/am-events.php:175
+#: ../am-events.php:175
 msgctxt "time picker"
 msgid "HH:mm"
 msgstr ""
 
-#: am-events.php:177 ../trunk/am-events.php:177
+#: ../am-events.php:177
 msgctxt "time picker"
 msgid "Choose Time"
 msgstr ""
 
-#: am-events.php:178 ../trunk/am-events.php:178
+#: ../am-events.php:178
 msgctxt "time picker"
 msgid "Time"
 msgstr ""
 
-#: am-events.php:179 ../trunk/am-events.php:179
+#: ../am-events.php:179
 msgctxt "time picker"
 msgid "Hour"
 msgstr ""
 
-#: am-events.php:180 ../trunk/am-events.php:180
+#: ../am-events.php:180
 msgctxt "time picker"
 msgid "Minute"
 msgstr ""
 
-#: am-events.php:181 ../trunk/am-events.php:181
+#: ../am-events.php:181
 msgctxt "time picker"
 msgid "Second"
 msgstr ""
 
-#: am-events.php:182 ../trunk/am-events.php:182
+#: ../am-events.php:182
 msgctxt "time picker"
 msgid "Millisecond"
 msgstr ""
 
-#: am-events.php:183 ../trunk/am-events.php:183
+#: ../am-events.php:183
 msgctxt "time picker"
 msgid "Time Zone"
 msgstr ""
 
-#: am-events.php:231 ../tags/1.0.0/am-events.php:177
-#: ../tags/1.0.1/am-events.php:177 ../trunk/am-events.php:231
+#: ../am-events.php:231
 msgid "Event Details"
 msgstr ""
 
-#: am-events.php:261 ../tags/1.0.0/am-events.php:207
-#: ../tags/1.0.1/am-events.php:207 ../trunk/am-events.php:261
+#: ../am-events.php:251 ../am-events.php:253
+msgctxt "administration"
+msgid "m/d/Y H:i"
+msgstr ""
+
+#: ../am-events.php:261
 msgid "Start Date:"
 msgstr ""
 
-#: am-events.php:270 ../tags/1.0.0/am-events.php:216
-#: ../tags/1.0.1/am-events.php:216 ../trunk/am-events.php:270
+#: ../am-events.php:270
 msgid "End Date:"
 msgstr ""
 
-#: am-events.php:278 ../tags/1.0.0/am-events.php:224
-#: ../tags/1.0.1/am-events.php:224 ../trunk/am-events.php:278
+#: ../am-events.php:278
 msgid "Additional options:"
 msgstr ""
 
-#: am-events.php:280 ../tags/1.0.0/am-events.php:226
-#: ../tags/1.0.1/am-events.php:226 ../trunk/am-events.php:280
+#: ../am-events.php:280
 msgid "Recurrent event:"
 msgstr ""
 
-#: am-events.php:285 ../tags/1.0.0/am-events.php:231
-#: ../tags/1.0.1/am-events.php:231 ../trunk/am-events.php:285
+#: ../am-events.php:285
 msgid "weekly"
 msgstr ""
 
-#: am-events.php:286 ../tags/1.0.0/am-events.php:232
-#: ../tags/1.0.1/am-events.php:232 ../trunk/am-events.php:286
+#: ../am-events.php:286
 msgid "every two weeks"
 msgstr ""
 
-#: am-events.php:291 ../tags/1.0.0/am-events.php:237
-#: ../tags/1.0.1/am-events.php:237 ../trunk/am-events.php:291
+#: ../am-events.php:291
 msgid "times"
 msgstr ""
 
-#: am-events.php:293 ../tags/1.0.0/am-events.php:239
-#: ../tags/1.0.1/am-events.php:239 ../trunk/am-events.php:293
+#: ../am-events.php:293
 msgid "Recurrent events are created when the event is saved or updated."
 msgstr ""
 
-#: am-events.php:443 ../tags/1.0.0/am-events.php:390
-#: ../tags/1.0.1/am-events.php:389 ../trunk/am-events.php:443
+#: ../am-events.php:443
 msgid "Start Date"
 msgstr ""
 
-#: am-events.php:444 ../tags/1.0.0/am-events.php:391
-#: ../tags/1.0.1/am-events.php:390 ../trunk/am-events.php:444
+#: ../am-events.php:444
 msgid "End Date"
 msgstr ""
 
-#: am-events.php:520 am-events.php:522 ../tags/1.0.0/am-events.php:467
-#: ../tags/1.0.0/am-events.php:469 ../tags/1.0.1/am-events.php:466
-#: ../tags/1.0.1/am-events.php:468 ../trunk/am-events.php:520
-#: ../trunk/am-events.php:522
+#: ../am-events.php:520 ../am-events.php:522
 msgid "Events"
 msgstr ""
 
-#: am-events.php:521 am-events.php:525 am-events.php:535
-#: ../tags/1.0.0/am-events.php:468 ../tags/1.0.0/am-events.php:472
-#: ../tags/1.0.0/am-events.php:482 ../tags/1.0.1/am-events.php:467
-#: ../tags/1.0.1/am-events.php:471 ../tags/1.0.1/am-events.php:481
-#: ../trunk/am-events.php:521 ../trunk/am-events.php:525
-#: ../trunk/am-events.php:535
+#: ../am-events.php:521 ../am-events.php:525 ../am-events.php:535
 msgid "Event"
 msgstr ""
 
-#: am-events.php:523 ../tags/1.0.0/am-events.php:470
-#: ../tags/1.0.1/am-events.php:469 ../trunk/am-events.php:523
+#: ../am-events.php:523
 msgid "All Events"
 msgstr ""
 
-#: am-events.php:524 ../tags/1.0.0/am-events.php:471
-#: ../tags/1.0.1/am-events.php:470 ../trunk/am-events.php:524
+#: ../am-events.php:524
 msgid "Add New Event"
 msgstr ""
 
-#: am-events.php:526 ../tags/1.0.0/am-events.php:473
-#: ../tags/1.0.1/am-events.php:472 ../trunk/am-events.php:526
+#: ../am-events.php:526
 msgid "Edit Event"
 msgstr ""
 
-#: am-events.php:527 ../tags/1.0.0/am-events.php:474
-#: ../tags/1.0.1/am-events.php:473 ../trunk/am-events.php:527
+#: ../am-events.php:527
 msgid "New Event"
 msgstr ""
 
-#: am-events.php:528 ../tags/1.0.0/am-events.php:475
-#: ../tags/1.0.1/am-events.php:474 ../trunk/am-events.php:528
+#: ../am-events.php:528
 msgid "View Events"
 msgstr ""
 
-#: am-events.php:529 ../tags/1.0.0/am-events.php:476
-#: ../tags/1.0.1/am-events.php:475 ../trunk/am-events.php:529
+#: ../am-events.php:529
 msgid "Search Events"
 msgstr ""
 
-#: am-events.php:530 am-events.php:531 ../tags/1.0.0/am-events.php:477
-#: ../tags/1.0.0/am-events.php:478 ../tags/1.0.1/am-events.php:476
-#: ../tags/1.0.1/am-events.php:477 ../trunk/am-events.php:530
-#: ../trunk/am-events.php:531
+#: ../am-events.php:530 ../am-events.php:531
 msgid "No Events Found"
 msgstr ""
 
-#: am-events.php:544 ../tags/1.0.0/am-events.php:491
-#: ../tags/1.0.1/am-events.php:490 ../trunk/am-events.php:544
+#: ../am-events.php:544
 msgid "Type for events"
 msgstr ""
 
-#: am-events.php:558 am-events.php:572 ../tags/1.0.0/am-events.php:505
-#: ../tags/1.0.0/am-events.php:519 ../tags/1.0.1/am-events.php:504
-#: ../tags/1.0.1/am-events.php:518 ../trunk/am-events.php:558
-#: ../trunk/am-events.php:572
+#: ../am-events.php:558 ../am-events.php:572
 msgid "Venues"
 msgstr ""
 
-#: am-events.php:559 ../tags/1.0.0/am-events.php:506
-#: ../tags/1.0.1/am-events.php:505 ../trunk/am-events.php:559
+#: ../am-events.php:559
 msgid "Venue"
 msgstr ""
 
-#: am-events.php:560 ../tags/1.0.0/am-events.php:507
-#: ../tags/1.0.1/am-events.php:506 ../trunk/am-events.php:560
+#: ../am-events.php:560
 msgid "Search Venues"
 msgstr ""
 
-#: am-events.php:561 ../tags/1.0.0/am-events.php:508
-#: ../tags/1.0.1/am-events.php:507 ../trunk/am-events.php:561
+#: ../am-events.php:561
 msgid "Popular Venues"
 msgstr ""
 
-#: am-events.php:562 ../tags/1.0.0/am-events.php:509
-#: ../tags/1.0.1/am-events.php:508 ../trunk/am-events.php:562
+#: ../am-events.php:562
 msgid "All Venues"
 msgstr ""
 
-#: am-events.php:563 ../tags/1.0.0/am-events.php:510
-#: ../tags/1.0.1/am-events.php:509 ../trunk/am-events.php:563
+#: ../am-events.php:563
 msgid "Parent Venue"
 msgstr ""
 
-#: am-events.php:564 ../tags/1.0.0/am-events.php:511
-#: ../tags/1.0.1/am-events.php:510 ../trunk/am-events.php:564
+#: ../am-events.php:564
 msgid "Parent Venue:"
 msgstr ""
 
-#: am-events.php:565 ../tags/1.0.0/am-events.php:512
-#: ../tags/1.0.1/am-events.php:511 ../trunk/am-events.php:565
+#: ../am-events.php:565
 msgid "Edit Venue"
 msgstr ""
 
-#: am-events.php:566 ../tags/1.0.0/am-events.php:513
-#: ../tags/1.0.1/am-events.php:512 ../trunk/am-events.php:566
+#: ../am-events.php:566
 msgid "Update Venue"
 msgstr ""
 
-#: am-events.php:567 ../tags/1.0.0/am-events.php:514
-#: ../tags/1.0.1/am-events.php:513 ../trunk/am-events.php:567
+#: ../am-events.php:567
 msgid "Add New Venue"
 msgstr ""
 
-#: am-events.php:568 ../tags/1.0.0/am-events.php:515
-#: ../tags/1.0.1/am-events.php:514 ../trunk/am-events.php:568
+#: ../am-events.php:568
 msgid "New Venue"
 msgstr ""
 
-#: am-events.php:569 ../tags/1.0.0/am-events.php:516
-#: ../tags/1.0.1/am-events.php:515 ../trunk/am-events.php:569
+#: ../am-events.php:569
 msgid "Separate venues with commas"
 msgstr ""
 
-#: am-events.php:570 ../tags/1.0.0/am-events.php:517
-#: ../tags/1.0.1/am-events.php:516 ../trunk/am-events.php:570
+#: ../am-events.php:570
 msgid "Add or remove venues"
 msgstr ""
 
-#: am-events.php:571 ../tags/1.0.0/am-events.php:518
-#: ../tags/1.0.1/am-events.php:517 ../trunk/am-events.php:571
+#: ../am-events.php:571
 msgid "Choose from the most used venues"
 msgstr ""
 
-#: am-events.php:596 am-events.php:610 ../tags/1.0.0/am-events.php:543
-#: ../tags/1.0.0/am-events.php:557 ../tags/1.0.1/am-events.php:542
-#: ../tags/1.0.1/am-events.php:556 ../trunk/am-events.php:596
-#: ../trunk/am-events.php:610
+#: ../am-events.php:596 ../am-events.php:610
 msgid "Event Categories"
 msgstr ""
 
-#: am-events.php:597 ../tags/1.0.0/am-events.php:544
-#: ../tags/1.0.1/am-events.php:543 ../trunk/am-events.php:597
+#: ../am-events.php:597
 msgid "Event Category"
 msgstr ""
 
-#: am-events.php:598 ../tags/1.0.0/am-events.php:545
-#: ../tags/1.0.1/am-events.php:544 ../trunk/am-events.php:598
+#: ../am-events.php:598
 msgid "Search Event Categories"
 msgstr ""
 
-#: am-events.php:599 ../tags/1.0.0/am-events.php:546
-#: ../tags/1.0.1/am-events.php:545 ../trunk/am-events.php:599
+#: ../am-events.php:599
 msgid "Popular Event Categories"
 msgstr ""
 
-#: am-events.php:600 ../tags/1.0.0/am-events.php:547
-#: ../tags/1.0.1/am-events.php:546 ../trunk/am-events.php:600
+#: ../am-events.php:600
 msgid "All Event Categories"
 msgstr ""
 
-#: am-events.php:601 ../tags/1.0.0/am-events.php:548
-#: ../tags/1.0.1/am-events.php:547 ../trunk/am-events.php:601
+#: ../am-events.php:601
 msgid "Parent Event Category"
 msgstr ""
 
-#: am-events.php:602 ../tags/1.0.0/am-events.php:549
-#: ../tags/1.0.1/am-events.php:548 ../trunk/am-events.php:602
+#: ../am-events.php:602
 msgid "Parent Event Category:"
 msgstr ""
 
-#: am-events.php:603 ../tags/1.0.0/am-events.php:550
-#: ../tags/1.0.1/am-events.php:549 ../trunk/am-events.php:603
+#: ../am-events.php:603
 msgid "Edit Event Category"
 msgstr ""
 
-#: am-events.php:604 ../tags/1.0.0/am-events.php:551
-#: ../tags/1.0.1/am-events.php:550 ../trunk/am-events.php:604
+#: ../am-events.php:604
 msgid "Update Event Category"
 msgstr ""
 
-#: am-events.php:605 ../tags/1.0.0/am-events.php:552
-#: ../tags/1.0.1/am-events.php:551 ../trunk/am-events.php:605
+#: ../am-events.php:605
 msgid "Add New Event Category"
 msgstr ""
 
-#: am-events.php:606 ../tags/1.0.0/am-events.php:553
-#: ../tags/1.0.1/am-events.php:552 ../trunk/am-events.php:606
+#: ../am-events.php:606
 msgid "New Event Category"
 msgstr ""
 
-#: am-events.php:607 ../tags/1.0.0/am-events.php:554
-#: ../tags/1.0.1/am-events.php:553 ../trunk/am-events.php:607
+#: ../am-events.php:607
 msgid "Separate event categories with commas"
 msgstr ""
 
-#: am-events.php:608 ../tags/1.0.0/am-events.php:555
-#: ../tags/1.0.1/am-events.php:554 ../trunk/am-events.php:608
+#: ../am-events.php:608
 msgid "Add or remove event categories"
 msgstr ""
 
-#: am-events.php:609 ../tags/1.0.0/am-events.php:556
-#: ../tags/1.0.1/am-events.php:555 ../trunk/am-events.php:609
+#: ../am-events.php:609
 msgid "Choose from the most used event categories"
 msgstr ""
 
-#: am-events.php:636 ../tags/1.0.0/am-events.php:583
-#: ../tags/1.0.1/am-events.php:582 ../trunk/am-events.php:636
+#: ../am-events.php:636
 #, php-format
 msgid "Event updated. <a href=\"%s\">View event</a>"
 msgstr ""
 
-#: am-events.php:637 ../tags/1.0.0/am-events.php:584
-#: ../tags/1.0.1/am-events.php:583 ../trunk/am-events.php:637
+#: ../am-events.php:637
 msgid "Custom field updated."
 msgstr ""
 
-#: am-events.php:638 ../tags/1.0.0/am-events.php:585
-#: ../tags/1.0.1/am-events.php:584 ../trunk/am-events.php:638
+#: ../am-events.php:638
 msgid "Custom field deleted."
 msgstr ""
 
-#: am-events.php:639 ../tags/1.0.0/am-events.php:586
-#: ../tags/1.0.1/am-events.php:585 ../trunk/am-events.php:639
+#: ../am-events.php:639
 msgid "Event updated."
 msgstr ""
 
-#: am-events.php:641 ../tags/1.0.0/am-events.php:588
-#: ../tags/1.0.1/am-events.php:587 ../trunk/am-events.php:641
+#: ../am-events.php:641
 #, php-format
 msgid "Event restored to revision from %s"
 msgstr ""
 
-#: am-events.php:642 ../tags/1.0.0/am-events.php:589
-#: ../tags/1.0.1/am-events.php:588 ../trunk/am-events.php:642
+#: ../am-events.php:642
 #, php-format
 msgid "Event published. <a href=\"%s\">View event</a>"
 msgstr ""
 
-#: am-events.php:643 ../tags/1.0.0/am-events.php:590
-#: ../tags/1.0.1/am-events.php:589 ../trunk/am-events.php:643
+#: ../am-events.php:643
 msgid "Event saved."
 msgstr ""
 
-#: am-events.php:644 ../tags/1.0.0/am-events.php:591
-#: ../tags/1.0.1/am-events.php:590 ../trunk/am-events.php:644
+#: ../am-events.php:644
 #, php-format
 msgid "Event submitted. <a target=\"_blank\" href=\"%s\">Preview event</a>"
 msgstr ""
 
-#: am-events.php:645 ../tags/1.0.0/am-events.php:592
-#: ../tags/1.0.1/am-events.php:591 ../trunk/am-events.php:645
+#: ../am-events.php:645
 #, php-format
 msgid ""
 "Event scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s"
 "\">Preview event</a>"
 msgstr ""
 
-#: am-events.php:647 ../tags/1.0.0/am-events.php:594
-#: ../tags/1.0.1/am-events.php:593 ../trunk/am-events.php:647
+#: ../am-events.php:647
+msgctxt "Publish box, see http://php.net/date"
 msgid "d.m.Y G:i"
 msgstr ""
 
-#: am-events.php:648 ../tags/1.0.0/am-events.php:595
-#: ../tags/1.0.1/am-events.php:594 ../trunk/am-events.php:648
+#: ../am-events.php:648
 #, php-format
 msgid "Event draft updated. <a target=\"_blank\" href=\"%s\">Preview event</a>"
 msgstr ""
 
-#: widget-upcoming-events.php:33 ../tags/1.0.0/widget-upcoming-events.php:29
-#: ../tags/1.0.1/widget-upcoming-events.php:33
-#: ../trunk/widget-upcoming-events.php:33
+#: ../widget-upcoming-events.php:33
 msgid "Display upcoming events"
 msgstr ""
 
-#: widget-upcoming-events.php:201 ../tags/1.0.0/widget-upcoming-events.php:196
-#: ../tags/1.0.1/widget-upcoming-events.php:201
-#: ../trunk/widget-upcoming-events.php:201
+#: ../widget-upcoming-events.php:132 ../widget-upcoming-events.php:133
+msgctxt "upcoming events widget"
+msgid "m/d/Y"
+msgstr ""
+
+#: ../widget-upcoming-events.php:135 ../widget-upcoming-events.php:136
+msgctxt "upcoming events widget"
+msgid "H:i"
+msgstr ""
+
+#: ../widget-upcoming-events.php:201
 msgid "Upcoming Events"
 msgstr ""
 
-#: widget-upcoming-events.php:201 ../tags/1.0.0/widget-upcoming-events.php:196
-#: ../tags/1.0.1/widget-upcoming-events.php:201
-#: ../trunk/widget-upcoming-events.php:201
+#: ../widget-upcoming-events.php:201
 msgid "See More Events ->"
 msgstr ""
 
-#: widget-upcoming-events.php:222 ../tags/1.0.0/widget-upcoming-events.php:217
-#: ../tags/1.0.1/widget-upcoming-events.php:222
-#: ../trunk/widget-upcoming-events.php:222
+#: ../widget-upcoming-events.php:222
 msgid "Title:"
 msgstr ""
 
-#: widget-upcoming-events.php:228 ../tags/1.0.0/widget-upcoming-events.php:223
-#: ../tags/1.0.1/widget-upcoming-events.php:228
-#: ../trunk/widget-upcoming-events.php:228
+#: ../widget-upcoming-events.php:228
 msgid "Select Event category:"
 msgstr ""
 
-#: widget-upcoming-events.php:230 widget-upcoming-events.php:242
-#: ../tags/1.0.0/widget-upcoming-events.php:225
-#: ../tags/1.0.0/widget-upcoming-events.php:237
-#: ../tags/1.0.1/widget-upcoming-events.php:230
-#: ../tags/1.0.1/widget-upcoming-events.php:242
-#: ../trunk/widget-upcoming-events.php:230
-#: ../trunk/widget-upcoming-events.php:242
+#: ../widget-upcoming-events.php:230 ../widget-upcoming-events.php:242
 msgid "All"
 msgstr ""
 
-#: widget-upcoming-events.php:240 ../tags/1.0.0/widget-upcoming-events.php:235
-#: ../tags/1.0.1/widget-upcoming-events.php:240
-#: ../trunk/widget-upcoming-events.php:240
+#: ../widget-upcoming-events.php:240
 msgid "Select Venue:"
 msgstr ""
 
-#: widget-upcoming-events.php:251 ../tags/1.0.0/widget-upcoming-events.php:246
-#: ../tags/1.0.1/widget-upcoming-events.php:251
-#: ../trunk/widget-upcoming-events.php:251
+#: ../widget-upcoming-events.php:251
 msgid "Number of events:"
 msgstr ""
 
-#: widget-upcoming-events.php:256 ../tags/1.0.0/widget-upcoming-events.php:251
-#: ../tags/1.0.1/widget-upcoming-events.php:256
-#: ../trunk/widget-upcoming-events.php:256
+#: ../widget-upcoming-events.php:256
 msgid "Display before events:"
 msgstr ""
 
-#: widget-upcoming-events.php:261 ../tags/1.0.0/widget-upcoming-events.php:256
-#: ../tags/1.0.1/widget-upcoming-events.php:261
-#: ../trunk/widget-upcoming-events.php:261
+#: ../widget-upcoming-events.php:261
 msgid "Template for single event:"
 msgstr ""
 
-#: widget-upcoming-events.php:266 ../tags/1.0.0/widget-upcoming-events.php:261
-#: ../tags/1.0.1/widget-upcoming-events.php:266
-#: ../trunk/widget-upcoming-events.php:266
+#: ../widget-upcoming-events.php:266
 msgid "Display after events:"
 msgstr ""
