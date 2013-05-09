@@ -160,7 +160,7 @@ function am_custom_script() {
             'dayNameMinMon' => __('Mo', 'am-events'), 'dayNameMinTue' => __('Tu', 'am-events'), 'dayNameMinWed' => __('We', 'am-events'), 'dayNameMinThu' => __('Th', 'am-events'), 'dayNameMinFri' => __('Fr', 'am-events'), 'dayNameMinSat' => __('Sa', 'am-events'), 'dayNameMinSun' => __('Su', 'am-events'),
             'dayStatus' => _x('Set DD as first week day', 'date picker', 'am-events'), //Status text for the day of the week selection
             'dateStatus' => _x('Select D, M d', 'date picker', 'am-events'), //Status text for the date selection
-            'dateFormat' => _x('dd.MM.yyyy', 'date picker, see format options on parseDate', 'am-events'), //See format options on parseDate
+            'dateFormat' => _x('mm/dd/yy', 'date picker, see format options on parseDate', 'am-events'), //See format options on parseDate
             'firstDay' => 1, //The first day of the week, Sun = 0, Mon = 1, ...
             'initStatus' => _x('Select a date', 'date picker', 'am-events'), //Initial Status text on opening
             'isRTL' => false, //True if right-to-left language, false if left-to-right

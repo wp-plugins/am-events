@@ -100,8 +100,6 @@ jQuery(function($) {
         var endDateTextBox = $('#am_enddate');
 
         startDateTextBox.datetimepicker({
-                dateFormat: "dd.mm.yy",
-                timeFormat: 'HH:mm',
                 stepMinute: 15,
                 onClose: function(dateText, inst) {
                         if (endDateTextBox.val() != '') {
@@ -119,8 +117,6 @@ jQuery(function($) {
                 }
         });
         endDateTextBox.datetimepicker({ 
-                dateFormat: "dd.mm.yy",
-                timeFormat: 'HH:mm',
                 stepMinute: 15,
                 onClose: function(dateText, inst) {
                         if (startDateTextBox.val() != '') {
