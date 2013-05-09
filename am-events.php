@@ -131,7 +131,61 @@ function am_custom_script() {
                 'jquery-custom', plugins_url('/script/jquery-ui-1.10.2.custom.min.js', __FILE__)
         );
 
-        // JQuery time picker from http://trentrichardson.com/examples/timepicker/
+		//JQuery datetime picker from http://trentrichardson.com/examples/timepicker/
+		// Localization for datetimepicker
+		$localization = array(
+            // Date picker
+            'clearText' => _x('Clear', 'date picker', 'am-events'), //Display text for clear link
+            'clearStatus' => _x('Erase the current date', 'date picker', 'am-events'), //Status text for clear link
+            'closeText' => _x('Close', 'date picker', 'am-events'), //Display text for close link
+            'closeStatus' => _x('Close without change', 'date picker', 'am-events'), //Status text for close link
+            'prevText' => _x('<Prev', 'date picker', 'am-events'), //Display text for previous month link
+            'prevBigText' => _x('<<', 'date picker', 'am-events'), //Display text for previous year link
+            'prevStatus' => _x('Show the previous month', 'date picker', 'am-events'), //Status text for previous month link
+            'prevBigStatus' => _x('Show the previous year', 'date picker', 'am-events'), //Status text for previous year link
+            'nextText' => _x('Next>', 'date picker', 'am-events'), //Display text for next month link
+            'nextBigText' => _x('>>', 'date picker', 'am-events'), //Display text for next year link
+            'nextStatus' => _x('Show the next month', 'date picker', 'am-events'), //Status text for next month link
+            'nextBigStatus' => _x('Show the next year', 'date picker', 'am-events'), //Status text for next year link
+            'currentText' => _x('Today', 'date picker', 'am-events'), //Display text for current month link
+            'currentStatus' => _x('Show the current month', 'date picker', 'am-events'), //Status text for current month link
+            'january' => __('January', 'am-events'), 'february' => __('February', 'am-events'), 'march' => __('March', 'am-events'),  'april' => __('April', 'am-events'),  'may' => __('May', 'am-events'), 'june' => __('June', 'am-events'), 'july' => __('July', 'am-events'), 'august' => __('August', 'am-events'), 'septemper' => __('September', 'am-events'), 'october' => __('October', 'am-events'), 'november' => __('November', 'am-events'), 'december' => __('December', 'am-events'),
+            'januaryShort' => __('Jan', 'am-events'), 'februaryShort' => __('Feb', 'am-events'), 'marchShort' => __('Mar', 'am-events'),  'aprilShort' => __('Apr', 'am-events'),  'mayShort' => __('May', 'am-events'), 'juneShort' => __('Jun', 'am-events'), 'julyShort' => __('Jul', 'am-events'), 'augustShort' => __('Aug', 'am-events'), 'septemperShort' => __('Sep', 'am-events'), 'octoberShort' => __('Oct', 'am-events'), 'novemberShort' => __('Nov', 'am-events'), 'decemberShort' => __('Dec', 'am-events'),
+            'monthStatus' => _x('Show a different month', 'date picker', 'am-events'), //Status text for selecting a month
+            'yearStatus' => _x('Show a different year', 'date picker', 'am-events'), //Status text for selecting a year
+            'weekHeader' => _x('Wk', 'date picker', 'am-events'), //Header for the week of the year column
+            'weekStatus' => _x('Week of the year', 'date picker', 'am-events'), //Status text for the week of the year column
+            'dayNameFullMon' => __('Monday', 'am-events'), 'dayNameFullTue' => __('Tuesday', 'am-events'), 'dayNameFullWed' => __('Wednesday', 'am-events'), 'dayNameFullThu' => __('Thursday', 'am-events'), 'dayNameFullFri' => __('Friday', 'am-events'), 'dayNameFullSat' => __('Saturday', 'am-events'), 'dayNameFullSun' => __('Sunday', 'am-events'),
+            'dayNameShortMon' => __('Mon', 'am-events'), 'dayNameShortTue' => __('Tue', 'am-events'), 'dayNameShortWed' => __('Wed', 'am-events'), 'dayNameShortThu' => __('Thu', 'am-events'), 'dayNameShortFri' => __('Fri', 'am-events'), 'dayNameShortSat' => __('Sat', 'am-events'), 'dayNameShortSun' => __('Sun', 'am-events'),
+            'dayNameMinMon' => __('Mo', 'am-events'), 'dayNameMinTue' => __('Tu', 'am-events'), 'dayNameMinWed' => __('We', 'am-events'), 'dayNameMinThu' => __('Th', 'am-events'), 'dayNameMinFri' => __('Fr', 'am-events'), 'dayNameMinSat' => __('Sa', 'am-events'), 'dayNameMinSun' => __('Su', 'am-events'),
+            'dayStatus' => _x('Set DD as first week day', 'date picker', 'am-events'), //Status text for the day of the week selection
+            'dateStatus' => _x('Select D, M d', 'date picker', 'am-events'), //Status text for the date selection
+            'dateFormat' => _x('dd.MM.yyyy', 'date picker, see format options on parseDate', 'am-events'), //See format options on parseDate
+            'firstDay' => 1, //The first day of the week, Sun = 0, Mon = 1, ...
+            'initStatus' => _x('Select a date', 'date picker', 'am-events'), //Initial Status text on opening
+            'isRTL' => false, //True if right-to-left language, false if left-to-right
+            
+            // Time picker
+            'currentText' => _x('Now', 'time picker', 'am-events'),
+            'closeText' => _x('Done', 'time picker', 'am-events'),
+            'amNames' => _x('AM', 'time picker', 'am-events'),
+            'amNamesShort' => _x('A', 'time picker', 'am-events'),
+            'pmNames' => _x('PM', 'time picker', 'am-events'),
+            'pmNamesShort' => _x('P', 'time picker', 'am-events'),
+            'timeFormat' => _x('HH:mm', 'time picker', 'am-events'),
+            'timeSuffix' => _x('', 'time picker', 'am-events'),
+            'timeOnlyTitle' => _x('Choose Time', 'time picker', 'am-events'),
+            'timeText' => _x('Time', 'time picker', 'am-events'),
+            'hourText' => _x('Hour', 'time picker', 'am-events'),
+            'minuteText' => _x('Minute', 'time picker', 'am-events'),
+            'secondText' => _x('Second', 'time picker', 'am-events'),
+            'millisecText' => _x('Millisecond', 'time picker', 'am-events'),
+            'timezoneText' => _x('Time Zone', 'time picker', 'am-events'),
+            'isRTL' => false
+        );
+        
+        wp_register_script('jquery-ui-timepicker', plugins_url('/script/jquery-ui-timepicker-addon.js', __FILE__));
+        wp_localize_script('jquery-ui-timepicker', 'localization', $localization); //pass any values to javascript
         wp_enqueue_script(
                 'jquery-ui-timepicker', plugins_url('/script/jquery-ui-timepicker-addon.js', __FILE__), array('jquery-custom')
         );
