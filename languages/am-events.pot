@@ -1,0 +1,335 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: am-events\n"
+"POT-Creation-Date: 2013-05-09 20:06+0200\n"
+"PO-Revision-Date: 2013-05-09 20:07+0200\n"
+"Last-Translator: Atte Moisio <atte.moisio@attemoisio.fi>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-KeywordsList: __;_e;_x\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: am-events.php:177
+msgid "Event Details"
+msgstr ""
+
+#: am-events.php:207
+msgid "Start Date:"
+msgstr ""
+
+#: am-events.php:216
+msgid "End Date:"
+msgstr ""
+
+#: am-events.php:224
+msgid "Additional options:"
+msgstr ""
+
+#: am-events.php:226
+msgid "Recurrent event:"
+msgstr ""
+
+#: am-events.php:231
+msgid "weekly"
+msgstr ""
+
+#: am-events.php:232
+msgid "every two weeks"
+msgstr ""
+
+#: am-events.php:237
+msgid "times"
+msgstr ""
+
+#: am-events.php:239
+msgid "Recurrent events are created when the event is saved or updated."
+msgstr ""
+
+#: am-events.php:389
+msgid "Start Date"
+msgstr ""
+
+#: am-events.php:390
+msgid "End Date"
+msgstr ""
+
+#: am-events.php:466 am-events.php:468
+msgid "Events"
+msgstr ""
+
+#: am-events.php:467 am-events.php:471 am-events.php:481
+msgid "Event"
+msgstr ""
+
+#: am-events.php:469
+msgid "All Events"
+msgstr ""
+
+#: am-events.php:470
+msgid "Add New Event"
+msgstr ""
+
+#: am-events.php:472
+msgid "Edit Event"
+msgstr ""
+
+#: am-events.php:473
+msgid "New Event"
+msgstr ""
+
+#: am-events.php:474
+msgid "View Events"
+msgstr ""
+
+#: am-events.php:475
+msgid "Search Events"
+msgstr ""
+
+#: am-events.php:476 am-events.php:477
+msgid "No Events Found"
+msgstr ""
+
+#: am-events.php:490
+msgid "Type for events"
+msgstr ""
+
+#: am-events.php:504 am-events.php:518
+msgid "Venues"
+msgstr ""
+
+#: am-events.php:505
+msgid "Venue"
+msgstr ""
+
+#: am-events.php:506
+msgid "Search Venues"
+msgstr ""
+
+#: am-events.php:507
+msgid "Popular Venues"
+msgstr ""
+
+#: am-events.php:508
+msgid "All Venues"
+msgstr ""
+
+#: am-events.php:509
+msgid "Parent Venue"
+msgstr ""
+
+#: am-events.php:510
+msgid "Parent Venue:"
+msgstr ""
+
+#: am-events.php:511
+msgid "Edit Venue"
+msgstr ""
+
+#: am-events.php:512
+msgid "Update Venue"
+msgstr ""
+
+#: am-events.php:513
+msgid "Add New Venue"
+msgstr ""
+
+#: am-events.php:514
+msgid "New Venue"
+msgstr ""
+
+#: am-events.php:515
+msgid "Separate venues with commas"
+msgstr ""
+
+#: am-events.php:516
+msgid "Add or remove venues"
+msgstr ""
+
+#: am-events.php:517
+msgid "Choose from the most used venues"
+msgstr ""
+
+#: am-events.php:542 am-events.php:556
+msgid "Event Categories"
+msgstr ""
+
+#: am-events.php:543
+msgid "Event Category"
+msgstr ""
+
+#: am-events.php:544
+msgid "Search Event Categories"
+msgstr ""
+
+#: am-events.php:545
+msgid "Popular Event Categories"
+msgstr ""
+
+#: am-events.php:546
+msgid "All Event Categories"
+msgstr ""
+
+#: am-events.php:547
+msgid "Parent Event Category"
+msgstr ""
+
+#: am-events.php:548
+msgid "Parent Event Category:"
+msgstr ""
+
+#: am-events.php:549
+msgid "Edit Event Category"
+msgstr ""
+
+#: am-events.php:550
+msgid "Update Event Category"
+msgstr ""
+
+#: am-events.php:551
+msgid "Add New Event Category"
+msgstr ""
+
+#: am-events.php:552
+msgid "New Event Category"
+msgstr ""
+
+#: am-events.php:553
+msgid "Separate event categories with commas"
+msgstr ""
+
+#: am-events.php:554
+msgid "Add or remove event categories"
+msgstr ""
+
+#: am-events.php:555
+msgid "Choose from the most used event categories"
+msgstr ""
+
+#: am-events.php:582
+#, php-format
+msgid "Event updated. <a href=\"%s\">View event</a>"
+msgstr ""
+
+#: am-events.php:583
+msgid "Custom field updated."
+msgstr ""
+
+#: am-events.php:584
+msgid "Custom field deleted."
+msgstr ""
+
+#: am-events.php:585
+msgid "Event updated."
+msgstr ""
+
+#: am-events.php:587
+#, php-format
+msgid "Event restored to revision from %s"
+msgstr ""
+
+#: am-events.php:588
+#, php-format
+msgid "Event published. <a href=\"%s\">View event</a>"
+msgstr ""
+
+#: am-events.php:589
+msgid "Event saved."
+msgstr ""
+
+#: am-events.php:590
+#, php-format
+msgid "Event submitted. <a target=\"_blank\" href=\"%s\">Preview event</a>"
+msgstr ""
+
+#: am-events.php:591
+#, php-format
+msgid ""
+"Event scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href=\"%2$s"
+"\">Preview event</a>"
+msgstr ""
+
+#: am-events.php:593
+msgid "d.m.Y G:i"
+msgstr ""
+
+#: am-events.php:594
+#, php-format
+msgid "Event draft updated. <a target=\"_blank\" href=\"%s\">Preview event</a>"
+msgstr ""
+
+#: widget-upcoming-events.php:33
+msgid "Display upcoming events"
+msgstr ""
+
+#: widget-upcoming-events.php:201
+msgid "Upcoming Events"
+msgstr ""
+
+#: widget-upcoming-events.php:201
+msgid "See More Events ->"
+msgstr ""
+
+#: widget-upcoming-events.php:222
+msgid "Title:"
+msgstr ""
+
+#: widget-upcoming-events.php:228
+msgid "Select Event category:"
+msgstr ""
+
+#: widget-upcoming-events.php:230 widget-upcoming-events.php:242
+msgid "All"
+msgstr ""
+
+#: widget-upcoming-events.php:240
+msgid "Select Venue:"
+msgstr ""
+
+#: widget-upcoming-events.php:251
+msgid "Number of events:"
+msgstr ""
+
+#: widget-upcoming-events.php:256
+msgid "Display before events:"
+msgstr ""
+
+#: widget-upcoming-events.php:261
+msgid "Template for single event:"
+msgstr ""
+
+#: widget-upcoming-events.php:266
+msgid "Display after events:"
+msgstr ""
+
+#: widget-upcoming-events.php:306
+msgid "Mon"
+msgstr ""
+
+#: widget-upcoming-events.php:307
+msgid "Tue"
+msgstr ""
+
+#: widget-upcoming-events.php:308
+msgid "Wed"
+msgstr ""
+
+#: widget-upcoming-events.php:309
+msgid "Thu"
+msgstr ""
+
+#: widget-upcoming-events.php:310
+msgid "Fri"
+msgstr ""
+
+#: widget-upcoming-events.php:311
+msgid "Sat"
+msgstr ""
+
+#: widget-upcoming-events.php:312
+msgid "Sun"
+msgstr ""
