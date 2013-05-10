@@ -19,7 +19,9 @@ There are no special functions or template tags to add events on pages or posts.
 
 As an extra feature, the plugin also includes a widget for showing upcoming events. It uses a very simple template system for full control of the layout.
 
-The plugin is fully translatable. The only available languages at the moment are English(default) and Finnish. Feel free to send me additional translations.
+The plugin is fully translatable. The only available languages at the moment are English(default) and Finnish. The download includes a pot-file for additional translations.
+
+If you think something critical is missing, feel free to send me a request.
 
 == Installation ==
 
