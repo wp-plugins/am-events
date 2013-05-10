@@ -348,7 +348,7 @@ msgstr "Valitse Aika"
 #: ../am-events.php:178
 msgctxt "time picker"
 msgid "Time"
-msgstr "Kellonaika"
+msgstr "Aika"
 
 #: ../am-events.php:179
 msgctxt "time picker"
