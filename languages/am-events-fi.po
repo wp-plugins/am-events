@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: am-events\n"
 "POT-Creation-Date: 2013-05-09 22:30+0200\n"
-"PO-Revision-Date: 2013-05-09 22:35+0200\n"
+"PO-Revision-Date: 2013-05-10 17:11+0200\n"
 "Last-Translator: Atte Moisio <atte.moisio@attemoisio.fi>\n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -22,120 +22,120 @@ msgstr ""
 #: ../am-events.php:138
 msgctxt "date picker"
 msgid "Clear"
-msgstr ""
+msgstr "Tyhjennä"
 
 #: ../am-events.php:139
 msgctxt "date picker"
 msgid "Erase the current date"
-msgstr ""
+msgstr "Tyhjennä nykyinen päiväys"
 
 #: ../am-events.php:140
 msgctxt "date picker"
 msgid "Close"
-msgstr ""
+msgstr "Sulje"
 
 #: ../am-events.php:141
 msgctxt "date picker"
 msgid "Close without change"
-msgstr ""
+msgstr "Sulje muuttamatta"
 
 #: ../am-events.php:142
 msgctxt "date picker"
 msgid "<Prev"
-msgstr ""
+msgstr "< Edellinen"
 
 #: ../am-events.php:143
 msgctxt "date picker"
 msgid "<<"
-msgstr ""
+msgstr "<<"
 
 #: ../am-events.php:144
 msgctxt "date picker"
 msgid "Show the previous month"
-msgstr ""
+msgstr "Näytä edellinen kuukausi"
 
 #: ../am-events.php:145
 msgctxt "date picker"
 msgid "Show the previous year"
-msgstr ""
+msgstr "Näytä edellinen vuosi"
 
 #: ../am-events.php:146
 msgctxt "date picker"
 msgid "Next>"
-msgstr ""
+msgstr "Seuraava>"
 
 #: ../am-events.php:147
 msgctxt "date picker"
 msgid ">>"
-msgstr ""
+msgstr ">>"
 
 #: ../am-events.php:148
 msgctxt "date picker"
 msgid "Show the next month"
-msgstr ""
+msgstr "Näytä seuraava kuukausi"
 
 #: ../am-events.php:149
 msgctxt "date picker"
 msgid "Show the next year"
-msgstr ""
+msgstr "Näytä seuraava vuosi"
 
 #: ../am-events.php:150
 msgctxt "date picker"
 msgid "Today"
-msgstr ""
+msgstr "Tänään"
 
 #: ../am-events.php:151
 msgctxt "date picker"
 msgid "Show the current month"
-msgstr ""
+msgstr "Näytä nykyinen kuukausi"
 
 #: ../am-events.php:152
 msgid "January"
-msgstr ""
+msgstr "Tammikuu"
 
 #: ../am-events.php:152
 msgid "February"
-msgstr ""
+msgstr "Helmikuu"
 
 #: ../am-events.php:152
 msgid "March"
-msgstr ""
+msgstr "Maaliskuu"
 
 #: ../am-events.php:152
 msgid "April"
-msgstr ""
+msgstr "Huhtikuu"
 
 #: ../am-events.php:152 ../am-events.php:153
 msgid "May"
-msgstr ""
+msgstr "Toukokuu"
 
 #: ../am-events.php:152
 msgid "June"
-msgstr ""
+msgstr "Kesäkuu"
 
 #: ../am-events.php:152
 msgid "July"
-msgstr ""
+msgstr "Heinäkuu"
 
 #: ../am-events.php:152
 msgid "August"
-msgstr ""
+msgstr "Elokuu"
 
 #: ../am-events.php:152
 msgid "September"
-msgstr ""
+msgstr "Syyskuu"
 
 #: ../am-events.php:152
 msgid "October"
-msgstr ""
+msgstr "Lokakuu"
 
 #: ../am-events.php:152
 msgid "November"
-msgstr ""
+msgstr "Marraskuu"
 
 #: ../am-events.php:152
 msgid "December"
-msgstr ""
+msgstr "Joulukuu"
 
 #: ../am-events.php:153
 msgid "Jan"
@@ -143,19 +143,19 @@ msgstr "Tam"
 
 #: ../am-events.php:153
 msgid "Feb"
-msgstr ""
+msgstr "Helmi"
 
 #: ../am-events.php:153
 msgid "Mar"
-msgstr ""
+msgstr "Maalis"
 
 #: ../am-events.php:153
 msgid "Apr"
-msgstr ""
+msgstr "Huhti"
 
 #: ../am-events.php:153
 msgid "Jun"
-msgstr "Kes"
+msgstr "Kesä"
 
 #: ../am-events.php:153
 msgid "Jul"
@@ -163,47 +163,47 @@ msgstr "Hei"
 
 #: ../am-events.php:153
 msgid "Aug"
-msgstr ""
+msgstr "Elo"
 
 #: ../am-events.php:153
 msgid "Sep"
-msgstr ""
+msgstr "Syys"
 
 #: ../am-events.php:153
 msgid "Oct"
-msgstr ""
+msgstr "Loka"
 
 #: ../am-events.php:153
 msgid "Nov"
-msgstr ""
+msgstr "Marras"
 
 #: ../am-events.php:153
 msgid "Dec"
-msgstr ""
+msgstr "oulu"
 
 #: ../am-events.php:154
 msgctxt "date picker"
 msgid "Show a different month"
-msgstr ""
+msgstr "Näytä eri kuukausi"
 
 #: ../am-events.php:155
 msgctxt "date picker"
 msgid "Show a different year"
-msgstr ""
+msgstr "Näytä eri vuosi"
 
 #: ../am-events.php:156
 msgctxt "date picker"
 msgid "Wk"
-msgstr ""
+msgstr "Vk"
 
 #: ../am-events.php:157
 msgctxt "date picker"
 msgid "Week of the year"
-msgstr ""
+msgstr "Viikon numero"
 
 #: ../am-events.php:158
 msgid "Monday"
-msgstr ""
+msgstr "Maanantai"
 
 #: ../am-events.php:158
 msgid "Tuesday"
@@ -258,37 +258,30 @@ msgid "Sun"
 msgstr "Su"
 
 #: ../am-events.php:160
-#, fuzzy
 msgid "Mo"
 msgstr "Ma"
 
 #: ../am-events.php:160
-#, fuzzy
 msgid "Tu"
 msgstr "Ti"
 
 #: ../am-events.php:160
-#, fuzzy
 msgid "We"
 msgstr "Ke"
 
 #: ../am-events.php:160
-#, fuzzy
 msgid "Th"
 msgstr "To"
 
 #: ../am-events.php:160
-#, fuzzy
 msgid "Fr"
 msgstr "Pe"
 
 #: ../am-events.php:160
-#, fuzzy
 msgid "Sa"
 msgstr "La"
 
 #: ../am-events.php:160
-#, fuzzy
 msgid "Su"
 msgstr "Su"
 
