@@ -100,10 +100,10 @@ add_action('admin_print_scripts-post.php', 'am_custom_script');
 /**
  * WIDGET
  */
-add_action('widgets_init', function() {
-            register_widget('AM_Upcoming_Events_Widget');
-        });
-
+add_action('widgets_init', 'am_register_widget');
+function am_register_widget() {
+	register_widget('AM_Upcoming_Events_Widget');
+}	
 
 /**
  * INCLUDES
@@ -115,6 +115,7 @@ add_action('restrict_manage_posts', 'am_restrict_events_by_category');
 add_action('manage_am_event_posts_custom_column', 'am_custom_event_column');
 //Only run our customization on the 'edit.php' page in the admin. */
 add_action('load-edit.php', 'am_edit_event_load');
+
 
 
 /* * ****************************************************************************
