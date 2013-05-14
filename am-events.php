@@ -103,7 +103,7 @@ add_action('admin_print_scripts-post.php', 'am_custom_script');
 add_action('widgets_init', 'am_register_widget');
 function am_register_widget() {
 	register_widget('AM_Upcoming_Events_Widget');
-}	
+}
 
 /**
  * INCLUDES
