@@ -3,7 +3,7 @@ Contributors: Moisture
 Tags: events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
 Tested up to: 3.5.1
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,6 +43,10 @@ Feel free to mail me at atte.moisio@attemoisio.fi
 
 == Changelog ==
 
+= 1.2.0 =
+* Added support for PHP 5.2 (previously needed 5.3)
+* Fixed multiple bugs *
+
 = 1.1.0 =
 * Added localization to date format
 
@@ -54,6 +58,10 @@ Feel free to mail me at atte.moisio@attemoisio.fi
 * First released/stable version
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+* Adds support for php 5.2 (previously needed 5.3)
+* Fixes bugs.
 
 = 1.1.0 =
 * Adds localization support for date format.
