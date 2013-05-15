@@ -23,6 +23,10 @@ The plugin is fully translatable. The only available languages at the moment are
 
 If you think something critical is missing, feel free to send me a request.
 
+See Other Notes for more information about the custom post type and the widget.
+
+
+
 == Installation ==
 
 This section describes how to install the plugin and get it working.
@@ -68,6 +72,11 @@ Feel free to mail me at atte.moisio@attemoisio.fi
 
 = 1.0.1 =
 * Fixes bugs in the upcoming events -widget
+
+== Using in wp_query ==
+
+The custom post type for event is named 'am_event'
+Taxonomies are named as 'am_venues' and 'am_event_categories'
 
 == Widget ==
 
