@@ -45,7 +45,7 @@ Feel free to mail me at atte.moisio@attemoisio.fi
 
 = 1.2.0 =
 * Added support for PHP 5.2 (previously needed 5.3)
-* Fixed multiple bugs *
+* Fixed multiple bugs
 
 = 1.1.0 =
 * Added localization to date format
