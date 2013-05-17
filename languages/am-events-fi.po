@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: am-events\n"
 "POT-Creation-Date: 2013-05-09 22:30+0200\n"
-"PO-Revision-Date: 2013-05-10 17:11+0200\n"
+"PO-Revision-Date: 2013-05-17 22:01+0200\n"
 "Last-Translator: Atte Moisio <atte.moisio@attemoisio.fi>\n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -602,7 +602,7 @@ msgstr "Tapahtuma palautettu versiosta %s"
 #: ../am-events.php:642
 #, php-format
 msgid "Event published. <a href=\"%s\">View event</a>"
-msgstr "Tapahtum julkaistu. <a href=\"%s\">Näytä</a>"
+msgstr "Tapahtuma julkaistu. <a href=\"%s\">Näytä</a>"
 
 #: ../am-events.php:643
 msgid "Event saved."
