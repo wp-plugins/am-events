@@ -346,6 +346,70 @@ function am_save_custom_meta($post_id) {
     }
 }
 
+/**
+ * Messages with the default wordpress classes
+ */
+function am_show_message($message, $errormsg = false)
+{
+    if ($errormsg) {
+        echo '<div id="message" class="error">';
+    }
+    else {
+        echo '<div id="message" class="updated fade">';
+    }
+
+    echo "<p>$message</p></div>";
+}
+
+/**
+ * Display custom messages
+ */
+function am_show_admin_messages() {
+    
+    if(isset($_COOKIE['wp-admin-messages-normal'])) {
+
+        //setcookie('wp-admin-messages-normal', null);
+        
+        $messages = strtok($_COOKIE['wp-admin-messages-normal'], "@@");
+
+        while ($messages !== false) {
+            am_show_message($messages, false);
+            $messages = strtok("@@");
+        }
+
+        
+    }
+
+    if(isset($_COOKIE['wp-admin-messages-error'])) {
+        $messages = strtok($_COOKIE['wp-admin-messages-error'], "@@");
+
+        while ($messages !== false) {
+            am_show_message($messages, true);
+            $messages = strtok("@@");
+        }
+
+        setcookie('wp-admin-messages-error', null);
+    }
+}
+
+/** 
+  * Hook into admin notices 
+  */
+add_action('admin_notices', 'am_show_admin_messages');
+
+/**
+ * User Wrapper
+ */
+function add_admin_message($message, $error = false)
+{
+    if(empty($message)) return false;
+
+    if($error) {
+        setcookie('wp-admin-messages-error', $_COOKIE['wp-admin-messages-error'] . '@@' . $message, time()+3);
+    } else {
+        setcookie('wp-admin-messages-normal', $_COOKIE['wp-admin-messages-normal'] . '@@' . $message, time()+3);
+    }
+}   
 
 /**
  * Save event meta and create recurring events.
@@ -428,9 +492,13 @@ function am_save_event() {
                         wp_set_post_terms($new_post_id, $v->term_id, 'am_venues', true);
                     }
                 }
+
+                add_admin_message( sprintf(__('Created %d recurrent events.', 'am-events'), $recurrent_amount) );
+                        
             }
         }
     }
+
 }
 
 /**
