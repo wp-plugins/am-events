@@ -15,7 +15,7 @@ The plugin adds a custom post type for events, including two taxonomies: event c
 
 With this plugin, the user can add new events just like normal posts with added fields for start time, end time, category and venue. You can also easily create weekly or biweekly recurring events.
 
-There are no special functions or template tags to add events on pages or posts. It is intended to be done in the theme files using wp_query for example, which allows full control over the layout and what elements to show.
+There are no special functions or template tags to add events on pages or posts. It is intended to be done in the theme files using WP_Query for example, which allows full control over the layout and what elements to show. See 'Other Notes' for a simple tutorial.
 
 As an extra feature, the plugin also includes a widget for showing upcoming events. It uses a very simple template system for full control of the layout.
 
@@ -39,10 +39,6 @@ This section describes how to install the plugin and get it working.
 = Where can I ask a question? =
 
 Feel free to mail me at atte.moisio@attemoisio.fi
-
-= Can you give me an example of using WP_Query? =
-
-See 'Other Notes' for a simple tutorial.
 
 == Screenshots ==
 
@@ -166,7 +162,6 @@ If you need to display only upcoming events, add the following meta_query argume
                 'compare' => ">"
                 ),
             ),
-		),
 
 Note that if you want the date formatted other than the default, you will need to use additional php:
 
