@@ -92,6 +92,77 @@ Here are all the tags that can be used in the upcoming events widget template. D
  * {{end_date}}
  * {{end_time}}
 
-== Examples ==
+== Creating a WP_Query ==
 
-The plugin folder contains a file "examples.php", which contains example functions for displaying events.
+The custom post type is named 'am_event'
+The taxonomies are named 'am_venues' and 'am_event_categories'.
+
+The event post has metadata named 'am_startdate' and 'am_enddate' that are formatted like 'yyyy-mm-dd hh:mm'
+
+So suppose I wanted to display all events with a category of 'other' and venue 'mcdonalds'. I would then make a wp_query like this:
+
+    $args = array(
+            'post_type' => 'am_event',
+            'post_status' => 'publish',
+            'tax_query' => array(
+                    'relation' => 'AND',
+                    array(
+                        'taxonomy' => 'am_venues',
+                        'field' => 'name',
+                        'terms' => 'mcdonalds',
+                    ),
+                    array(
+                        'taxonomy' => 'am_event_categories',
+                        'field' => 'name',
+                        'terms' => 'other'
+                    ),
+            ),
+        );
+
+    $the_query = new WP_Query($args);
+
+    if ($the_query->have_posts()) {
+        while ($the_query->have_posts()) {
+            $the_query->the_post();
+
+            $postId = $post->ID;
+
+            // get start and end date
+            $startDate = get_post_meta($postId, 'am_startdate', true);
+            $endDate = get_post_meta($postId, 'am_enddate', true);
+
+            // get venues and categories in an array
+            $venues = wp_get_post_terms($postId, 'am_venues');
+            $eventCategories = wp_get_post_terms($postId, 'am_event_categories');
+
+            // All the other functions used for posts like
+            // the_title() and the_content() work just like with normal posts.
+
+            // ...  DISPLAY POST CONTENT HERE ... //
+
+        }
+    }
+
+
+If you want the events ordered by start date, add the following to $args:
+
+    'orderby' => 'meta_value',
+    'meta_key' => 'am_startdate',
+    'order' => 'ASC',
+
+If you need to display only upcoming events, add the following meta_query argument to $args:
+
+    'meta_query' => array(
+            array(
+                'key' => 'am_enddate',
+                'value' => date('Y-m-d H:i:s', time()),
+                'compare' => ">"
+                ),
+            ),
+
+Note that if you want the date formatted other than the default, you will need to use additional php:
+
+    // Format the date as 00.00.0000 00:00
+    $newDate = date('d.m.Y H:i', $strtotime($originalDate)); 
+
+The plugin folder also contains a file "examples.php", which contains an example function for displaying upcoming events in a table.
