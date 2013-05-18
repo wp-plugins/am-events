@@ -166,6 +166,7 @@ If you need to display only upcoming events, add the following meta_query argume
                 'compare' => ">"
                 ),
             ),
+		),
 
 Note that if you want the date formatted other than the default, you will need to use additional php:
 
