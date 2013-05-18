@@ -99,10 +99,9 @@ Here are all the tags that can be used in the upcoming events widget template. D
 
 == Custom post type, taxonomies and meta data ==
 
-The custom post type for event is named 'am_event'
-The taxonomies are named 'am_venues' and 'am_event_categories'.
-
-The event post has metadata named 'am_startdate' and 'am_enddate' which are formatted like 'yyyy-mm-dd hh:mm'
+* The custom post type: 'am_event'
+* Taxonomies: 'am_venues', 'am_event_categories'
+* Meta data: 'am_startdate', 'am_enddate' (both formatted like 'yyyy-mm-dd hh:mm')
 
 == Creating a WP_Query ==
 
