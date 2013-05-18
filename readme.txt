@@ -47,6 +47,10 @@ Feel free to mail me at atte.moisio@attemoisio.fi
 
 == Changelog ==
 
+= 1.3.0 =
+* Added notification when creating recurrent events
+* Added simple WP_Query tutorial in 'Other Notes'
+
 = 1.2.0 =
 * Added support for PHP 5.2 (previously needed 5.3)
 * Fixed multiple bugs
@@ -62,6 +66,9 @@ Feel free to mail me at atte.moisio@attemoisio.fi
 * First released/stable version
 
 == Upgrade Notice ==
+
+= 1.3.0 =
+* Adds notification when creating recurrent events
 
 = 1.2.0 =
 * Adds support for php 5.2 (previously needed 5.3)
