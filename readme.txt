@@ -23,8 +23,6 @@ The plugin is fully translatable. The only available languages at the moment are
 
 If you think something critical is missing, feel free to send me a request.
 
-See Other Notes for more information about the custom post type and the widget.
-
 
 
 == Installation ==
