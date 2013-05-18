@@ -81,11 +81,6 @@ Feel free to mail me at atte.moisio@attemoisio.fi
 = 1.0.1 =
 * Fixes bugs in the upcoming events -widget
 
-== Using in wp_query ==
-
-The custom post type for event is named 'am_event'
-Taxonomies are named as 'am_venues' and 'am_event_categories'
-
 == Widget ==
 
 Here are all the tags that can be used in the upcoming events widget template. Don't add any extra spaces inside the brackets.
