@@ -23,8 +23,6 @@ The plugin is fully translatable. The only available languages at the moment are
 
 If you think something critical is missing, feel free to send me a request.
 
-See Other Notes for more information about the custom post type and the widget.
-
 
 
 == Installation ==
@@ -39,6 +37,10 @@ This section describes how to install the plugin and get it working.
 = Where can I ask a question? =
 
 Feel free to mail me at atte.moisio@attemoisio.fi
+
+= Can you give me an example of using WP_Query? =
+
+See 'Other Notes' for a simple tutorial.
 
 == Screenshots ==
 
@@ -95,19 +97,32 @@ Here are all the tags that can be used in the upcoming events widget template. D
  * {{end_date}}
  * {{end_time}}
 
-== Creating a WP_Query ==
+== Custom post type, taxonomies and meta data ==
 
-The custom post type is named 'am_event'
+The custom post type for event is named 'am_event'
 The taxonomies are named 'am_venues' and 'am_event_categories'.
 
-The event post has metadata named 'am_startdate' and 'am_enddate' that are formatted like 'yyyy-mm-dd hh:mm'
+The event post has metadata named 'am_startdate' and 'am_enddate' which are formatted like 'yyyy-mm-dd hh:mm'
 
-So suppose I wanted to display all events with a category of 'other' and venue 'mcdonalds'. I would then make a wp_query like this:
+== Creating a WP_Query ==
+
+The bare minimum arguments for getting all published events are these:
 
     $args = array(
             'post_type' => 'am_event',
             'post_status' => 'publish',
-            'tax_query' => array(
+        );
+		
+	$the_query = new WP_Query($args);
+		
+So suppose I wanted to limit the query to a single event category named 'other' and venue named 'mcdonalds'. I would then add a tax_query argument:
+
+	$args = array(
+			// The first two are the same as above
+            'post_type' => 'am_event',
+            'post_status' => 'publish',
+			// Add a tax_query arqument to limit events to a single category and venue
+			'tax_query' => array(
                     'relation' => 'AND',
                     array(
                         'taxonomy' => 'am_venues',
@@ -121,7 +136,32 @@ So suppose I wanted to display all events with a category of 'other' and venue '
                     ),
             ),
         );
+		
+	$the_query = new WP_Query($args);
+	
+If you want the events ordered by start date, add the following to $args:
 
+    'orderby' => 'meta_value',
+    'meta_key' => 'am_startdate',
+    'order' => 'ASC',
+
+If you need to display only upcoming events, add the following to $args:
+
+    'meta_query' => array(
+            array(
+                'key' => 'am_enddate',
+                'value' => date('Y-m-d H:i:s', time()),
+                'compare' => ">"
+                ),
+            ),
+		),
+		
+= The Loop =
+
+When you've got all the arguments in place, it's time to construct the loop. Example follows.
+	
+	// ... CREATE $args HERE ...  //
+	
     $the_query = new WP_Query($args);
 
     if ($the_query->have_posts()) {
@@ -138,7 +178,7 @@ So suppose I wanted to display all events with a category of 'other' and venue '
             $venues = wp_get_post_terms($postId, 'am_venues');
             $eventCategories = wp_get_post_terms($postId, 'am_event_categories');
 
-            // All the other functions used for posts like
+            // All the other wordpress functions used for normal posts like
             // the_title() and the_content() work just like with normal posts.
 
             // ...  DISPLAY POST CONTENT HERE ... //
@@ -146,26 +186,11 @@ So suppose I wanted to display all events with a category of 'other' and venue '
         }
     }
 
-
-If you want the events ordered by start date, add the following to $args:
-
-    'orderby' => 'meta_value',
-    'meta_key' => 'am_startdate',
-    'order' => 'ASC',
-
-If you need to display only upcoming events, add the following meta_query argument to $args:
-
-    'meta_query' => array(
-            array(
-                'key' => 'am_enddate',
-                'value' => date('Y-m-d H:i:s', time()),
-                'compare' => ">"
-                ),
-            ),
-
 Note that if you want the date formatted other than the default, you will need to use additional php:
 
     // Format the date as 00.00.0000 00:00
-    $newDate = date('d.m.Y H:i', $strtotime($originalDate)); 
+    $newDate = date('d.m.Y H:i', $strtotime($startDate)); 
 
+= Other examples =
+	
 The plugin folder also contains a file "examples.php", which contains an example function for displaying upcoming events in a table.
