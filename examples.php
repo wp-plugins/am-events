@@ -1,10 +1,7 @@
 <?php
 /*
- * This file contains example functions for displaying events
+ * EXAMPLE FUNCTIONS FOR SHOWING EVENTS ON A PAGE.
  */
-?>
-
-<?php
 
 /**
  * Echo all upcoming events in a paged table
