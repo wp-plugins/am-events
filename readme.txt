@@ -99,9 +99,9 @@ Here are all the tags that can be used in the upcoming events widget template. D
 
 == Custom post type, taxonomies and meta data ==
 
-* The custom post type: 'am_event'
-* Taxonomies: 'am_venues', 'am_event_categories'
-* Meta data: 'am_startdate', 'am_enddate' (both formatted like 'yyyy-mm-dd hh:mm')
+* The custom post is named 'am_event'
+* Taxonomies are named 'am_venues' and 'am_event_categories'
+* Each event post has metadata named 'am_startdate' and 'am_enddate', that are formatted like 'yyyy-mm-dd hh:mm')
 
 == Creating a WP_Query ==
 
@@ -157,7 +157,7 @@ If you need to display only upcoming events, add the following to $args:
 		
 = The Loop =
 
-When you've got all the arguments in place, it's time to construct the loop. Example follows.
+When you've got all the arguments in place, it's time to construct the loop. Example follows:
 	
 	// ... CREATE $args HERE ...  //
 	
@@ -192,4 +192,4 @@ Note that if you want the date formatted other than the default, you will need t
 
 = Other examples =
 	
-The plugin folder also contains a file "examples.php", which contains an example function for displaying upcoming events in a table.
+The plugin folder also contains a file "examples.php", which contains an example function for displaying upcoming events in a paged table.
