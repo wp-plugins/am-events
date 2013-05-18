@@ -40,6 +40,10 @@ This section describes how to install the plugin and get it working.
 
 Feel free to mail me at atte.moisio@attemoisio.fi
 
+= Can you give me an example of using WP_Query? =
+
+See 'Other Notes' for a simple tutorial.
+
 == Screenshots ==
 
 1. Widget administration.
