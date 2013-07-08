@@ -1,4 +1,4 @@
-=== AM Events ===
+﻿=== AM Events ===
 Contributors: Moisture
 Tags: events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
@@ -7,25 +7,23 @@ Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Adds an additional interface for events similar to normal posts. Also includes a widget for upcoming events.
+Adds an event post type with an interface and template tags similar to normal posts.
 
 == Description ==
 
-The plugin adds a custom post type for events, including two taxonomies: event category and venue. 
+The plugin adds a custom event post type with two taxonomies: event category and venue. 
 
-With this plugin, the user can add new events just like normal posts with added fields for start time, end time, category and venue. You can also easily create weekly or biweekly recurring events.
+Allows the user to add new events just like normal posts with added fields for start time, end time, category and venue. You can also easily create weekly or biweekly recurring events.
 
-There are no special functions or template tags to add events on pages or posts. It is intended to be done in the theme files using wp_query for example, which allows full control over the layout and what elements to show.
+Displaying the events is done in the theme files using WP_Query and the template tags provided by the plugin. This allows full control over the layout and what elements to show.
 
 As an extra feature, the plugin also includes a widget for showing upcoming events. It uses a very simple template system for full control of the layout.
 
-The plugin is fully translatable. The only available languages at the moment are English(default) and Finnish. The download includes a pot-file for additional translations.
+The plugin is fully translatable. The only available languages at the moment are English(default) and Finnish. The download includes a .pot-file for additional translations.
 
-If you think something critical is missing, feel free to send me a request.
+If you think something critical is missing, feel free to send me a request. I'm using this on some of my client's sites so I'll certainly be improving/fixing it for upcoming Wordpress versions.
 
 See Other Notes for more information about the custom post type and the widget.
-
-
 
 == Installation ==
 
@@ -36,9 +34,9 @@ This section describes how to install the plugin and get it working.
 
 == Frequently Asked Questions ==
 
-= Where can I ask a question? =
+= Can you give me an example of using WP_Query? =
 
-Feel free to mail me at atte.moisio@attemoisio.fi
+See 'Other Notes' for a simple tutorial.
 
 == Screenshots ==
 
@@ -48,7 +46,10 @@ Feel free to mail me at atte.moisio@attemoisio.fi
 == Changelog ==
 
 = 1.3.0 =
-* Added notification when creating recurrent events
+* Added template tags for getting and displaying event data
+
+= 1.2.1 =
+* Fixed localization typos
 * Added simple WP_Query tutorial in 'Other Notes'
 
 = 1.2.0 =
@@ -68,7 +69,11 @@ Feel free to mail me at atte.moisio@attemoisio.fi
 == Upgrade Notice ==
 
 = 1.3.0 =
-* Adds notification when creating recurrent events
+* Adds template tags for getting/displaying event data
+
+= 1.2.1 =
+* Fixes localization typos
+* Adds simple WP_Query tutorial to readme.txt
 
 = 1.2.0 =
 * Adds support for php 5.2 (previously needed 5.3)
@@ -79,11 +84,6 @@ Feel free to mail me at atte.moisio@attemoisio.fi
 
 = 1.0.1 =
 * Fixes bugs in the upcoming events -widget
-
-== Using in wp_query ==
-
-The custom post type for event is named 'am_event'
-Taxonomies are named as 'am_venues' and 'am_event_categories'
 
 == Widget ==
 
@@ -99,6 +99,28 @@ Here are all the tags that can be used in the upcoming events widget template. D
  * {{end_date}}
  * {{end_time}}
 
+= Template tags =
+
+Template tags were introduced in version 1.3.0 and are listed below. More documentation can be found in the source files.
+
+    // Template tags for getting and displaying event dates
+    am_the_startdate($format = 'Y-m-d H:i:s', $before = '', $after = '', $echo = true)
+    am_get_the_startdate( $format = 'Y-m-d H:i:s', $post = 0 )
+    am_the_enddate($format = 'Y-m-d H:i:s', $before = '', $after = '', $echo = true)
+    am_get_the_enddate( $format = 'Y-m-d H:i:s', $post = 0 )
+    
+    // Template tags for getting and displaying event venues
+    am_get_the_venue( $id = false )
+    am_in_venue( $venue, $post = null )
+    am_get_the_venue_list( $separator = '', $parents='', $post_id = false )
+    am_the_venue( $separator = '', $parents='', $post_id = false )
+
+    // Template tags for getting and displaying event categories
+    am_get_the_event_category( $id = false )
+    am_get_the_event_category_list( $separator = '', $parents='', $post_id = false )
+    am_in_event_category( $eventCategory, $post = null )
+    am_the_event_category( $separator = '', $parents='', $post_id = false )
+
 == Creating a WP_Query ==
 
 The custom post type is named 'am_event'
@@ -106,7 +128,7 @@ The taxonomies are named 'am_venues' and 'am_event_categories'.
 
 The event post has metadata named 'am_startdate' and 'am_enddate' that are formatted like 'yyyy-mm-dd hh:mm'
 
-So suppose I wanted to display all events with a category of 'other' and venue 'mcdonalds'. I would then make a wp_query like this:
+So suppose I wanted to display all events with a category of 'other' and venue 'mcdonalds'. I would then make a WP_Query like this:
 
     $args = array(
             'post_type' => 'am_event',
@@ -134,13 +156,13 @@ So suppose I wanted to display all events with a category of 'other' and venue '
 
             $postId = $post->ID;
 
-            // get start and end date
-            $startDate = get_post_meta($postId, 'am_startdate', true);
-            $endDate = get_post_meta($postId, 'am_enddate', true);
+            // Use template tags to get start and end date
+            $startDate = am_get_the_startdate('Y-m-d H:i:s');
+            $endDate = am_get_the_enddate('Y-m-d H:i:s');
 
-            // get venues and categories in an array
-            $venues = wp_get_post_terms($postId, 'am_venues');
-            $eventCategories = wp_get_post_terms($postId, 'am_event_categories');
+            // Use template tags to get venues and categories in an array
+            $venues = am_get_the_venue( $postId );
+            $eventCategories = am_get_the_category( $postId );
 
             // All the other functions used for posts like
             // the_title() and the_content() work just like with normal posts.
@@ -163,13 +185,9 @@ If you need to display only upcoming events, add the following meta_query argume
             array(
                 'key' => 'am_enddate',
                 'value' => date('Y-m-d H:i:s', time()),
-                'compare' => ">"
+                'compare' => ">",
                 ),
             ),
-
-Note that if you want the date formatted other than the default, you will need to use additional php:
-
-    // Format the date as 00.00.0000 00:00
-    $newDate = date('d.m.Y H:i', $strtotime($originalDate)); 
+	),
 
 The plugin folder also contains a file "examples.php", which contains an example function for displaying upcoming events in a table.
