@@ -2,7 +2,7 @@
 Contributors: Moisture
 Tags: events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
-Tested up to: 3.5.1
+Tested up to: 3.6
 Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,9 @@ The plugin is fully translatable. The only available languages at the moment are
 
 If you think something critical is missing, feel free to send me a request. I'm using this on some of my client's sites so I'll certainly be improving/fixing it for upcoming Wordpress versions.
 
-See Other Notes for more information about the custom post type and the widget.
+See Other Notes for detailed information and a small tutorial about the custom post type and the widget.
+
+For integrating AM Events to an existing theme, I suggest creating a [child theme](http://codex.wordpress.org/Child_Themes) with custom page templates. You can download a full example of a working Twenty Twelve child theme from my website [(Download link)](http://attemoisio.fi/projects/am-events/twentytwelve-child.zip). It contains three different page templates for events pages.
 
 == Installation ==
 
