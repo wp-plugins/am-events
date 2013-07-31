@@ -1,4 +1,4 @@
-﻿=== AM Events ===
+=== AM Events ===
 Contributors: Moisture
 Tags: events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
