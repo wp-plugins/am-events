@@ -1,4 +1,4 @@
-﻿=== AM Events ===
+=== AM Events ===
 Contributors: Moisture
 Tags: events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
@@ -19,13 +19,13 @@ Displaying the events is done in the theme files using WP_Query and the template
 
 As an extra feature, the plugin also includes a widget for showing upcoming events. It uses a very simple template system for full control of the layout.
 
-The plugin is fully translatable. The only available languages at the moment are English(default) and Finnish. The download includes a .pot-file for additional translations.
+The plugin is fully translatable. The only available languages at the moment are english(default) and finnish. The download includes a .pot-file for additional translations.
 
-If you think something critical is missing, feel free to send me a request. I'm using this on some of my client's sites so I'll certainly be improving/fixing it for upcoming Wordpress versions.
+For integrating AM Events to an existing theme, I suggest creating a [child theme](http://codex.wordpress.org/Child_Themes) with custom page templates. You can download a full example of a working Twenty Twelve child theme from my website [(Download link)](http://attemoisio.fi/projects/am-events/twentytwelve-child.zip). It contains three different page templates for events pages.
 
 See Other Notes for detailed information and a small tutorial about the custom post type and the widget.
 
-For integrating AM Events to an existing theme, I suggest creating a [child theme](http://codex.wordpress.org/Child_Themes) with custom page templates. You can download a full example of a working Twenty Twelve child theme from my website [(Download link)](http://attemoisio.fi/projects/am-events/twentytwelve-child.zip). It contains three different page templates for events pages.
+If you think something critical is missing, feel free to send me a request. I'm using this on some of my client's sites so I'll certainly be improving/fixing it for upcoming Wordpress versions.
 
 == Installation ==
 

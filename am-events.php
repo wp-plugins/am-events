@@ -31,8 +31,8 @@
 
 
 
-/******************************************************************************
- * VARIABLE NAMES, TAXONOMY NAMES AND WIDGET TAGS FOR REFERENCE
+/************************************************************************************
+ * VARIABLE NAMES, TAXONOMY NAMES, WIDGET SHORTCODES AND TEMPLATE TAGS FOR REFERENCE
  * 
  * Custom post type name: 
  * 
@@ -60,6 +60,30 @@
  *              {{title}}
  *              {{event_category}}
  *              {{venue}}
+ *
+ * Template tags:
+ *
+ *     Dates:
+ *
+ *              am_the_startdate($format = 'Y-m-d H:i:s', $before = '', $after = '', $echo = true)
+ *              am_get_the_startdate( $format = 'Y-m-d H:i:s', $post = 0 )
+ *              am_the_enddate($format = 'Y-m-d H:i:s', $before = '', $after = '', $echo = true)
+ *              am_get_the_enddate( $format = 'Y-m-d H:i:s', $post = 0 )
+ * 
+ *     Venues:
+ *
+ *              am_get_the_venue( $id = false )
+ *              am_in_venue( $venue, $post = null )
+ *              am_get_the_venue_list( $separator = '', $parents='', $post_id = false )
+ *              am_the_venue( $separator = '', $parents='', $post_id = false )
+ * 
+ *     Event categories:
+ *
+ *              am_get_the_event_category( $id = false )
+ *              am_get_the_event_category_list( $separator = '', $parents='', $post_id = false )
+ *              am_in_event_category( $eventCategory, $post = null )
+ *              am_the_event_category( $separator = '', $parents='', $post_id = false )
+ *
  *
  */
 
@@ -122,16 +146,16 @@ add_action('load-edit.php', 'am_edit_event_load');
 function am_custom_script() {
     global $post;
     if ($post->post_type === 'am_event' && is_admin()) {
-
-
-
+		
+		// include JQuery
         wp_enqueue_script(
                 'jquery-custom', plugins_url('/script/jquery-ui-1.10.2.custom.min.js', __FILE__)
         );
 
-		//JQuery datetime picker from http://trentrichardson.com/examples/timepicker/
-		// Localization for datetimepicker
+		// JQuery datetime picker from http://trentrichardson.com/examples/timepicker/
+		// datetimepicker localization
 		$localization = array(
+		
             // Date picker
             'clearText' => _x('Clear', 'date picker', 'am-events'), //Display text for clear link
             'clearStatus' => _x('Erase the current date', 'date picker', 'am-events'), //Status text for clear link
@@ -182,6 +206,7 @@ function am_custom_script() {
             'isRTL' => false
         );
         
+		// Add Timepicker script
         wp_register_script('jquery-ui-timepicker', plugins_url('/script/jquery-ui-timepicker-addon.js', __FILE__));
         wp_localize_script('jquery-ui-timepicker', 'localization', $localization); //pass any values to javascript
         wp_enqueue_script(
@@ -229,6 +254,9 @@ function am_add_custom_meta_box() {
     add_meta_box('am_metabox', __('Event Details', 'am-events'), 'am_meta_box_content', 'am_event', 'normal', 'high', null);
 }
 
+/**
+ * Meta box content
+ */
 function am_meta_box_content($post) {
 
     // Nonce for verification.
@@ -250,7 +278,7 @@ function am_meta_box_content($post) {
     if ($metaEndDate !== '')
         $endDate = date(_x('m/d/Y H:i','administration', 'am-events'), strtotime($metaEndDate));
     
-    // Content of the meta box
+    // Echo content of the meta box
     ?>
     <table>
         <tr>
@@ -321,9 +349,9 @@ function am_save_custom_meta($post_id) {
         if (empty($temp1))
             return;
 
-        //Convert startdate from 00.00.0000 00:00 to 0000-00-00 00:00:00
+        // Convert startdate to Wordpress default format (0000-00-00 00:00:00)
         $startdate = date('Y-m-d H:i:s', strtotime($temp1));
-        //Check if conversion succeeded
+        // Check if conversion succeeded
         if ($startdate != FALSE)
             update_post_meta($post_id, 'am_startdate', $startdate);
         else
@@ -335,7 +363,7 @@ function am_save_custom_meta($post_id) {
         if (empty($temp2))
             return;
 
-        //Convert enddate from 00.00.0000 00:00 to 0000-00-00 00:00:00
+        //Convert enddate to Wordpress default format (0000-00-00 00:00:00)
         $enddate = date('Y-m-d H:i:s', strtotime($temp2));
         if ($enddate != FALSE)
             update_post_meta($post_id, 'am_enddate', $enddate);
@@ -444,6 +472,7 @@ function am_save_event() {
                     return; // do not create recurrent events.
                 }
 
+				// Limit number of created events to 99
                 if ($recurrent_amount < 2 || $recurrent_amount > 99) {
                     return;
                 }
@@ -492,7 +521,7 @@ function am_save_event() {
                     }
                 }
 				
-				// TODO: Not working
+				// TODO: Notify user when recurrent events have been created.
                 // add_admin_message( sprintf(__('Created %d recurrent events.', 'am-events'), $recurrent_amount) );
                         
             }
@@ -540,7 +569,7 @@ function am_edit_event_load() {
 }
 
 /**
- *  Used to sorts the events in the administration. 
+ *  Used to sort the events in the administration. 
  */
 function am_sort_events($vars) {
 
@@ -553,8 +582,8 @@ function am_sort_events($vars) {
             /* Merge the query vars with our custom variables. */
             $vars = array_merge(
                     $vars, array(
-                'meta_key' => 'am_startdate',
-                'orderby' => 'meta_value'
+						'meta_key' => 'am_startdate',
+						'orderby' => 'meta_value'
                     )
             );
         }
