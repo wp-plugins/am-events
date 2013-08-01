@@ -19,8 +19,6 @@
   along with this program; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
- 
 
 class AM_Upcoming_Events_Widget extends WP_Widget {
    
@@ -140,6 +138,8 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             $template_event_category = $meta_event_categories[0]->name;
             
             $template_title = get_the_title();
+            
+            $template_content = get_the_content();
                    
             // Widget template tags
             $search = array(
@@ -152,6 +152,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 '{{title}}',
                 '{{event_category}}',
                 '{{venue}}',
+                '{{content}}',
                 );
             
             $replace = array(
@@ -164,6 +165,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 $template_title,
                 $template_event_category,
                 $template_venue,
+                $template_content,
             );
             
             $output = str_replace($search, $replace, $template);
@@ -291,8 +293,6 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
            
            return $instance;
    }
-   
-
 
 }
 
