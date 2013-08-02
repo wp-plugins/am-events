@@ -3,7 +3,7 @@ Contributors: Moisture
 Tags: events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
 Tested up to: 3.6
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,9 @@ See 'Other Notes' for a simple tutorial.
 
 == Changelog ==
 
+= 1.3.1 =
+* Fixed minor bugs in template tags
+
 = 1.3.0 =
 * Added template tags for getting and displaying event data
 
@@ -69,6 +72,9 @@ See 'Other Notes' for a simple tutorial.
 * First released/stable version
 
 == Upgrade Notice ==
+
+= 1.3.1 =
+* Fixes minor bugs in template tags
 
 = 1.3.0 =
 * Adds template tags for getting/displaying event data
@@ -100,6 +106,7 @@ Here are all the tags that can be used in the upcoming events widget template. D
  * {{end_day_name}}
  * {{end_date}}
  * {{end_time}}
+ * {{content}}
 
 = Template tags =
 
