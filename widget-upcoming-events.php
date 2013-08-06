@@ -112,13 +112,36 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
 
             $post_id = get_the_ID();
 
-            // get post meta
-            $meta_venues = wp_get_post_terms( $post_id, 'am_venues' ); 
-            $meta_event_categories = wp_get_post_terms( $post_id, 'am_event_categories' ); 
             
+            
+            
+            // Old template system (1.3.1 and older)
+            $output = $this->parse_event_old($template);
+            
+            // new parsing system, 1.4.0 and newer
+            $output = $this->parse_event($output);
+            
+            echo $output;
 
-            $meta_startdate = get_post_meta($post_id, 'am_startdate', true);
-            $meta_enddate = get_post_meta($post_id, 'am_enddate', true);
+         }
+         echo $after;
+
+        /* After widget (defined by themes). */
+        echo $after_widget;
+    }
+    
+    /**
+     * Parses the shortcodes, old method used for backward compatibility
+     * @param type $content
+     * @return type
+     */
+    protected function parse_event_old($template) {
+        // get post meta
+            $meta_venues = am_get_the_venue(); 
+            $meta_event_categories = am_get_the_event_category(); 
+
+            $meta_startdate = am_get_the_startdate();
+            $meta_enddate = am_get_the_enddate();
 
             // get timestamps of dates
             $timestamp_start = strtotime($meta_startdate);
@@ -140,7 +163,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             $template_title = get_the_title();
             
             $template_content = get_the_content();
-                   
+              
             // Widget template tags
             $search = array(
                 '{{start_day_name}}', 
@@ -153,7 +176,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 '{{event_category}}',
                 '{{venue}}',
                 '{{content}}',
-                );
+            );
             
             $replace = array(
                 $template_startdayname,
@@ -168,17 +191,110 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 $template_content,
             );
             
-            $output = str_replace($search, $replace, $template);
-
-            echo $output;
-
-         }
-         echo $after;
-
-        /* After widget (defined by themes). */
-        echo $after_widget;
+            return str_replace($search, $replace, $template);
+    }
+    
+    /**
+     * Parses the shortcodes
+     * @param type $content
+     * @return type
+     * @since 1.4.0
+     */
+    protected function parse_event($content) {
+        
+        //Array of valid shortcodes
+        $shortcodes = array(
+            'event-title',    //The event title
+            'start-date',     //The start date of the event (uses the date format from the feed options, if it is set. Otherwise uses the default WordPress date format)
+            'end-date',       //The end date of the event (uses the date format from the feed options, if it is set. Otherwise uses the default WordPress date format)
+            'event-venue',    //The event venue
+            'event-category', //The event category
+            'content',        //The event content (number of words can be limited by the 'limit' attribute)
+            'permalink',      //The event post permalink
+        );
+        
+        $regex = 
+            '/\\[(\\[?)(' 
+            . implode( '|', $shortcodes ) 
+            . ')(?![\\w-])([^\\]\\/]*(?:\\/(?!\\])[^\\]\\/]*)*?)(?:(\\/)\\]|\\](?:([^\\[]*+(?:\\[(?!\\/\\2\\])[^\\[]*+)*+)\\[\\/\\2\\])?)(\\]?)/s';
+    
+        return preg_replace_callback( $regex, array( $this, 'process_shortcode' ), $content );
+        
     }
 
+    /**
+     * Parses a shortcode, returning the appropriate event information
+     * Much of this code is 'borrowed' from WordPress' own shortcode handling stuff!
+     */
+    protected function process_shortcode( $m ) {
+        
+        if ( '[' == $m[1] && ']' == $m[6] )
+                return substr( $m[0], 1, -1 );
+     
+        //Extract any attributes contained in the shortcode
+        extract( shortcode_atts( array(
+                'format'    => '',
+                'limit'     => '0',
+                'link'      => 'false',
+        ), shortcode_parse_atts( $m[3] ) ) );
+        
+        //Sanitize the attributes
+        $format    = esc_attr( $format );
+        $limit     = absint( $limit );
+        $link  = ( 'true' === $link );
+        
+        // Do the appropriate stuff depending on which shortcode we're looking at.
+        // See valid shortcode list (above) for explanation of each shortcode
+	switch ( $m[2] ) {
+            case 'event-title':
+                $title = esc_html( trim( get_the_title()));
+                //If a word limit has been set, trim the title to the required length
+                if ( 0 != $limit ) {
+                        preg_match( '/([\S]+\s*){0,' . $limit . '}/', $title , $title );
+                        $title = trim( $title[0] );
+                }
+                if ($link) {  
+                    return $m[1] . '<a href="'. get_permalink() .'">' .$title. '</a>' . $m[6];
+                } else {
+                    return $m[1] . $title . $m[6];
+                }
+                
+            case 'content':
+                $content = get_the_content();
+                //If a word limit has been set, trim the title to the required length
+                if ( 0 != $limit ) {
+                        preg_match( '/([\S]+\s*){0,' . $limit . '}/', $content, $content );
+                        $content = trim( $content[0] );
+                }
+                return $m[1] . $content . $m[6];
+            case 'permalink':
+                return $m[1] . get_permalink() . $m[6];
+            case 'event-category':
+                $categoryArray = am_get_the_event_category();
+                if ($link)
+                    return $m[1] . '<a href="'. get_term_link($categoryArray[0]) . '">' . $categoryArray[0]->name . '</a>' . $m[6];
+                else
+                    return $m[1] . $categoryArray[0]->name . $m[6];
+            case 'event-venue':
+                $venueArray = am_get_the_venue();
+                if ($link)
+                    return $m[1] . '<a href="'. get_term_link($venueArray[0]) . '">' . $venueArray[0]->name . '</a>' . $m[6];
+                else
+                    return $m[1] . $venueArray[0]->name . $m[6];
+            case 'start-date':
+                $startdate = am_get_the_startdate();
+                $format = $format === '' ? "m/d/Y H:i" : $format;
+                return $m[1] . date_i18n( $format, strtotime($startdate) ) . $m[6];
+            case 'end-date':
+                $enddate = am_get_the_enddate();
+                $format = $format === '' ? "m/d/Y H:i" : $format;
+                return $m[1] . date_i18n( $format, strtotime($enddate) ) . $m[6];
+                
+        }
+        
+    }
+    
+    
     /**
      * Back-end widget form.
      *
@@ -188,17 +304,26 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
      */
     public function form( $instance ) {
         
-        $default_template = '<h3>{{title}}</h3>
+        $default_template = "<h3>[event-title link=true]</h3>
+
 <p>
-    {{start_day_name}} {{start_date}} {{start_time}} - 
-    {{end_day_name}} {{end_date}} {{end_time}}
+    [start-date format='D d.m.Y H:s'] - 
+    [end-date format='D d.m.Y H:s']
 </p>
 
-<p>{{event_category}}</p>
+<p>[event-category], [event-venue]</p>
 
-<p>{{venue}}</p>';
+<p> [content limit=25]... <a href=\"[permalink]\">read more...</a> </p>";
                 
-        $defaults = array( 'title' => __('Upcoming Events', 'am-events'), 'category' => 'all', 'venue' => 'all', 'postcount' => '3', 'template' => $default_template, 'after' => '<p><a href="#">' . __('See More Events ->', 'am-events') . '</a></p>', 'before' => '' );
+        $defaults = array( 
+            'title' => __('Upcoming Events', 'am-events'),
+            'category' => 'all', 
+            'venue' => 'all', 
+            'postcount' => '3', 
+            'template' => $default_template, 
+            'after' => '<p><a href="#">' . __('See More Events ->', 'am-events') . '</a></p>', 
+            'before' => '',  
+            );
         $instance = wp_parse_args( (array) $instance, $defaults );
 
 

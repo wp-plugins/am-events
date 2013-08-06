@@ -3,7 +3,7 @@
   Plugin Name: AM Events
   Plugin URI: http://wordpress.org/extend/plugins/am-events/
   Description: Adds a post type for events and a customizable widget for displaying upcoming events.
-  Version: 1.3.1
+  Version: 1.4.0
   Author: Atte Moisio
   Author URI: http://attemoisio.fi
   License: GPL2
@@ -50,17 +50,13 @@
  *              'am_event_categories'
  * 
  * Widget template shortcodes:
- *             
- *              {{start_day_name}} 
- *              {{start_date}}
- *              {{start_time}}
- *              {{end_day_name}}
- *              {{end_date}}
- *              {{end_time}}
- *              {{title}}
- *              {{event_category}}
- *              {{venue}}
- *              {{content}}
+ * 
+ *           [event-title]    //The event title
+ *           [start-date]     //The start date of the event (uses the date format from the feed options, if it is set. Otherwise uses the default WordPress date format)
+ *           [end-date]       //The end date of the event (uses the date format from the feed options, if it is set. Otherwise uses the default WordPress date format)
+ *           [event-venue]    //The event venue
+ *           [event-category] //The event category
+ *           [content]        //The event content (number of words can be limited by the 'limit' attribute)        
  *
  * Template tags:
  *

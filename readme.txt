@@ -3,7 +3,7 @@ Contributors: Moisture
 Tags: events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
 Tested up to: 3.6
-Stable tag: 1.3.1
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,9 @@ See 'Other Notes' for a simple tutorial.
 
 == Changelog ==
 
+= 1.4.0 =
+* Added new improved widget template shortcode system
+
 = 1.3.1 =
 * Fixed minor bugs in template tags
 
@@ -73,6 +76,10 @@ See 'Other Notes' for a simple tutorial.
 
 == Upgrade Notice ==
 
+= 1.4.0 =
+
+* Adds new improved widget shortcode system
+
 = 1.3.1 =
 * Fixes minor bugs in template tags
 
@@ -95,18 +102,29 @@ See 'Other Notes' for a simple tutorial.
 
 == Widget ==
 
-Here are all the tags that can be used in the upcoming events widget template. Don't add any extra spaces inside the brackets.
+Here are the shortcodes available in the upcoming events widget template.
 
- * {{title}}
- * {{event_category}}
- * {{venue}}
- * {{start_day_name}}
- * {{start_date}} 
- * {{start_time}}
- * {{end_day_name}}
- * {{end_date}}
- * {{end_time}}
- * {{content}}
+ * [event-title]
+ * [start-date]
+ * [end-date]
+ * [event-venue]
+ * [event-category]
+ * [content]
+ * [permalink]
+
+The title can be linked to the event post with the 'link' attribute, e.g. [event-title link=true]
+
+The category and venue can also be linked similarly to their respective archive pages using the 'link' attribute, e.g. [event-category link=true]
+
+The number of words displayed in the title or the content can be limited by the 'limit' attribute, e.g. [content limit=25] or [event-title limit=10].
+
+The dates can be formatted using the 'format' attribute, e.g. [start-date format='d.m.Y H:i'] (see [PHP date](http://php.net/manual/en/function.date.php) for formatting options). If no format is given, the default WordPress date format is used.
+
+You can use any shortcode as many times as needed in a single template. To separate date and time of start date for example you could write:
+    
+    [start-date format='d.m.Y'] 
+    <span>divider</span>
+    [start-date format='H:i']
 
 = Template tags =
 
@@ -129,6 +147,11 @@ Template tags were introduced in version 1.3.0 and are listed below. More docume
     am_get_the_event_category_list( $separator = '', $parents='', $post_id = false )
     am_in_event_category( $eventCategory, $post = null )
     am_the_event_category( $separator = '', $parents='', $post_id = false )
+
+Example of displaying the first category of the current event post:
+    
+    $categoryArray = am_get_the_event_category();
+    echo $categoryArray[0]->name;
 
 == Creating a WP_Query ==
 
