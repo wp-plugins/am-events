@@ -1,13 +1,13 @@
 === AM Events ===
 Contributors: Moisture
-Tags: events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
+Tags: event list, events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
 Tested up to: 3.6
 Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Adds an event post type with an interface and template tags similar to normal posts.
+Adds an event post type with an interface and template tags similar to normal posts. Also includes a customizable widget for upcoming events.
 
 == Description ==
 
@@ -17,7 +17,7 @@ Allows the user to add new events just like normal posts with added fields for s
 
 Displaying the events is done in the theme files using WP_Query and the template tags provided by the plugin. This allows full control over the layout and what elements to show.
 
-As an extra feature, the plugin also includes a widget for showing upcoming events. It uses a very simple template system for full control of the layout.
+The plugin also includes a widget for showing upcoming events. It uses a very simple template system for full control of the layout.
 
 The plugin is fully translatable. The only available languages at the moment are english(default) and finnish. The download includes a .pot-file for additional translations.
 
