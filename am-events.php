@@ -636,7 +636,7 @@ function am_register_post_type() {
         'category_name' => 'etusivu',
         'labels' => $labels,
         'description' => __('Type for events', 'am-events'),
-        'supports' => array('title', 'editor'),
+        'supports' => array('title', 'editor', 'thumbnail', 'excerpt'),
         'taxonomies' => array('am_event_category', 'am_venue'),
     );
 
