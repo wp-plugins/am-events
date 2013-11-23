@@ -3,7 +3,7 @@ Contributors: Moisture
 Tags: event list, events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
 Tested up to: 3.7.1
-Stable tag: 1.4.0
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,9 @@ See 'Other Notes' for a simple tutorial.
 
 == Changelog ==
 
+= 1.5.0 =
+* Added support for thumbnail and excerpt for event posts
+
 = 1.4.0 =
 * Added new improved widget template shortcode system
 
@@ -75,6 +78,10 @@ See 'Other Notes' for a simple tutorial.
 * First released/stable version
 
 == Upgrade Notice ==
+
+= 1.5.0 =
+
+* Adds support for thumbnails and excerpts
 
 = 1.4.0 =
 
