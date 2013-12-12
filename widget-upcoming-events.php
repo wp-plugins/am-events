@@ -139,7 +139,6 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         // get post meta
             $meta_venues = am_get_the_venue(); 
             $meta_event_categories = am_get_the_event_category(); 
-
             $meta_startdate = am_get_the_startdate();
             $meta_enddate = am_get_the_enddate();
 
@@ -157,8 +156,13 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             $template_startdayname = getWeekDay(date('N', $timestamp_start));
             $template_enddayname = getWeekDay(date('N', $timestamp_end));
 
-            $template_venue = $meta_venues[0]->name;
-            $template_event_category = $meta_event_categories[0]->name;
+            $template_venue = '';
+            if (count($meta_venues)  > 0)
+                $template_venue = $meta_venues[0]->name;
+            
+            $template_event_category = '';
+            if (count($meta_event_categories) > 0)
+                $template_event_category = $meta_event_categories[0]->name;
             
             $template_title = get_the_title();
             
@@ -271,16 +275,25 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 return $m[1] . get_permalink() . $m[6];
             case 'event-category':
                 $categoryArray = am_get_the_event_category();
-                if ($link)
-                    return $m[1] . '<a href="'. get_term_link($categoryArray[0]) . '">' . $categoryArray[0]->name . '</a>' . $m[6];
-                else
-                    return $m[1] . $categoryArray[0]->name . $m[6];
+                if (count($categoryArray) > 0) {
+                    if ($link)
+                        return $m[1] . '<a href="'. get_term_link($categoryArray[0]) . '">' . $categoryArray[0]->name . '</a>' . $m[6];
+                    else
+                        return $m[1] . $categoryArray[0]->name . $m[6];
+                } else {
+                    return '-';
+                }
             case 'event-venue':
                 $venueArray = am_get_the_venue();
-                if ($link)
-                    return $m[1] . '<a href="'. get_term_link($venueArray[0]) . '">' . $venueArray[0]->name . '</a>' . $m[6];
-                else
-                    return $m[1] . $venueArray[0]->name . $m[6];
+                if (count($venueArray) > 0) {
+                    if ($link)
+                        return $m[1] . '<a href="'. get_term_link($venueArray[0]) . '">' . $venueArray[0]->name . '</a>' . $m[6];
+                    else
+                        return $m[1] . $venueArray[0]->name . $m[6];
+                }
+                else {
+                    return '-';
+                }
             case 'start-date':
                 $startdate = am_get_the_startdate();
                 $format = $format === '' ? "m/d/Y H:i" : $format;
