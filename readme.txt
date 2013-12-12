@@ -47,6 +47,9 @@ See 'Other Notes' for a simple tutorial.
 
 == Changelog ==
 
+= 1.5.1 =
+* Fixed a few minor bugs
+
 = 1.5.0 =
 * Added support for thumbnail and excerpt for event posts
 
@@ -78,6 +81,10 @@ See 'Other Notes' for a simple tutorial.
 * First released/stable version
 
 == Upgrade Notice ==
+
+= 1.5.1 =
+
+* Fixes a few minor bugs
 
 = 1.5.0 =
 
