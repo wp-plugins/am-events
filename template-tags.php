@@ -340,7 +340,7 @@ function am_get_the_event_category_list( $separator = '', $parents='', $post_id 
 					break;
 				case 'single':
 					$thelist .= '<a href="' . esc_url( get_category_link( $category->term_id ) ) . '" title="' . esc_attr( sprintf( _x( "View all events in %s", "Category", "am-events" ), $category->name ) ) . '" ' . $rel . '>';
-					if ( $category->parent )t
+					if ( $category->parent )
 						$thelist .= get_category_parents( $category->parent, false, $separator );
 					$thelist .= "$category->name</a>";
 					break;
