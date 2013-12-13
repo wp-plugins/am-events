@@ -99,6 +99,55 @@ add_action('init', 'am_cpt_init');
 add_action('plugins_loaded', 'am_load_language_files');
 add_action('init', 'am_load_language_files');
 
+/**
+ * SETTINGS MENU
+ */
+
+if ( is_admin() ){ // admin actions
+  add_action( 'admin_menu', 'am_plugin_menu' );
+  add_action( 'admin_init', 'am_register_settings' );
+} else {
+  // non-admin enqueues, actions, and filters
+}
+
+function am_register_settings() { // whitelist options
+  register_setting( 'am-events-settings-group', 'am_timepicker_minutestep' );
+}
+
+function am_plugin_menu() {
+	add_options_page( 'AM Events settings', 'AM Events', 'manage_options', 'am-events-settings', 'am_plugin_settings' );
+}
+
+function am_plugin_settings() {
+	if ( !current_user_can( 'manage_options' ) )  {
+		wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+	}
+        
+        ?>
+	<div class="wrap">
+        <h2>AM Events settings</h2>
+        <form method="post" action="options.php"> 
+            
+        <?php
+        settings_fields( 'am-events-settings-group' );
+        do_settings_sections( 'am-events-settings-group' );
+        ?>
+        <table><tbody>
+            <tr>
+                <td><label for="am_timepicker_minutestep"><?php _e( 'Timepicker minute step', 'am_events' ) ?></label> </td>   
+                <td><input id="am_timepicker_minutestep" valuechanged="" type="number" min="1" max="59" name="am_timepicker_minutestep" value="<?php echo get_option('am_timepicker_minutestep', 15); ?>" /></td>
+            </tr>
+        </tbody></table>
+        
+        <?php submit_button(); ?>
+        </form>
+        
+        
+        
+	</div>
+
+        <?php
+}
 
 /**
  * SAVE_POST
@@ -186,6 +235,7 @@ function am_custom_script() {
             'isRTL' => false, //True if right-to-left language, false if left-to-right
             
             // Time picker
+            'minuteStep' => get_option('am_timepicker_minutestep', 15),
             'currentText' => _x('Now', 'time picker', 'am-events'),
             'closeText' => _x('Done', 'time picker', 'am-events'),
             'amNames' => _x('AM', 'time picker', 'am-events'),
@@ -230,7 +280,7 @@ function am_custom_css() {
 
     // Other styles (for metabox etc.)
     wp_enqueue_style(
-            'am-events', plugins_url('/css/am-events.css', __FILE__));
+            'am-events', plugins_url('/css/am_events.css', __FILE__));
 }
 
 /* * ****************************************************************************
@@ -261,7 +311,7 @@ function am_meta_box_content($post) {
     if (function_exists('am_nonce'))
         wp_nonce_field(plugin_basename(__FILE__), 'am_nonce');
 
-
+    
     // The actual fields for data entry
     // Use get_post_meta to retrieve an existing value from the database and use the value for the form
     // DATE FIELDS

@@ -100,7 +100,7 @@ jQuery(function($) {
         var endDateTextBox = $('#am_enddate');
 
         startDateTextBox.datetimepicker({
-                stepMinute: 15,
+                stepMinute: parseInt(localization.minuteStep),
                 onClose: function(dateText, inst) {
                         if (endDateTextBox.val() != '') {
                                 var testStartDate = startDateTextBox.datetimepicker('getDate');
@@ -117,7 +117,7 @@ jQuery(function($) {
                 }
         });
         endDateTextBox.datetimepicker({ 
-                stepMinute: 15,
+                stepMinute: parseInt(localization.minuteStep),
                 onClose: function(dateText, inst) {
                         if (startDateTextBox.val() != '') {
                                 var testStartDate = startDateTextBox.datetimepicker('getDate');
