@@ -42,8 +42,8 @@ See 'Other Notes' for a simple tutorial.
 
 == Screenshots ==
 
-1. Widget administration.
-2. Creating an event
+1. Creating an event
+2. Widget administration
 
 == Changelog ==
 
