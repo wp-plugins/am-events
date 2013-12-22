@@ -554,6 +554,7 @@ function am_save_event() {
                         );
                         $new_post_id = wp_insert_post($new_post);
                         
+                        wp_set_post_tags($new_post_id, wp_get_post_tags($post_id));
                         set_post_thumbnail($new_post_id, get_post_thumbnail_id($post_id));
 
                         switch ($recurrenceSelection) {

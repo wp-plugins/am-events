@@ -3,7 +3,7 @@ Contributors: Moisture
 Tags: event list, events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
 Tested up to: 3.8
-Stable tag: 1.5.1
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -47,6 +47,10 @@ See 'Other Notes' for a simple tutorial.
 
 == Changelog ==
 
+= 1.6.0 =
+* Added option to change time picker minute step
+* Fixed featured image and excerpts not copying when creating recurrent events
+
 = 1.5.1 =
 * Fixed a few minor bugs
 
@@ -81,6 +85,11 @@ See 'Other Notes' for a simple tutorial.
 * First released/stable version
 
 == Upgrade Notice ==
+
+= 1.6.0 =
+
+* Adds option to change time picker minute step
+* Fixes featured image and excerpts not copying when creating recurrent events
 
 = 1.5.1 =
 

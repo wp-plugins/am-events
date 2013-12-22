@@ -93,7 +93,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 'key' => 'am_enddate',
                  // display events with an end date greater than 
                  // the current time - 24hrs
-                'value' => date('Y-m-d H:i:s', time() - (60 * 60 * 24)),                
+                'value' => date(am_get_default_date_format(), time() - (60 * 60 * 24)),                
                 'compare' => ">" // startdate > value
 				),
             ),
