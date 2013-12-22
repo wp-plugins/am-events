@@ -3,7 +3,7 @@
   Plugin Name: AM Events
   Plugin URI: http://wordpress.org/extend/plugins/am-events/
   Description: Adds a post type for events and a customizable widget for displaying upcoming events.
-  Version: 1.5.1
+  Version: 1.6.0
   Author: Atte Moisio
   Author URI: http://attemoisio.fi
   License: GPL2
@@ -108,6 +108,10 @@ if ( is_admin() ){ // admin actions
   add_action( 'admin_init', 'am_register_settings' );
 } else {
   // non-admin enqueues, actions, and filters
+}
+
+function am_get_default_date_format() {
+    return 'Y-m-d H:i:s';
 }
 
 function am_register_settings() { // whitelist options
@@ -398,7 +402,7 @@ function am_save_custom_meta($post_id) {
             return;
 
         // Convert startdate to Wordpress default format (0000-00-00 00:00:00)
-        $startdate = date('Y-m-d H:i:s', strtotime($temp1));
+        $startdate = date(am_get_default_date_format(), strtotime($temp1));
         // Check if conversion succeeded
         if ($startdate != FALSE)
             update_post_meta($post_id, 'am_startdate', $startdate);
@@ -412,7 +416,7 @@ function am_save_custom_meta($post_id) {
             return;
 
         //Convert enddate to Wordpress default format (0000-00-00 00:00:00)
-        $enddate = date('Y-m-d H:i:s', strtotime($temp2));
+        $enddate = date(am_get_default_date_format(), strtotime($temp2));
         if ($enddate != FALSE)
             update_post_meta($post_id, 'am_enddate', $enddate);
         else
@@ -531,8 +535,8 @@ function am_save_event() {
                     $startdate = get_post_meta($post_id, 'am_startdate', true);
                     $enddate = get_post_meta($post_id, 'am_enddate', true);
 
-                    $start = DateTime::createFromFormat('Y-m-d H:i:s', $startdate);
-                    $end = DateTime::createFromFormat('Y-m-d H:i:s', $enddate);
+                    $start = DateTime::createFromFormat(am_get_default_date_format(), $startdate);
+                    $end = DateTime::createFromFormat(am_get_default_date_format(), $enddate);
 
                     for ($i = 1; $i < $recurrent_amount; $i++) {
                         $new_post = array(
@@ -543,8 +547,14 @@ function am_save_event() {
                             'post_author' => $post->post_author,
                             'post_type' => $post->post_type,
                             'post_category' => $post->post_category,
+                            'post_excerpt' => $post->post_excerpt,
+                            'comment_status' => $post->comment_status,
+                            'ping_status' => $post->ping_status,
+                            'post_password' => $post->post_password,
                         );
                         $new_post_id = wp_insert_post($new_post);
+                        
+                        set_post_thumbnail($new_post_id, get_post_thumbnail_id($post_id));
 
                         switch ($recurrenceSelection) {
                             case 'am_weekly':
@@ -559,8 +569,8 @@ function am_save_event() {
                                 return;
                         }
 
-                        update_post_meta($new_post_id, 'am_startdate', $start->format('Y-m-d H:i:s'));
-                        update_post_meta($new_post_id, 'am_enddate', $end->format('Y-m-d H:i:s'));
+                        update_post_meta($new_post_id, 'am_startdate', $start->format(am_get_default_date_format()));
+                        update_post_meta($new_post_id, 'am_enddate', $end->format(am_get_default_date_format()));
 
                         $eventCategories = wp_get_post_terms($post_id, 'am_event_categories');
                         $venues = wp_get_post_terms($post_id, 'am_venues');
