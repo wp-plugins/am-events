@@ -3,7 +3,7 @@
   Plugin Name: AM Events
   Plugin URI: http://wordpress.org/extend/plugins/am-events/
   Description: Adds a post type for events and a customizable widget for displaying upcoming events.
-  Version: 1.6.0
+  Version: 1.7.0
   Author: Atte Moisio
   Author URI: http://attemoisio.fi
   License: GPL2
@@ -56,6 +56,7 @@
  *           [end-date]       //The end date of the event (uses the date format from the feed options, if it is set. Otherwise uses the default WordPress date format)
  *           [event-venue]    //The event venue
  *           [event-category] //The event category
+ *           [excerpt] 	      //The event excerpt
  *           [content]        //The event content (number of words can be limited by the 'limit' attribute)        
  *
  * Template tags:
@@ -116,6 +117,7 @@ function am_get_default_date_format() {
 
 function am_register_settings() { // whitelist options
   register_setting( 'am-events-settings-group', 'am_timepicker_minutestep' );
+  register_setting( 'am-events-settings-group', 'am_rewrite_slug' );
 }
 
 function am_plugin_menu() {
@@ -129,7 +131,7 @@ function am_plugin_settings() {
         
         ?>
 	<div class="wrap">
-        <h2>AM Events settings</h2>
+        <h2><?php _e( 'AM Events settings', 'am_events' ) ?></h2>
         <form method="post" action="options.php"> 
             
         <?php
@@ -138,7 +140,12 @@ function am_plugin_settings() {
         ?>
         <table><tbody>
             <tr>
-                <td><label for="am_timepicker_minutestep"><?php _e( 'Timepicker minute step', 'am_events' ) ?></label> </td>   
+                <td><label for="am_rewrite_slug"><?php _e( 'Slug for event posts', 'am_events' ) ?></label> </td>   
+                <td><input id="am_rewrite_slug" valuechanged="" type="text" name="am_rewrite_slug" value="<?php echo get_option('am_rewrite_slug', 'am-events'); ?>" /></td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td><label for="am_timepicker_minutestep"><?php _e( 'Timepicker minute step', 'am-events' ) ?></label> </td>   
                 <td><input id="am_timepicker_minutestep" valuechanged="" type="number" min="1" max="59" name="am_timepicker_minutestep" value="<?php echo get_option('am_timepicker_minutestep', 15); ?>" /></td>
             </tr>
         </tbody></table>
@@ -703,7 +710,10 @@ function am_register_post_type() {
         'description' => __('Type for events', 'am-events'),
         'supports' => array('title', 'editor', 'thumbnail', 'excerpt'),
         'taxonomies' => array('am_event_category', 'am_venue'),
+        'rewrite' => array( 'slug' => get_option('am_rewrite_slug', 'am-events') ),
     );
+    
+    
 
     register_post_type('am_event', $args);
 }

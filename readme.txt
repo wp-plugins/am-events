@@ -2,7 +2,7 @@
 Contributors: Moisture
 Tags: event list, events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
-Tested up to: 3.8
+Tested up to: 3.9-alpha
 Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -44,8 +44,15 @@ See 'Other Notes' for a simple tutorial.
 
 1. Creating an event
 2. Widget administration
+3. Example page with events and the widget.
 
 == Changelog ==
+
+= 1.7.0 =
+* Added option to change slug for event posts
+* Added [excerpt] shortcode for the widget
+* Added customizable "No upcoming events" message to widget
+* Added option to change how long passed events are shown in the widget
 
 = 1.6.0 =
 * Added option to change time picker minute step
@@ -85,6 +92,13 @@ See 'Other Notes' for a simple tutorial.
 * First released/stable version
 
 == Upgrade Notice ==
+
+= 1.7.0 =
+
+* Adds option to change slug for event posts
+* Adds [excerpt] shortcode for the widget
+* Adds customizable "No upcoming events" message to widget
+* Adds option to change offset for events shown in the widget
 
 = 1.6.0 =
 
@@ -133,13 +147,15 @@ Here are the shortcodes available in the upcoming events widget template.
  * [event-venue]
  * [event-category]
  * [content]
+ * [excerpt]
  * [permalink]
+
 
 The title can be linked to the event post with the 'link' attribute, e.g. [event-title link=true]
 
 The category and venue can also be linked similarly to their respective archive pages using the 'link' attribute, e.g. [event-category link=true]
 
-The number of words displayed in the title or the content can be limited by the 'limit' attribute, e.g. [content limit=25] or [event-title limit=10].
+The number of words displayed in the title, content or excerpt can be limited by the 'limit' attribute, e.g. [content limit=25] or [event-title limit=10].
 
 The dates can be formatted using the 'format' attribute, e.g. [start-date format='d.m.Y H:i'] (see [PHP date](http://php.net/manual/en/function.date.php) for formatting options). If no format is given, the default WordPress date format is used.
 

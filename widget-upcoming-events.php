@@ -50,6 +50,8 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         $template = $instance['template'];
         $before = $instance['before'];
         $after = $instance['after'];
+        $emptyevents = $instance['emptyevents'];
+		$offset = $instance['offset'];
         
         /* Before widget (defined by themes). */
         echo $before_widget;
@@ -93,7 +95,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 'key' => 'am_enddate',
                  // display events with an end date greater than 
                  // the current time - 24hrs
-                'value' => date(am_get_default_date_format(), time() - (60 * 60 * 24)),                
+                'value' => date(am_get_default_date_format(), time() - intval($offset)),                
                 'compare' => ">" // startdate > value
 				),
             ),
@@ -107,24 +109,25 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         echo $before;
         
         $loop = new WP_Query( $args );
-        while ($loop->have_posts()) {
-            $loop->the_post();
+        if (!$loop->have_posts()) {
+            echo $emptyevents;
+        } else {
+            while ($loop->have_posts()) {
+                $loop->the_post();
 
-            $post_id = get_the_ID();
+                $post_id = get_the_ID();
 
-            
-            
-            
-            // Old template system (1.3.1 and older)
-            $output = $this->parse_event_old($template);
-            
-            // new parsing system, 1.4.0 and newer
-            $output = $this->parse_event($output);
-            
-            echo $output;
+                // Old template system (1.3.1 and older)
+                $output = $this->parse_event_old($template);
 
-         }
-         echo $after;
+                // new parsing system, 1.4.0 and newer
+                $output = $this->parse_event($output);
+
+                echo $output;
+
+             }
+        }
+        echo $after;
 
         /* After widget (defined by themes). */
         echo $after_widget;
@@ -215,6 +218,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             'event-category', //The event category
             'content',        //The event content (number of words can be limited by the 'limit' attribute)
             'permalink',      //The event post permalink
+            'excerpt',      //The event excerpt
         );
         
         $regex = 
@@ -273,6 +277,13 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 return $m[1] . $content . $m[6];
             case 'permalink':
                 return $m[1] . get_permalink() . $m[6];
+            case 'excerpt':
+                $excerpt = get_the_excerpt();
+                if ( 0 != $limit ) {
+                        preg_match( '/([\S]+\s*){0,' . $limit . '}/', $excerpt, $excerpt );
+                        $excerpt = trim( $excerpt[0] );
+                }
+                return $m[1] . get_the_excerpt() . $m[6];
             case 'event-category':
                 $categoryArray = am_get_the_event_category();
                 if (count($categoryArray) > 0) {
@@ -333,6 +344,8 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             'category' => 'all', 
             'venue' => 'all', 
             'postcount' => '3', 
+			'offset' => 86400, // 24 hours
+            'emptyevents' => '<p>No upcoming events</p>',
             'template' => $default_template, 
             'after' => '<p><a href="#">' . __('See More Events ->', 'am-events') . '</a></p>', 
             'before' => '',  
@@ -343,9 +356,11 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         $title      = $instance[ 'title' ];
         $category   = $instance[ 'category' ];
         $venue      = $instance[ 'venue' ];
+        $emptyevents= $instance[ 'emptyevents' ];
         $template   = $instance[ 'template' ];
         $before     = $instance[ 'before' ];
         $after      = $instance[ 'after' ];
+		$offset     = $instance[ 'offset' ];
         
         $args = array( 'hide_empty' => false );
         
@@ -390,6 +405,16 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             <input type="number" id="<?php echo $this->get_field_id('postcount') ?>" name="<?php echo $this->get_field_name('postcount') ?>" type="number" min="1" value="<?php echo $instance['postcount']; ?>" />      
             <br />
             <br />
+			
+			<label for="<?php echo $this->get_field_id( 'offset' ); ?>"><?php _e('Keep passed events visible for:', 'am-events')?></label><br />
+			<select id="<?php echo $this->get_field_id( 'offset' ); ?>" name="<?php echo $this->get_field_name( 'offset' ); ?>">
+				<option value="0" <?php if ( $offset === 0 ){ echo 'selected="selected"'; }?>><?php _e("Don't keep visible", 'am-events') ?></option>
+				<option value="3600" <?php if ( $offset === 3600 ){ echo 'selected="selected"'; }?>><?php _e("1 Hour", 'am-events') ?></option>
+				<option value="86400" <?php if ( $offset === 86400){ echo 'selected="selected"'; }?>><?php _e("24 Hours", 'am-events') ?></option>
+				<option value="604800" <?php if ( $offset === 604800){ echo 'selected="selected"'; }?>><?php _e("1 Week", 'am-events') ?></option>
+			</select>
+			<br />
+            <br />
             
             <label for="<?php echo $this->get_field_id( 'before' ); ?>"><?php _e('Display before events:', 'am-events')?></label><br />
             <textarea class="widefat" rows="2" id="<?php echo $this->get_field_id('before') ?>" name="<?php echo $this->get_field_name( 'before' ) ?>"><?php echo $before ?></textarea>
@@ -398,6 +423,11 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             
             <label for="<?php echo $this->get_field_id( 'template' ); ?>"><?php _e('Template for single event:', 'am-events')?></label><br />
             <textarea class="widefat" rows="10" id="<?php echo $this->get_field_id('template') ?>" name="<?php echo $this->get_field_name( 'template' ) ?>"><?php echo $template ?></textarea>
+            <br />
+            <br />
+            
+            <label for="<?php echo $this->get_field_id( 'emptyevents' ); ?>"><?php _e('Display when no events are found:', 'am-events')?></label><br />
+            <textarea class="widefat" rows="2" id="<?php echo $this->get_field_id('emptyevents') ?>" name="<?php echo $this->get_field_name( 'emptyevents' ) ?>"><?php echo $emptyevents ?></textarea>
             <br />
             <br />
             
@@ -427,7 +457,8 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
            $instance['template'] = $new_instance['template'];
            $instance['before'] = $new_instance['before'];
            $instance['after'] = $new_instance['after'];
-           
+		   $instance['offset'] = intval(strip_tags($new_instance['offset']));
+           $instance['emptyevents'] = $new_instance['emptyevents'];
            
            return $instance;
    }
