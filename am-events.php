@@ -138,21 +138,35 @@ function am_plugin_settings() {
         settings_fields( 'am-events-settings-group' );
         do_settings_sections( 'am-events-settings-group' );
         ?>
+		<?php if( isset($_GET['settings-updated']) ) { ?>
+			<script>
+				jQuery( "#setting-error-settings_updated p" ).append(" Remember to reapply permalinks when changing slug.");
+			</script>
+		<?php } ?>
         <table><tbody>
             <tr>
-                <td><label for="am_rewrite_slug"><?php _e( 'Slug for event posts', 'am_events' ) ?></label> </td>   
-                <td><input id="am_rewrite_slug" valuechanged="" type="text" name="am_rewrite_slug" value="<?php echo get_option('am_rewrite_slug', 'am_event'); ?>" /></td>
-            </tr>
-            <tr></tr>
+                <td><label for="am_rewrite_slug"><?php _e( 'Slug for event posts', 'am_events' ) ?></label> </td>  
+                <td>
+					<input id="am_rewrite_slug" valuechanged="" type="text" name="am_rewrite_slug" value="<?php echo get_option('am_rewrite_slug', 'am_event'); ?>" />
+					
+				</td>
+
+			</tr>
+			<tr></tr>
             <tr>
                 <td><label for="am_timepicker_minutestep"><?php _e( 'Timepicker minute step', 'am-events' ) ?></label> </td>   
                 <td><input id="am_timepicker_minutestep" valuechanged="" type="number" min="1" max="59" name="am_timepicker_minutestep" value="<?php echo get_option('am_timepicker_minutestep', 15); ?>" /></td>
-            </tr>
+			</tr>
+
+			</tr>
         </tbody></table>
+		
+
+		
         
         <?php submit_button(); ?>
         </form>
-        
+        <span id="slug-instructions" style="display:none"></span>
         
         
 	</div>
