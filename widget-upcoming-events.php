@@ -109,7 +109,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         echo $before;
         
         $loop = new WP_Query( $args );
-        if (!$loop->have_posts()) {
+        if (!($loop->have_posts())) {
             echo $emptyevents;
         } else {
             while ($loop->have_posts()) {

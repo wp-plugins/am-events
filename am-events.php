@@ -141,7 +141,7 @@ function am_plugin_settings() {
         <table><tbody>
             <tr>
                 <td><label for="am_rewrite_slug"><?php _e( 'Slug for event posts', 'am_events' ) ?></label> </td>   
-                <td><input id="am_rewrite_slug" valuechanged="" type="text" name="am_rewrite_slug" value="<?php echo get_option('am_rewrite_slug', 'am-events'); ?>" /></td>
+                <td><input id="am_rewrite_slug" valuechanged="" type="text" name="am_rewrite_slug" value="<?php echo get_option('am_rewrite_slug', 'am_event'); ?>" /></td>
             </tr>
             <tr></tr>
             <tr>
@@ -710,7 +710,7 @@ function am_register_post_type() {
         'description' => __('Type for events', 'am-events'),
         'supports' => array('title', 'editor', 'thumbnail', 'excerpt'),
         'taxonomies' => array('am_event_category', 'am_venue'),
-        'rewrite' => array( 'slug' => get_option('am_rewrite_slug', 'am-events') ),
+        'rewrite' => array( 'slug' => get_option('am_rewrite_slug', 'am_event') ),
     );
     
     
