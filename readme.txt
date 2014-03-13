@@ -257,7 +257,6 @@ If you need to display only upcoming events, add the following meta_query argume
                 'key' => 'am_enddate',
                 'value' => date('Y-m-d H:i:s', time()),
                 'compare' => ">",
-                ),
             ),
 	),
 
