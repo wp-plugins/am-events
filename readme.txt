@@ -25,12 +25,12 @@ See Other Notes for detailed information and a small tutorial about the custom p
 
 If you think something critical is missing, feel free to send me a request. I'm using this on some of my client's sites so I'll certainly be improving/fixing it for upcoming WordPress versions.
 
-The plugin is available in the following languages (A pot-file for additional translations is included): 
+The plugin is available in the following languages (pot-file included for additional translations): 
 
-* english
-* french
-* norwegian
-* finnish
+* English
+* French
+* Norwegian
+* Finnish
 
 == Installation ==
 
@@ -52,6 +52,9 @@ See 'Other Notes' for a simple tutorial.
 3. Example page with events and the widget.
 
 == Changelog ==
+
+= 1.7.1 =
+* Added French language
 
 = 1.7.0 =
 * Added option to change slug for event posts
