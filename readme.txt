@@ -19,13 +19,18 @@ Displaying the events is done in the theme files using WP_Query and the template
 
 The plugin also includes a widget for showing upcoming events. It uses a very simple template system for full control of the layout.
 
-The plugin is fully translatable. The only available languages at the moment are english(default), finnish and norwegian. The download includes a .pot-file for additional translations.
-
 For integrating AM Events to an existing theme, I suggest creating a [child theme](http://codex.wordpress.org/Child_Themes) with custom page templates. You can download a full example of a working Twenty Twelve child theme from my website [(Download link)](http://attemoisio.fi/projects/am-events/twentytwelve-child.zip). It contains three different page templates for events pages.
 
 See Other Notes for detailed information and a small tutorial about the custom post type and the widget.
 
 If you think something critical is missing, feel free to send me a request. I'm using this on some of my client's sites so I'll certainly be improving/fixing it for upcoming Wordpress versions.
+
+The plugin is available in the following languages (A pot-file for additional translations is included): 
+
+* english
+* french
+* norwegian
+* finnish
 
 == Installation ==
 
