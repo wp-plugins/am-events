@@ -3,7 +3,7 @@
   Plugin Name: AM Events
   Plugin URI: http://wordpress.org/extend/plugins/am-events/
   Description: Adds a post type for events and a customizable widget for displaying upcoming events.
-  Version: 1.7.0
+  Version: 1.7.1
   Author: Atte Moisio
   Author URI: http://attemoisio.fi
   License: GPL2
@@ -13,7 +13,7 @@
  * =COPYRIGHT
  * ****************************************************************************/
 
-/*  Copyright 2013  Atte Moisio  (email : atte.moisio@attemoisio.fi)
+/*  Copyright 2013 Atte Moisio  (email : atte.moisio@attemoisio.fi)
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License, version 2, as
