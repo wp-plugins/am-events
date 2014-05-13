@@ -104,6 +104,11 @@ class WP_Test_Template_Tags extends WP_UnitTestCase {
 		
 		$this->assertRegExp( $regexp_separator, am_get_the_venue_list( '|', 'single', $test_post_id), "\$parents = 'single', \$separator='|'");
 		$this->assertRegExp( $regexp_no_separator, am_get_the_venue_list( '', 'single', $test_post_id), "\$parents = 'single', \$separator=''");
+		$this->assertRegExp( $regexp_separator, am_get_the_venue_list( '|', '', $test_post_id), "\$parents = '', \$separator='|'");
+		$this->assertRegExp( $regexp_no_separator, am_get_the_venue_list( '', '', $test_post_id), "\$parents = '', \$separator=''");
+		$this->assertRegExp( $regexp_separator, am_get_the_venue_list( '|', 'multiple', $test_post_id), "\$parents = 'multiple', \$separator='|'");
+		$this->assertRegExp( $regexp_no_separator, am_get_the_venue_list( '', 'multiple', $test_post_id), "\$parents = 'multiple', \$separator=''");
+	
 	}
 	
 	/**
@@ -197,7 +202,10 @@ class WP_Test_Template_Tags extends WP_UnitTestCase {
 		
 		$this->assertRegExp( $regexp_separator, am_get_the_event_category_list( '|', 'single', $test_post_id), "\$parents = 'single', \$separator='|'");
 		$this->assertRegExp( $regexp_no_separator, am_get_the_event_category_list( '', 'single', $test_post_id), "\$parents = 'single', \$separator=''");
-	
+		$this->assertRegExp( $regexp_separator, am_get_the_event_category_list( '|', '', $test_post_id), "\$parents = '', \$separator='|'");
+		$this->assertRegExp( $regexp_no_separator, am_get_the_event_category_list( '', '', $test_post_id), "\$parents = '', \$separator=''");
+		$this->assertRegExp( $regexp_separator, am_get_the_event_category_list( '|', 'multiple', $test_post_id), "\$parents = 'multiple', \$separator='|'");
+		$this->assertRegExp( $regexp_no_separator, am_get_the_event_category_list( '', 'multiple', $test_post_id), "\$parents = 'multiple', \$separator=''");
 	}
 	
 	/**
