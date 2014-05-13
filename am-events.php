@@ -516,11 +516,8 @@ function add_admin_message($message, $error = false)
  * @return type
  */
 function am_save_event() {
-
-
     // Remove save_post action to avoid infinite loop when calling wp_insert_posts
     remove_action('save_post', 'am_save_event');
-
     
     if (!isset($_POST['post_ID']))
         return;
