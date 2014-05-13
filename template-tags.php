@@ -140,10 +140,6 @@ function am_get_the_venue( $id = false ) {
 
 	$venues = array_values( $venues );
 
-	foreach ( array_keys( $venues ) as $key ) {
-		_make_cat_compat( $venues[$key] );
-	}
-
         // Filter name is plural because we return alot of categories (possibly more than #13237) not just one
 	return apply_filters( 'am_get_the_venues', $venues );
         
@@ -274,9 +270,6 @@ function am_get_the_event_category( $id = false ) {
 
 	$categories = array_values( $categories );
 
-	foreach ( array_keys( $categories ) as $key ) {
-		_make_cat_compat( $categories[$key] );
-	}
 
 	// Filter name is plural because we return alot of categories (possibly more than #13237) not just one
 	return apply_filters( 'am_get_the_event_categories', $categories );
