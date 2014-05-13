@@ -107,6 +107,25 @@ class WP_Test_Template_Tags extends WP_UnitTestCase {
 	}
 	
 	/**
+	 * Test am_in_venue( $venue, $post = null )
+	 */
+	function am_in_venue() {
+		$test_post_id = $this->factory->post->create( array( 'post_type' => 'am_event' ) );
+		
+		$venue1 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Beach' ) );
+		$venue2 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Home' ) );
+		$venue3 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'McDonalds' ) );
+		wp_set_object_terms( $test_post_id, array($venue1, $venue3), 'am_venues' );
+		
+		// Example of return value:
+		// <a href="" title="View all events in Beach" rel="venue">Beach</a>|<a href="" title="View all events in Home" rel="venue">Home</a>|<a href="" title="View all events in McDonalds" rel="venue">McDonalds</a>
+		
+		$this->assertTrue( am_in_venue( "Beach", $test_post_id) );
+		$this->assertFalse( am_in_venue( "Home", $test_post_id) );
+	}
+	
+	
+	/**
 	 * Test am_get_the_event_category( $id = false ) {
 	 */
 	function test_am_get_the_event_category( ) {
