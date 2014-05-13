@@ -102,7 +102,7 @@ class WP_Test_Template_Tags extends WP_UnitTestCase {
 		
 		// Example of return value:
 		// <a href="" title="View all events in Beach" rel="venue">Beach</a>|<a href="" title="View all events in Home" rel="venue">Home</a>|<a href="" title="View all events in McDonalds" rel="venue">McDonalds</a>
-		
+		// TODO: Assert with all values of parent
 		$this->assertRegExp( '/<a.*Beach<\\/a>\|<a.*Home<\\/a>\|<a.*McDonalds<\\/a>/i', am_get_the_venue_list( '|', 'single', $test_post_id));
 	}
 	
@@ -138,5 +138,24 @@ class WP_Test_Template_Tags extends WP_UnitTestCase {
 		
 		$this->assertEquals( array($cat1, $cat3), wp_list_pluck(am_get_the_event_category( $test_post_id ), 'term_id'));
 	}
+	
+	/**
+	 * Test am_get_the_event_category_list( $separator = '', $parents='', $post_id = false )
+	 */
+	function test_am_get_the_event_category_list() {
+		$test_post_id = $this->factory->post->create( array( 'post_type' => 'am_event' ) );
+		
+		$category1 = $this->factory->term->create( array( 'taxonomy' => 'am_event_categories', 'name' => 'Category1' ) );
+		$category2 = $this->factory->term->create( array( 'taxonomy' => 'am_event_categories', 'name' => 'Category2' ) );
+		$category3 = $this->factory->term->create( array( 'taxonomy' => 'am_event_categories', 'name' => 'Category3' ) );
+		wp_set_object_terms( $test_post_id, array($category1, $category2, $category3), 'am_event_categories' );
+		
+		// Example of return value:
+		// <a href="" title="View all events in Category1" rel="category">Category1</a>|<a href="" title="View all events in Category2" rel="category">Category2</a>|<a href="" title="View all events in Category3" rel="category">Category3</a>
+		
+		// TODO: Assert with all values of parent
+		$this->assertRegExp( '/<a.*Category1<\\/a>\|<a.*Category2<\\/a>\|<a.*Category3<\\/a>/i', am_get_the_event_category_list( '|', 'single', $test_post_id));
+	}
+	
 	
 }
