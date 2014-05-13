@@ -94,10 +94,11 @@ function am_the_enddate($format = 'Y-m-d H:i:s', $before = '', $after = '', $ech
 
     $date = $before . $date . $after;
 
-    if ( $echo )
+    if ( $echo ) {
         echo $date;
-    else 
+	} else {
         return $date;
+	}
 }
 
 /**
@@ -158,8 +159,9 @@ function am_get_the_venue( $id = false ) {
  * @return bool True if the current post is in any of the given venues.
  */
 function am_in_venue( $venue, $post = null ) {
-	if ( empty( $venue ) )
+	if ( empty( $venue ) ) {
 		return false;
+	}
 
 	return has_term( $venue, 'am_venues', $post );
 }
@@ -362,8 +364,9 @@ function am_get_the_event_category_list( $separator = '', $parents='', $post_id 
  * @return bool True if the current post is in any of the given categories.
  */
 function am_in_event_category( $eventCategory, $post = null ) {
-	if ( empty( $eventCategory ) )
+	if ( empty( $eventCategory ) ) {
 		return false;
+	}
 
 	return has_term( $category, 'am_event_categories', $post );
 }
