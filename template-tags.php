@@ -363,13 +363,15 @@ function am_get_the_event_category_list( $separator = '', $parents='', $post_id 
  * @param int|object $post Optional. Post to check instead of the current post. (since 2.7.0)
  * @return bool True if the current post is in any of the given categories.
  */
-function am_in_event_category( $eventCategory, $post = null ) {
-	if ( empty( $eventCategory ) ) {
+function am_in_event_category( $event_category, $post = null ) {
+	if ( empty( $event_category ) ) {
 		return false;
 	}
 
-	return has_term( $category, 'am_event_categories', $post );
+	return has_term( $event_category, 'am_event_categories', $post );
 }
+
+
 
 /**
  * Display the event category list for the event.
