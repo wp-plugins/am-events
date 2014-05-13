@@ -50,5 +50,56 @@ class WP_Test_Template_Tags extends WP_UnitTestCase {
 		$post = get_post( $test_post_id );
 		$this->assertEquals( '<test>2012-11-10 09:08:07</test>', am_the_startdate( 'Y-m-d H:i:s', '<test>', '</test>', false ) );
 	}
+	
+	/**
+	 * Test am_get_the_enddate($format = 'Y-m-d H:i:s')
+	 */
+	function test_am_get_the_enddate() {
+		$test_post_id = $this->factory->post->create( array( 'post_type' => 'am_event' ) );
+		update_post_meta($test_post_id, 'am_enddate', '2012-11-10 09:08:07');
 
+		$this->assertEquals( '2012-11-10 09:08:07', am_get_the_enddate( 'Y-m-d H:i:s',$test_post_id ) );
+		$this->assertEquals( '10/11/2012', am_get_the_enddate( 'd/m/Y',$test_post_id ) );
+	}
+	
+	/**
+	 * Test am_the_enddate($format = 'Y-m-d H:i:s', $before = '', $after = '', $echo = true)
+	 */
+	function test_am_the_enddate() {
+		global $post;
+		$test_post_id = $this->factory->post->create( array( 'post_type' => 'am_event' ) );
+		update_post_meta($test_post_id, 'am_enddate', '2012-11-10 09:08:07');
+		
+		$post = get_post( $test_post_id );
+		$this->assertEquals( '<test>2012-11-10 09:08:07</test>', am_the_enddate( 'Y-m-d H:i:s', '<test>', '</test>', false ) );
+	}
+	
+	/**
+	 * Test am_get_the_venue( $id = false )
+	 */
+	function test_am_get_the_venue( ) {
+		$test_post_id = $this->factory->post->create( array( 'post_type' => 'am_event' ) );
+		
+		$venue1 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Venue1' ) );
+		$venue2 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Venue2' ) );
+		$venue3 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Venue3' ) );
+		wp_set_object_terms( $test_post_id, array($venue1, $venue3), 'am_venues' );
+	
+		$this->assertEquals( array($venue1, $venue3), wp_list_pluck(am_get_the_venue( $test_post_id ), 'term_id'));
+	}
+
+	
+	/**
+	 * Test am_get_the_venue_list( $separator = '', $parents='', $post_id = false )
+	 */
+	function test_am_get_the_venue_list() {
+		$test_post_id = $this->factory->post->create( array( 'post_type' => 'am_event' ) );
+		
+		$venue1 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Venue1' ) );
+		$venue2 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Venue2' ) );
+		$venue3 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Venue3' ) );
+		wp_set_object_terms( $test_post_id, array($venue1, $venue3), 'am_venues' );
+	
+		$this->assertEquals( array($venue1, $venue3), wp_list_pluck(am_get_the_venue( $test_post_id ), 'term_id'));
+	}
 }
