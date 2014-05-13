@@ -95,11 +95,11 @@ class WP_Test_Template_Tags extends WP_UnitTestCase {
 	function test_am_get_the_venue_list() {
 		$test_post_id = $this->factory->post->create( array( 'post_type' => 'am_event' ) );
 		
-		$venue1 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Venue1' ) );
-		$venue2 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Venue2' ) );
-		$venue3 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Venue3' ) );
-		wp_set_object_terms( $test_post_id, array($venue1, $venue3), 'am_venues' );
-	
-		$this->assertEquals( array($venue1, $venue3), wp_list_pluck(am_get_the_venue( $test_post_id ), 'term_id'));
+		$venue1 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Beach' ) );
+		$venue2 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Home' ) );
+		$venue3 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'McDonalds' ) );
+		wp_set_object_terms( $test_post_id, array($venue1, $venue2, $venue3), 'am_venues' );
+		
+		$this->assertRegExp( '/<a.*Beach<\\/a>\|<a.*Home<\\/a>\|<a.*McDonalds<\\/a>/i', am_get_the_venue_list( '|', 'single', $test_post_id));
 	}
 }
