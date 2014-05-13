@@ -3,27 +3,6 @@
 /**
  * Tests to template tags.
  *
- * Dates:
- *
- *          am_the_startdate($format = 'Y-m-d H:i:s', $before = '', $after = '', $echo = true)
- *          am_get_the_startdate( $format = 'Y-m-d H:i:s', $post = 0 )
- *          am_the_enddate($format = 'Y-m-d H:i:s', $before = '', $after = '', $echo = true)
- *          am_get_the_enddate( $format = 'Y-m-d H:i:s', $post = 0 )
- * 
- * Venues:
- *
- *          am_get_the_venue( $id = false )
- *          am_in_venue( $venue, $post = null )
- *          am_get_the_venue_list( $separator = '', $parents='', $post_id = false )
- *          am_the_venue( $separator = '', $parents='', $post_id = false )
- * 
- * Event categories:
- *
- *          am_get_the_event_category( $id = false )
- *          am_get_the_event_category_list( $separator = '', $parents='', $post_id = false )
- *          am_in_event_category( $eventCategory, $post = null )
- *          am_the_event_category( $separator = '', $parents='', $post_id = false )
- *
  * @package wordpress-plugins-tests
  */
 class WP_Test_Template_Tags extends WP_UnitTestCase {
@@ -107,6 +86,45 @@ class WP_Test_Template_Tags extends WP_UnitTestCase {
 	}
 	
 	/**
+	 * Test am_the_venue( $separator = '', $parents='', $post_id = false )
+	 */
+	function test_am_the_venue( ) {
+		$test_post_id = $this->factory->post->create( array( 'post_type' => 'am_event' ) );
+		
+		$venue1 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Beach' ) );
+		$venue2 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Home' ) );
+		$venue3 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'McDonalds' ) );
+		wp_set_object_terms( $test_post_id, array($venue1, $venue2, $venue3), 'am_venues' );
+		
+		ob_start();
+		am_the_venue('|', 'single', $test_post_id);
+		$echoed = ob_get_contents();
+		ob_end_clean();
+		
+		$this->assertRegExp( '/<a.*Beach<\\/a>\|<a.*Home<\\/a>\|<a.*McDonalds<\\/a>/i', $echoed);
+	}
+	
+	/**
+	 * Test am_the_event_category( $separator = '', $parents='', $post_id = false )
+	 */
+	function test_am_the_event_category() {
+		$test_post_id = $this->factory->post->create( array( 'post_type' => 'am_event' ) );
+		
+		$category1 = $this->factory->term->create( array( 'taxonomy' => 'am_event_categories', 'name' => 'Category1' ) );
+		$category2 = $this->factory->term->create( array( 'taxonomy' => 'am_event_categories', 'name' => 'Category2' ) );
+		$category3 = $this->factory->term->create( array( 'taxonomy' => 'am_event_categories', 'name' => 'Category3' ) );
+		wp_set_object_terms( $test_post_id, array($category1, $category2, $category3), 'am_event_categories' );
+		
+		ob_start();
+		am_the_event_category('|', 'single', $test_post_id);
+		$echoed = ob_get_contents();
+		ob_end_clean();
+		
+		// TODO: Assert with all values of parent
+		$this->assertRegExp( '/<a.*Category1<\\/a>\|<a.*Category2<\\/a>\|<a.*Category3<\\/a>/i', $echoed);
+	}
+	
+	/**
 	 * Test am_in_venue( $venue, $post = null )
 	 */
 	function am_in_venue() {
@@ -116,10 +134,6 @@ class WP_Test_Template_Tags extends WP_UnitTestCase {
 		$venue2 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'Home' ) );
 		$venue3 = $this->factory->term->create( array( 'taxonomy' => 'am_venues', 'name' => 'McDonalds' ) );
 		wp_set_object_terms( $test_post_id, array($venue1, $venue3), 'am_venues' );
-		
-		// Example of return value:
-		// <a href="" title="View all events in Beach" rel="venue">Beach</a>|<a href="" title="View all events in Home" rel="venue">Home</a>|<a href="" title="View all events in McDonalds" rel="venue">McDonalds</a>
-		
 		$this->assertTrue( am_in_venue( "Beach", $test_post_id) );
 		$this->assertFalse( am_in_venue( "Home", $test_post_id) );
 	}
@@ -155,6 +169,20 @@ class WP_Test_Template_Tags extends WP_UnitTestCase {
 		
 		// TODO: Assert with all values of parent
 		$this->assertRegExp( '/<a.*Category1<\\/a>\|<a.*Category2<\\/a>\|<a.*Category3<\\/a>/i', am_get_the_event_category_list( '|', 'single', $test_post_id));
+	}
+	
+	/**
+	 * Test am_in_event_category( $eventCategory, $post = null )
+	 */
+	function am_in_event_category() {
+		$test_post_id = $this->factory->post->create( array( 'post_type' => 'am_event' ) );
+		
+		$cat1 = $this->factory->term->create( array( 'taxonomy' => 'am_event_categories', 'name' => 'Category1' ) );
+		$cat2 = $this->factory->term->create( array( 'taxonomy' => 'am_event_categories', 'name' => 'Category2' ) );
+		$cat3 = $this->factory->term->create( array( 'taxonomy' => 'am_event_categories', 'name' => 'Category3' ) );
+		wp_set_object_terms( $test_post_id, array($cat1, $cat3), 'am_venues' );
+		$this->assertTrue( am_in_event_category( "Category1", $test_post_id) );
+		$this->assertFalse( am_in_event_category( "Category2", $test_post_id) );
 	}
 	
 	

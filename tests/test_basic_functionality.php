@@ -34,6 +34,8 @@ class WP_Test_Basic_Functionality extends WP_UnitTestCase {
 		$this->assertEquals( $date, $updated_date);
 	}
 	
+	
+	
 	/**
 	 * Test post enddate update
 	 */

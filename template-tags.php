@@ -96,7 +96,7 @@ function am_the_enddate($format = 'Y-m-d H:i:s', $before = '', $after = '', $ech
 
     if ( $echo )
         echo $date;
-    else
+    else 
         return $date;
 }
 
