@@ -99,9 +99,11 @@ class WP_Test_Template_Tags extends WP_UnitTestCase {
 		// <a href="" title="View all events in Beach" rel="venue">Beach</a>|<a href="" title="View all events in Home" rel="venue">Home</a>|<a href="" title="View all events in McDonalds" rel="venue">McDonalds</a>
 		// TODO: Assert with all values of parent
 		
-		$regexp = '/<a.*Beach<\\/a>\|<a.*Home<\\/a>\|<a.*McDonalds<\\/a>/i';
-		$this->assertRegExp( $regexp, am_get_the_venue_list( '|', 'single', $test_post_id));
-		$this->assertRegExp( $regexp, am_get_the_venue_list( '|', 'multi', $test_post_id));
+		$regexp_separator = '/<a.*<\\/a>\|<a.*<\\/a>\|<a.*<\\/a>/i';
+		$regexp_no_separator = "/<ul.*(<li>.*<a.*<\/a><\/li>)*<\/ul>/sx";
+		
+		$this->assertRegExp( $regexp_separator, am_get_the_venue_list( '|', 'single', $test_post_id), "\$parents = 'single', \$separator='|'");
+		$this->assertRegExp( $regexp_no_separator, am_get_the_venue_list( '', 'single', $test_post_id), "\$parents = 'single', \$separator=''");
 	}
 	
 	/**
@@ -189,6 +191,13 @@ class WP_Test_Template_Tags extends WP_UnitTestCase {
 		
 		// TODO: Assert with all values of parent
 		$this->assertRegExp( '/<a.*Category1<\\/a>\|<a.*Category2<\\/a>\|<a.*Category3<\\/a>/i', am_get_the_event_category_list( '|', 'single', $test_post_id));
+		
+		$regexp_separator = '/<a.*<\\/a>\|<a.*<\\/a>\|<a.*<\\/a>/i';
+		$regexp_no_separator = "/<ul.*(<li>.*<a.*<\/a><\/li>)*<\/ul>/sx";
+		
+		$this->assertRegExp( $regexp_separator, am_get_the_event_category_list( '|', 'single', $test_post_id), "\$parents = 'single', \$separator='|'");
+		$this->assertRegExp( $regexp_no_separator, am_get_the_event_category_list( '', 'single', $test_post_id), "\$parents = 'single', \$separator=''");
+	
 	}
 	
 	/**
