@@ -601,7 +601,7 @@ function am_save_event() {
                         }
                     }
 
-                                    // TODO: Notify user when recurrent events have been created.
+                    // TODO: Notify user when recurrent events have been created.
                     // add_admin_message( sprintf(__('Created %d recurrent events.', 'am-events'), $recurrent_amount) );
 
                 }
@@ -654,7 +654,7 @@ function am_edit_event_load() {
  */
 function am_sort_events($vars) {
 
-    /* Check if we're viewing the 'movie' post type. */
+    /* Check if we're viewing the 'am_event' post type. */
     if (isset($vars['post_type']) && 'am_event' === $vars['post_type']) {
 
         /* Check if 'orderby' is set to 'am_startdate'. */

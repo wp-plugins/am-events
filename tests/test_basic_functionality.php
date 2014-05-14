@@ -7,6 +7,31 @@
  */
 class WP_Test_Basic_Functionality extends WP_UnitTestCase {
 	
+	function setUp() {
+		parent::setUp();
+		$this->current_user = get_current_user_id();
+		wp_set_current_user( $this->factory->user->create( array( 'role' => 'editor' ) ) );
+	}
+
+	function tearDown() {
+		wp_set_current_user( $this->current_user );
+		parent::tearDown();
+	}
+	
+	/**
+	 * Test event post save_post
+	 */
+	function test_save_post() {
+		$test_post_id = $this->factory->post->create( array( 'post_type' => 'am_event' ) );
+	
+		$_POST = array(
+		    'post_ID'       => $this->_post->ID,
+		    'savepostnonce' => wp_create_nonce( 'save-post' ),
+		    'post_content'  => $this->_post->post_content . PHP_EOL . $md5,
+		    'savepost'      => 1
+		);
+	}
+	
 	/**
 	 * Test event update
 	 */
