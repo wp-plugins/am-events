@@ -218,7 +218,8 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             'event-category', //The event category
             'content',        //The event content (number of words can be limited by the 'limit' attribute)
             'permalink',      //The event post permalink
-            'excerpt',      //The event excerpt
+            'excerpt',        //The event excerpt
+			'if',			  //Conditional tag
         );
         
         $regex = 
@@ -244,10 +245,12 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 'format'    => '',
                 'limit'     => '0',
                 'link'      => 'false',
+				'cond'      => '',
         ), shortcode_parse_atts( $m[3] ) ) );
         
         //Sanitize the attributes
         $format    = esc_attr( $format );
+		$cond    = esc_attr( $cond );
         $limit     = absint( $limit );
         $link  = ( 'true' === $link );
         
@@ -313,6 +316,33 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 $enddate = am_get_the_enddate();
                 $format = $format === '' ? "m/d/Y H:i" : $format;
                 return $m[1] . date_i18n( $format, strtotime($enddate) ) . $m[6];
+			case 'if':
+				switch ($cond) {
+				
+					case 'startdate-not-enddate':
+						$result = am_get_the_startdate() !== am_get_the_enddate() ? $m[1] . $m[5] . $m[6] : '';
+						return $this->parse_event($result);
+					
+					case 'startday-not-endday':
+						$start_day = date('mdY', strtotime(am_get_the_startdate()));
+						$end_day = date('mdY', strtotime(am_get_the_enddate()));
+						$result = $start_day !== $end_day ? $m[1] . $m[5] . $m[6] : '';
+						return $this->parse_event($result);
+					
+					case 'startdate-is-enddate':
+						$result = am_get_the_startdate() === am_get_the_enddate() ? $m[1] . $m[5] . $m[6] : '';
+						return $this->parse_event($result);
+					
+					case 'startday-is-endday':
+						$start_day = date('mdY', strtotime(am_get_the_startdate()));
+						$end_day = date('mdY', strtotime(am_get_the_enddate()));
+						$result = $start_day === $end_day ? $m[1] . $m[5] . $m[6] : '';
+						return $this->parse_event($result);
+					
+					default:
+						return $this->parse_event($m[1] . $m[5] . $m[6]);
+				}
+				
                 
         }
         
