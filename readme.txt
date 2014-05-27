@@ -53,6 +53,9 @@ See 'Other Notes' for a simple tutorial.
 
 == Changelog ==
 
+= 1.8.0 =
+* Added conditional tags for the widget 
+
 = 1.7.1 =
 * Added French language
 
@@ -101,28 +104,29 @@ See 'Other Notes' for a simple tutorial.
 
 == Upgrade Notice ==
 
-= 1.7.0 =
+= 1.8.0 =
+* Adds conditional tags for the widget
 
+= 1.7.1 =
+* Adds French language
+
+= 1.7.0 =
 * Adds option to change slug for event posts
 * Adds [excerpt] shortcode for the widget
 * Adds customizable "No upcoming events" message to widget
 * Adds option to change offset for events shown in the widget
 
 = 1.6.0 =
-
 * Adds option to change time picker minute step
 * Fixes featured image and excerpts not copying when creating recurrent events
 
 = 1.5.1 =
-
 * Fixes a few minor bugs
 
 = 1.5.0 =
-
 * Adds support for thumbnails and excerpts
 
 = 1.4.0 =
-
 * Adds new improved widget shortcode system
 
 = 1.3.1 =
@@ -157,6 +161,15 @@ Here are the shortcodes available in the upcoming events widget template.
  * [content]
  * [excerpt]
  * [permalink]
+ 
+Conditional shortcodes:
+
+ * [if cond="startdate-is-enddate"]
+ * [if cond="startdate-not-enddate"]
+ * [if cond="startday-is-endday"]
+ * [if cond="startday-not-endday"]
+ 
+ 
 
 
 The title can be linked to the event post with the 'link' attribute, e.g. [event-title link=true]
@@ -172,6 +185,13 @@ You can use any shortcode as many times as needed in a single template. To separ
     [start-date format='d.m.Y'] 
     <span>divider</span>
     [start-date format='H:i']
+	
+Example usage of conditional shortcode:
+
+	[start-date format='D d.m.Y H:s'] 
+    [if cond='startdate-not-enddate']
+     - [end-date format='D d.m.Y H:s'] 
+    [/if]
 
 = Template tags =
 
