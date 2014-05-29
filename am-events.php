@@ -234,6 +234,8 @@ function am_custom_script_post() {
         wp_enqueue_script(
                 'jquery-custom', plugins_url('/script/jquery-ui-1.10.2.custom.min.js', __FILE__)
         );
+		
+		
 
 		// JQuery datetime picker from http://trentrichardson.com/examples/timepicker/
 		// datetimepicker localization
@@ -299,7 +301,7 @@ function am_custom_script_post() {
 
         // Custom script for assigning jquery to inputs
         wp_enqueue_script(
-                'am_custom_script', plugins_url('/script/am-events-post.js', __FILE__), array('jquery-custom')
+                'am_custom_script', plugins_url('/script/admin-post.js', __FILE__), array('jquery-custom')
         );
     }
 }
@@ -412,48 +414,51 @@ function am_meta_box_content($post) {
  */
 function am_save_custom_meta($post_id) {
     global $post;
+	
+	if (isset($_GET['action']) && $_GET['action'] == 'trash')
+		return;
 
-    // Verification check.
-    if ( isset($_POST['am_nonce']) && !wp_verify_nonce( $_POST['am_nonce'], plugin_basename(__FILE__) ) )
-          return;
-    
-    // And they're of the right level?
-    if (!current_user_can('edit_posts'))
-        return;
-    /*
-     * check if the $_POST variable is set, 
-     * meaning that the form been submitted, 
-     * and if so then update our post meta options using update_post_meta().
-     */
-    if ($_POST && get_post_type($post) === 'am_event') {
+	// Verification check.
+	if ( isset($_POST['am_nonce']) && !wp_verify_nonce( $_POST['am_nonce'], plugin_basename(__FILE__) ) )
+		return;
+	
+	// And they're of the right level?
+	if (!current_user_can('edit_posts'))
+		return;
+	/*
+	 * check if the $_POST variable is set, 
+	 * meaning that the form been submitted, 
+	 * and if so then update our post meta options using update_post_meta().
+	 */
+	if ($_POST && get_post_type($post) === 'am_event') {
 
-        // Has the field been used?
-        $temp1 = trim($_POST['am_startdate']);
-        if (empty($temp1))
-            return;
+		// Has the field been used?
+		$temp1 = trim($_POST['am_startdate']);
+		if (empty($temp1))
+			return;
 
-        // Convert startdate to Wordpress default format (0000-00-00 00:00:00)
-        $startdate = date(am_get_default_date_format(), strtotime($temp1));
-        // Check if conversion succeeded
-        if ($startdate != FALSE)
-            update_post_meta($post_id, 'am_startdate', $startdate);
-        else
-            return;
+		// Convert startdate to Wordpress default format (0000-00-00 00:00:00)
+		$startdate = date(am_get_default_date_format(), strtotime($temp1));
+		// Check if conversion succeeded
+		if ($startdate != FALSE)
+			update_post_meta($post_id, 'am_startdate', $startdate);
+		else
+			return;
 
 
-        // Has the field been used?
-        $temp2 = trim($_POST['am_enddate']);
-        if (empty($temp2))
-            return;
+		// Has the field been used?
+		$temp2 = trim($_POST['am_enddate']);
+		if (empty($temp2))
+			return;
 
-        //Convert enddate to Wordpress default format (0000-00-00 00:00:00)
-        $enddate = date(am_get_default_date_format(), strtotime($temp2));
-        if ($enddate != FALSE)
-            update_post_meta($post_id, 'am_enddate', $enddate);
-        else
-            return;
-        
-    }
+		//Convert enddate to Wordpress default format (0000-00-00 00:00:00)
+		$enddate = date(am_get_default_date_format(), strtotime($temp2));
+		if ($enddate != FALSE)
+			update_post_meta($post_id, 'am_enddate', $enddate);
+		else
+			return;
+		
+	}
 }
 
 /**
@@ -539,7 +544,7 @@ function am_action_row($actions, $post){
 				$span_id = "trash-recurring-event" . $post->ID;
 				$href = get_delete_post_link( $post->ID );
 				$href_recurrent = add_query_arg( 'recurrent', 'yes', $href );
-				$text_trash = __( 'Trash recurrent', 'am-events' );
+				$text_trash = __( 'Trash&nbsp;recurring', 'am-events' );
 				$actions = am_array_insert_after("trash", $actions, "trash_recurrent", "<a class=\"submitdelete\" href=\"$href_recurrent\" title=\"$title\">$text_trash</a>");
 			}
 		}
@@ -1116,6 +1121,22 @@ function am_add_quick_edit($column_name, $post_type) {
 }
 
 add_action('admin_footer-edit.php', 'am_admin_edit_event_foot', 11);
+add_action('admin_enqueue_scripts', 'am_custom_script_edit');
+
+function am_custom_script_edit($hook) {
+	if( 'edit.php' != $hook )
+        return;
+	
+	$localization = array(
+		'confirmation' => __( 'Are you sure you want do trash this and all other events in the series?', 'am-events'),
+		'yes' => __( 'Yes, trash all events in the series', 'am-events' ),
+		'cancel' => __( 'Cancel'),
+	);
+	
+	wp_register_script('am_edit_script', plugins_url('/script/admin-edit.js', __FILE__));
+	wp_localize_script('am_edit_script', 'localization', $localization); //pass any values to javascript
+	wp_enqueue_script( 'am_edit_script');
+}
 
 /* load scripts in the footer */
 function am_admin_edit_event_foot() {
@@ -1124,7 +1145,7 @@ function am_admin_edit_event_foot() {
     if (   (isset($_GET['page']) && $_GET['page'] == $slug)
         || (isset($_GET['post_type']) && $_GET['post_type'] == $slug))
     {
-        echo '<script type="text/javascript" src="', plugins_url('script/admin_edit.js', __FILE__), '"></script>';
+        echo '<script type="text/javascript" src="', plugins_url('script/admin-edit-foot.js', __FILE__), '"></script>';
     }
 }
 

@@ -55,6 +55,7 @@ See 'Other Notes' for a simple tutorial.
 
 = 1.9.0 =
 * Recurrent events can now be easily deleted
+* Added start and end dates to quickedit
 
 = 1.8.0 =
 * Added conditional tags for the widget 
@@ -109,6 +110,7 @@ See 'Other Notes' for a simple tutorial.
 
 = 1.9.0 =
 * Recurrent events can now be trashed more easily
+* Adds start and end date to quick edit
 
 = 1.8.0 =
 * Adds conditional tags for the widget
