@@ -414,7 +414,7 @@ function am_meta_box_content($post) {
 
     <p style="margin: 20px 0 5px 0"><strong> <?php _e('Additional options:', 'am-events') ?></strong></p>
     <input style="margin-right:5px" type="checkbox" id="am_recurrent" name="am_recurrent" value="yes" />
-    <label for="am_recurrent"><?php _e('Recurrent event:', 'am-events') ?></label>
+    <label for="am_recurrent"><?php _e('Create Recurring events:', 'am-events') ?></label>
 
     <div id="am_recurrent_fields" style="display: none">
         <br />
@@ -425,9 +425,9 @@ function am_meta_box_content($post) {
         <br />
 
         <input style="width: 60px" name="am_recurrent_amount" type="number" min="1" max="99" id="am_recurrent_amount"></input>
-        <span> <?php _e('times', 'am-events') ?></span>
+        <span> <?php _e('times (starting from this event)', 'am-events') ?></span>
 
-        <p style="color: Red"> <?php _e('Recurrent events are created when the event is saved or updated.', 'am-events') ?> </p>
+        <p style="color: Red"> <?php _e('Recurring events are created when the event is published, saved or updated.', 'am-events') ?> </p>
 
     </div>
 
@@ -503,7 +503,9 @@ function am_show_message($message, $errormsg = false)
         echo '<div id="message" class="updated fade">';
     }
 
-    echo "<p>$message</p></div>";
+    echo "$message";
+	
+	echo "</div>";
 }
 
 /**
@@ -573,7 +575,7 @@ function am_action_row($actions, $post){
 			if (isset($recurrence_id) && $recurrence_id) {
 				$class = 'submitdelete recurrent recurrent-' . $recurrence_id;;
 				
-				$title = esc_attr( __( 'Move this and all recurrent items to trash', 'am-events' ) );
+				$title = esc_attr( __( 'Move this and all recurring items to trash', 'am-events' ) );
 				$span_id = "trash-recurring-event" . $post->ID;
 				$href = get_delete_post_link( $post->ID );
 				$href_recurrent = add_query_arg( 'recurrent', 'yes', $href );
@@ -657,16 +659,21 @@ function am_wp_trash_event_recurring($post_id) {
 				
 				$the_query = new WP_Query( $args );
 				$post_count = $the_query->post_count;
+				$ids_array = array();
 				while ($the_query->have_posts()) {
 					$the_query->the_post();
 					// clear recurrence id to avoid infinite loop
-					//update_post_meta(get_the_ID(), 'am_recurrence_id', '');
+					array_push($ids_array, get_the_ID());
 					remove_action('wp_trash_post', 'am_wp_trash_event_recurring');
 					wp_trash_post();
 					add_action('wp_trash_post', 'am_wp_trash_event_recurring');
 				}
-				
-				am_add_admin_message( sprintf(__('%d recurrent posts moved to the Trash.', 'am-events'), $post_count) );
+				$nonce = wp_create_nonce( 'undo-trash' );
+				$ids = implode(',', $ids_array);
+				// TODO: cookie messes up the undo link
+				//$link = '<a href="' . admin_url( wp_nonce_url( "edit.php?post_type=am_event&doaction=undo&action=untrash&ids=$ids", "bulk-posts" )) . '">' . __('Undo') . '</a>';
+				$link = '';
+				am_add_admin_message( '<p>' . sprintf(__('%d recurrent posts moved to the Trash.', 'am-events'), $post_count) . ' ' . $link . '<p>' );
 				
 			}
 		}
@@ -945,6 +952,7 @@ function am_register_post_type() {
         'show_ui' => true,
         'show_in_menu' => true,
         'menu_position' => 5, //Below Posts
+		'menu_icon' => 'dashicons-calendar',
         'has_archive' => true,
         'category_name' => 'etusivu',
         'labels' => $labels,
