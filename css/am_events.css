@@ -11,4 +11,8 @@
     padding: 10px 5px 5px 5px;
 }
 
+.row-actions span.trash_recurrent a {
+	color: #a00;
+}
+
 

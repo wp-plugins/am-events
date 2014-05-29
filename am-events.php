@@ -165,7 +165,6 @@ function am_plugin_settings() {
         </tbody></table>
 		
 
-		
         
         <?php submit_button(); ?>
         </form>
@@ -178,19 +177,28 @@ function am_plugin_settings() {
 }
 
 /**
+ *
+ */
+ 
+add_filter('post_row_actions','am_action_row', 10, 2);
+
+/**
  * SAVE_POST
  */
 add_action('save_post', 'am_save_custom_meta');
 add_action('add_meta_boxes', 'am_add_custom_meta_box');
 add_action('save_post', 'am_save_event');
+add_action('wp_trash_post', 'am_wp_trash_event_recurring');
 
 /**
  * SCRIPT AND STYLE
  */
 add_action('admin_print_styles-post-new.php', 'am_custom_css');
 add_action('admin_print_styles-post.php', 'am_custom_css');
-add_action('admin_print_scripts-post-new.php', 'am_custom_script');
-add_action('admin_print_scripts-post.php', 'am_custom_script');
+add_action('admin_print_styles-edit.php', 'am_custom_css');
+add_action('admin_print_scripts-post-new.php', 'am_custom_script_post');
+add_action('admin_print_scripts-post.php', 'am_custom_script_post');
+
 
 /**
  * WIDGET
@@ -217,8 +225,8 @@ add_action('load-edit.php', 'am_edit_event_load');
 /* * ****************************************************************************
  * =SCRIPT
  * *************************************************************************** */
-
-function am_custom_script() {
+ 
+function am_custom_script_post() {
     global $post;
     if ($post->post_type === 'am_event' && is_admin()) {
 		
@@ -291,7 +299,7 @@ function am_custom_script() {
 
         // Custom script for assigning jquery to inputs
         wp_enqueue_script(
-                'am_custom_script', plugins_url('/script/am-events.js', __FILE__), array('jquery-custom')
+                'am_custom_script', plugins_url('/script/am-events-post.js', __FILE__), array('jquery-custom')
         );
     }
 }
@@ -338,7 +346,6 @@ function am_meta_box_content($post) {
     // Nonce for verification.
     if (function_exists('am_nonce'))
         wp_nonce_field(plugin_basename(__FILE__), 'am_nonce');
-
     
     // The actual fields for data entry
     // Use get_post_meta to retrieve an existing value from the database and use the value for the form
@@ -353,7 +360,7 @@ function am_meta_box_content($post) {
         $startDate = date(_x('m/d/Y H:i','administration', 'am-events'), strtotime($metaStartDate));
     if ($metaEndDate !== '')
         $endDate = date(_x('m/d/Y H:i','administration', 'am-events'), strtotime($metaEndDate));
-    
+	
     // Echo content of the meta box
     ?>
     <table>
@@ -503,7 +510,7 @@ add_action('admin_notices', 'am_show_admin_messages');
 /**
  * User Wrapper
  */
-function add_admin_message($message, $error = false)
+function am_add_admin_message($message, $error = false)
 {
     if(empty($message)) return false;
 
@@ -513,6 +520,112 @@ function add_admin_message($message, $error = false)
         setcookie('wp-admin-messages-normal', $_COOKIE['wp-admin-messages-normal'] . '@@' . $message, time()+3);
     }
 }   
+
+
+/**
+ * Add action for trashing recurring events
+ */
+function am_action_row($actions, $post){
+    //check for your post type
+	
+    if ($post->post_type === 'am_event'){
+		if ($post->post_status !== 'trash') {
+			$post_type = 'am_event';
+			$recurrence_id = get_post_meta($post->ID, 'am_recurrence_id', true);
+			if (isset($recurrence_id) && $recurrence_id) {
+				$class = 'submitdelete recurrent recurrent-' . $recurrence_id;;
+				
+				$title = esc_attr( __( 'Move this and all recurrent items to trash', 'am-events' ) );
+				$span_id = "trash-recurring-event" . $post->ID;
+				$href = get_delete_post_link( $post->ID );
+				$href_recurrent = add_query_arg( 'recurrent', 'yes', $href );
+				$text_trash = __( 'Trash recurrent', 'am-events' );
+				$actions = am_array_insert_after("trash", $actions, "trash_recurrent", "<a class=\"submitdelete\" href=\"$href_recurrent\" title=\"$title\">$text_trash</a>");
+			}
+		}
+
+    }
+    return $actions;
+}
+
+/*
+ * Inserts a new key/value after the key in the array.
+ *
+ * @param $key
+ *   The key to insert after.
+ * @param $array
+ *   An array to insert in to.
+ * @param $new_key
+ *   The key to insert.
+ * @param $new_value
+ *   An value to insert.
+ *
+ * @return
+ *   The new array if the key exists, FALSE otherwise.
+ *
+ * @see array_insert_before()
+ */
+function am_array_insert_after($key, array &$array, $new_key, $new_value) {
+  if (array_key_exists($key, $array)) {
+    $new = array();
+    foreach ($array as $k => $value) {
+      $new[$k] = $value;
+      if ($k === $key) {
+        $new[$new_key] = $new_value;
+      }
+    }
+    return $new;
+  }
+  return FALSE;
+}
+
+/**
+ * Delete event and recurring events.
+ * @return type
+ */
+function am_wp_trash_event_recurring($post_id) {
+	
+	if (!isset($_GET['recurrent'])) 
+		return;
+	
+	$recurrent = $_GET['recurrent'];
+	if ($recurrent === 'yes') {
+		$post_type = get_post_type( $post_id );
+		$post_status = get_post_status( $post_id );
+		if( $post_type == 'am_event' && in_array($post_status, array('publish','draft','future')) ) {
+			$recurrence_id = get_post_meta($post_id, 'am_recurrence_id', true);
+			if (isset($recurrence_id) && $recurrence_id !== '') {
+			
+				// clear recurrence id to avoid infinite loop
+				//update_post_meta($post_id, 'am_recurrence_id', '');
+				$args = array(
+					'post_type' => 'am_event',
+					'post_status' => 'any',
+					'post_count' => 9999,
+					'posts_per_page' => 9999,
+					'meta_query' => array(
+						array(
+							'key' => 'am_recurrence_id',
+							'value' => $recurrence_id,
+							'compare' => "=",
+						),
+					),
+					'post__not_in' => array($post_id), //exclude current event
+				);
+				
+				$the_query = new WP_Query( $args );
+				while ($the_query->have_posts()) {
+					$the_query->the_post();
+					// clear recurrence id to avoid infinite loop
+					//update_post_meta(get_the_ID(), 'am_recurrence_id', '');
+					remove_action('wp_trash_post', 'am_wp_trash_event_recurring');
+					wp_trash_post();
+					add_action('wp_trash_post', 'am_wp_trash_event_recurring');
+				}
+			}
+		}
+	}
+}
 
 /**
  * Save event meta and create recurring events.
@@ -548,10 +661,14 @@ function am_save_event() {
                         return; // do not create recurrent events.
                     }
 
-                                    // Limit number of created events to 99
+                    // Limit number of created events between 2 and 99
                     if ($recurrent_amount < 2 || $recurrent_amount > 99) {
                         return;
                     }
+
+					//change recurrence id
+					$recurrence_id = am_create_recurrence_id($post_id);
+					update_post_meta($post_id, 'am_recurrence_id', $recurrence_id);
 
                     $startdate = get_post_meta($post_id, 'am_startdate', true);
                     $enddate = get_post_meta($post_id, 'am_enddate', true);
@@ -593,6 +710,7 @@ function am_save_event() {
 
                         update_post_meta($new_post_id, 'am_startdate', $start->format(am_get_default_date_format()));
                         update_post_meta($new_post_id, 'am_enddate', $end->format(am_get_default_date_format()));
+						update_post_meta($new_post_id, 'am_recurrence_id', $recurrence_id);
 
                         $eventCategories = wp_get_post_terms($post_id, 'am_event_categories');
                         $venues = wp_get_post_terms($post_id, 'am_venues');
@@ -611,7 +729,30 @@ function am_save_event() {
             }
         }
     }
+}
 
+/**
+ * Creates an id from the event's slug to group recurrent events for easy deletion
+ */
+function am_create_recurrence_id($post_id) {
+	$slug = get_post($post_id)->post_name;
+	$count = 0;
+	$id = '';
+	do {
+		$id = $count === 0 ? $slug : $slug . '-' . $count;
+		$args = array(
+			'meta_query' => array(
+				array(
+					'key' => 'am_recurrence_id',
+					'value' => $id,
+					'compare' => "=",
+				),
+			),
+		);
+		$the_query = new WP_Query( $args );
+	} while ($the_query->have_posts());
+	_log($id);
+	return $id;
 }
 
 /**
@@ -641,12 +782,12 @@ function am_custom_event_column($column) {
 /**
  *  Register the column as sortable
  */
-function register_sortable_columns($columns) {
+function am_register_sortable_columns($columns) {
     $columns['am_startdate'] = 'am_startdate';
     return $columns;
 }
 
-add_filter('manage_edit-am_event_sortable_columns', 'register_sortable_columns');
+add_filter('manage_edit-am_event_sortable_columns', 'am_register_sortable_columns');
 
 function am_edit_event_load() {
     add_filter('request', 'am_sort_events');
@@ -901,5 +1042,17 @@ function am_convert_id_to_term_in_query($query) {
     }
 }
 add_filter('parse_query', 'am_convert_id_to_term_in_query');
+
+if(!function_exists('_log')){
+  function _log( $message ) {
+    if( WP_DEBUG === true ){
+      if( is_array( $message ) || is_object( $message ) ){
+        error_log( print_r( $message, true ) );
+      } else {
+        error_log( $message );
+      }
+    }
+  }
+}
 
 ?>
