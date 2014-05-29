@@ -53,6 +53,9 @@ See 'Other Notes' for a simple tutorial.
 
 == Changelog ==
 
+= 1.9.0 =
+* Recurrent events can now be easily deleted
+
 = 1.8.0 =
 * Added conditional tags for the widget 
 
@@ -103,6 +106,9 @@ See 'Other Notes' for a simple tutorial.
 * First released/stable version
 
 == Upgrade Notice ==
+
+= 1.9.0 =
+* Recurrent events can now be trashed more easily
 
 = 1.8.0 =
 * Adds conditional tags for the widget
