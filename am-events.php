@@ -198,6 +198,8 @@ add_action('admin_print_styles-post.php', 'am_custom_css');
 add_action('admin_print_styles-edit.php', 'am_custom_css');
 add_action('admin_print_scripts-post-new.php', 'am_custom_script_post');
 add_action('admin_print_scripts-post.php', 'am_custom_script_post');
+add_action('admin_footer-edit.php', 'am_admin_edit_event_foot', 11);
+add_action('admin_enqueue_scripts', 'am_custom_script_edit');
 
 
 /**
@@ -223,7 +225,7 @@ add_action('load-edit.php', 'am_edit_event_load');
 
 
 /* * ****************************************************************************
- * =SCRIPT
+ * =SCRIPT =STYLE
  * *************************************************************************** */
  
 function am_custom_script_post() {
@@ -267,7 +269,7 @@ function am_custom_script_post() {
             'dayNameMinMon' => __('Mo', 'am-events'), 'dayNameMinTue' => __('Tu', 'am-events'), 'dayNameMinWed' => __('We', 'am-events'), 'dayNameMinThu' => __('Th', 'am-events'), 'dayNameMinFri' => __('Fr', 'am-events'), 'dayNameMinSat' => __('Sa', 'am-events'), 'dayNameMinSun' => __('Su', 'am-events'),
             'dayStatus' => _x('Set DD as first week day', 'date picker', 'am-events'), //Status text for the day of the week selection
             'dateStatus' => _x('Select D, M d', 'date picker', 'am-events'), //Status text for the date selection
-            'dateFormat' => _x('mm/dd/yy', 'date picker, see format options on parseDate', 'am-events'), //See format options on parseDate
+            'dateFormat' => _x('mm/dd/yy', 'date picker, see http://docs.jquery.com/UI/Datepicker/parseDate', 'am-events'), //See format options on parseDate
             'firstDay' => 1, //The first day of the week, Sun = 0, Mon = 1, ...
             'initStatus' => _x('Select a date', 'date picker', 'am-events'), //Initial Status text on opening
             'isRTL' => false, //True if right-to-left language, false if left-to-right
@@ -303,6 +305,30 @@ function am_custom_script_post() {
         wp_enqueue_script(
                 'am_custom_script', plugins_url('/script/admin-post.js', __FILE__), array('jquery-custom')
         );
+    }
+}
+
+function am_custom_script_edit($hook) {
+	if( 'edit.php' != $hook )
+        return;
+	
+	$localization = array(
+		'confirmation' => __( 'Are you sure you want do trash this and all other events in the series?', 'am-events'),
+	);
+	
+	wp_register_script('am_edit_script', plugins_url('/script/admin-edit.js', __FILE__));
+	wp_localize_script('am_edit_script', 'localization', $localization); //pass any values to javascript
+	wp_enqueue_script( 'am_edit_script');
+}
+
+/* load scripts in the footer */
+function am_admin_edit_event_foot() {
+    $slug = 'am_event';
+    # load only when editing a event
+    if (   (isset($_GET['page']) && $_GET['page'] == $slug)
+        || (isset($_GET['post_type']) && $_GET['post_type'] == $slug))
+    {
+        echo '<script type="text/javascript" src="', plugins_url('script/admin-edit-foot.js', __FILE__), '"></script>';
     }
 }
 
@@ -461,6 +487,10 @@ function am_save_custom_meta($post_id) {
 	}
 }
 
+/* * ****************************************************************************
+ * =MESSAGES
+ * *************************************************************************** */
+
 /**
  * Messages with the default wordpress classes
  */
@@ -526,6 +556,9 @@ function am_add_admin_message($message, $error = false)
     }
 }   
 
+/* * ****************************************************************************
+ * =ROW ACTIONS
+ * *************************************************************************** */
 
 /**
  * Add action for trashing recurring events
@@ -584,6 +617,10 @@ function am_array_insert_after($key, array &$array, $new_key, $new_value) {
   return FALSE;
 }
 
+/* * ****************************************************************************
+ * =TRASHING
+ * *************************************************************************** */
+
 /**
  * Delete event and recurring events.
  * @return type
@@ -632,6 +669,10 @@ function am_wp_trash_event_recurring($post_id) {
 	}
 }
 
+/* * ****************************************************************************
+ * =SAVING
+ * *************************************************************************** */
+
 /**
  * Save event meta and create recurring events.
  * @return type
@@ -651,10 +692,14 @@ function am_save_event($post_id) {
 		}
 
 		if ( isset( $_REQUEST['am_startdate'] ) ) {
-			update_post_meta( $post_id, 'am_startdate', $_REQUEST['am_startdate'] );
+			$startdate = strtotime($_REQUEST['am_startdate'] );
+			if ($startdate)
+				update_post_meta( $post_id, 'am_startdate', date( am_get_default_date_format(), $startdate) );
 		}
 		if ( isset( $_REQUEST['am_enddate'] ) ) {
-			update_post_meta( $post_id, 'am_enddate', $_REQUEST['am_enddate'] );
+			$enddate = strtotime($_REQUEST['am_enddate'] );
+			if ($enddate)
+				update_post_meta( $post_id, 'am_enddate', date( am_get_default_date_format(), $enddate));
 		}
 	}
 	// Normal edit
@@ -785,6 +830,10 @@ function am_create_recurrence_id($post_id) {
 	return $id;
 }
 
+/* * ****************************************************************************
+ * =COLUMNS
+ * *************************************************************************** */
+
 /**
  * Add columns to event list in administration
  * @param type $columns
@@ -801,10 +850,10 @@ function am_custom_event_column($column) {
     $post_id = $post->ID;
     switch ($column) {
         case 'am_startdate':
-            echo get_post_meta($post_id, 'am_startdate', true);
+            echo date(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_post_meta($post_id, 'am_startdate', true)));
             break;
         case 'am_enddate':
-            echo get_post_meta($post_id, 'am_enddate', true);
+            echo date(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_post_meta($post_id, 'am_enddate', true)));
             break;
     }
 }
@@ -1120,33 +1169,6 @@ function am_add_quick_edit($column_name, $post_type) {
     
 }
 
-add_action('admin_footer-edit.php', 'am_admin_edit_event_foot', 11);
-add_action('admin_enqueue_scripts', 'am_custom_script_edit');
 
-function am_custom_script_edit($hook) {
-	if( 'edit.php' != $hook )
-        return;
-	
-	$localization = array(
-		'confirmation' => __( 'Are you sure you want do trash this and all other events in the series?', 'am-events'),
-		'yes' => __( 'Yes, trash all events in the series', 'am-events' ),
-		'cancel' => __( 'Cancel'),
-	);
-	
-	wp_register_script('am_edit_script', plugins_url('/script/admin-edit.js', __FILE__));
-	wp_localize_script('am_edit_script', 'localization', $localization); //pass any values to javascript
-	wp_enqueue_script( 'am_edit_script');
-}
-
-/* load scripts in the footer */
-function am_admin_edit_event_foot() {
-    $slug = 'am_event';
-    # load only when editing a event
-    if (   (isset($_GET['page']) && $_GET['page'] == $slug)
-        || (isset($_GET['post_type']) && $_GET['post_type'] == $slug))
-    {
-        echo '<script type="text/javascript" src="', plugins_url('script/admin-edit-foot.js', __FILE__), '"></script>';
-    }
-}
 
 ?>
