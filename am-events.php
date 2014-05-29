@@ -313,7 +313,7 @@ function am_custom_script_edit($hook) {
         return;
 	
 	$localization = array(
-		'confirmation' => __( 'Are you sure you want do trash this and all other events in the series?', 'am-events'),
+		'confirmation' => __( 'Are you sure you want to move this and all other events in the series to the Trash?', 'am-events'),
 	);
 	
 	wp_register_script('am_edit_script', plugins_url('/script/admin-edit.js', __FILE__));
@@ -550,11 +550,11 @@ function am_add_admin_message($message, $error = false)
     if(empty($message)) return false;
 
     if($error) {
-        setcookie('wp-admin-messages-error', $_COOKIE['wp-admin-messages-error'] . '@@' . $message, time()+3);
+        setcookie('wp-admin-messages-error', $_COOKIE['wp-admin-messages-error'] . '@@' . $message, time()+2);
     } else {
-        setcookie('wp-admin-messages-normal', $_COOKIE['wp-admin-messages-normal'] . '@@' . $message, time()+3);
+        setcookie('wp-admin-messages-normal', $_COOKIE['wp-admin-messages-normal'] . '@@' . $message, time()+2);
     }
-}   
+}
 
 /* * ****************************************************************************
  * =ROW ACTIONS
@@ -656,6 +656,7 @@ function am_wp_trash_event_recurring($post_id) {
 				);
 				
 				$the_query = new WP_Query( $args );
+				$post_count = $the_query->post_count;
 				while ($the_query->have_posts()) {
 					$the_query->the_post();
 					// clear recurrence id to avoid infinite loop
@@ -664,10 +665,15 @@ function am_wp_trash_event_recurring($post_id) {
 					wp_trash_post();
 					add_action('wp_trash_post', 'am_wp_trash_event_recurring');
 				}
+				
+				am_add_admin_message( sprintf(__('%d recurrent posts moved to the Trash.', 'am-events'), $post_count) );
+				
 			}
 		}
 	}
 }
+
+
 
 /* * ****************************************************************************
  * =SAVING
@@ -794,8 +800,8 @@ function am_save_event($post_id) {
 							}
 						}
 
-						// TODO: Notify user when recurrent events have been created.
-						// add_admin_message( sprintf(__('Created %d recurrent events.', 'am-events'), $recurrent_amount) );
+						// Notify user when recurrent events have been created.
+					    am_add_admin_message( sprintf(__('Created %d recurrent events.', 'am-events'), $recurrent_amount) );
 
 					}
 				}
@@ -805,6 +811,7 @@ function am_save_event($post_id) {
 
     
 }
+
 
 /**
  * Creates an id from the event's slug to group recurrent events for easy deletion
