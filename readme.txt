@@ -54,7 +54,7 @@ See 'Other Notes' for a simple tutorial.
 == Changelog ==
 
 = 1.9.0 =
-* Recurrent events can now be easily deleted
+* Improved handling of recurring events
 * Added start and end dates to quickedit
 
 = 1.8.0 =
@@ -109,8 +109,9 @@ See 'Other Notes' for a simple tutorial.
 == Upgrade Notice ==
 
 = 1.9.0 =
-* Recurrent events can now be trashed more easily
+* Improves handling of recurring events
 * Adds start and end date to quick edit
+* Small improvements
 
 = 1.8.0 =
 * Adds conditional tags for the widget

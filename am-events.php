@@ -187,6 +187,8 @@ add_filter('post_row_actions','am_action_row', 10, 2);
  */
 add_action('save_post', 'am_save_custom_meta');
 add_action('add_meta_boxes', 'am_add_custom_meta_box');
+add_action('admin_menu', 'am_remove_submit_meta_box' );
+add_action('add_meta_boxes', 'am_replace_submit_meta_box' );
 add_action('save_post', 'am_save_event');
 add_action('wp_trash_post', 'am_wp_trash_event_recurring');
 
@@ -351,6 +353,14 @@ function am_custom_css() {
  * =META BOX
  * *************************************************************************** */
 
+function am_remove_submit_meta_box() {
+    remove_meta_box('submitdiv', 'am_event', 'core');
+}
+
+function am_replace_submit_meta_box() {
+    add_meta_box('submitdiv', __('Publish'), 'am_post_submit_meta_box', 'am_event', 'side', 'high', null);
+}
+ 
 /**
  * Custom meta box for events
  */
@@ -414,7 +424,7 @@ function am_meta_box_content($post) {
 
     <p style="margin: 20px 0 5px 0"><strong> <?php _e('Additional options:', 'am-events') ?></strong></p>
     <input style="margin-right:5px" type="checkbox" id="am_recurrent" name="am_recurrent" value="yes" />
-    <label for="am_recurrent"><?php _e('Create Recurring events:', 'am-events') ?></label>
+    <label for="am_recurrent"><?php _e('Create recurring events:', 'am-events') ?></label>
 
     <div id="am_recurrent_fields" style="display: none">
         <br />
@@ -487,6 +497,303 @@ function am_save_custom_meta($post_id) {
 	}
 }
 
+/**
+ * Display post submit form fields. A modified version of post_submit_meta_box() (wp-admin/includes/meta-boxes.php, line 12).
+ *
+ * @param object $post
+ */
+function am_post_submit_meta_box($post, $args = array() ) {
+	global $action;
+
+	$post_type = $post->post_type;
+	$post_type_object = get_post_type_object($post_type);
+	$can_publish = current_user_can($post_type_object->cap->publish_posts);
+	$recurring_count = am_get_recurring_count($post->ID);
+	?>
+	<div class="submitbox" id="submitpost">
+
+	<div id="minor-publishing">
+
+	<?php // Hidden submit button early on so that the browser chooses the right button when form is submitted with Return key ?>
+	<div style="display:none;">
+	<?php submit_button( __( 'Save' ), 'button', 'save' ); ?>
+	</div>
+
+	<div id="minor-publishing-actions">
+	<div id="save-action">
+	<?php if ( 'publish' != $post->post_status && 'future' != $post->post_status && 'pending' != $post->post_status ) { ?>
+	<input <?php if ( 'private' == $post->post_status ) { ?>style="display:none"<?php } ?> type="submit" name="save" id="save-post" value="<?php esc_attr_e('Save Draft'); ?>" class="button" />
+	<?php } elseif ( 'pending' == $post->post_status && $can_publish ) { ?>
+	<input type="submit" name="save" id="save-post" value="<?php esc_attr_e('Save as Pending'); ?>" class="button" />
+	<?php } ?>
+	<span class="spinner"></span>
+	</div>
+	<?php if ( $post_type_object->public ) : ?>
+	<div id="preview-action">
+	<?php
+	if ( 'publish' == $post->post_status ) {
+		$preview_link = esc_url( get_permalink( $post->ID ) );
+		$preview_button = __( 'Preview Changes' );
+	} else {
+		$preview_link = set_url_scheme( get_permalink( $post->ID ) );
+		/**
+		 * Filter the URI of a post preview in the post submit box.
+		 *
+		 * @since 2.0.5
+		 *
+		 * @param string $preview_link URI the user will be directed to for a post preview.
+		 */
+		$preview_link = esc_url( apply_filters( 'preview_post_link', add_query_arg( 'preview', 'true', $preview_link ) ) );
+		$preview_button = __( 'Preview' );
+	}
+	?>
+	<a class="preview button" href="<?php echo $preview_link; ?>" target="wp-preview-<?php echo (int) $post->ID; ?>" id="post-preview"><?php echo $preview_button; ?></a>
+	<input type="hidden" name="wp-preview" id="wp-preview" value="" />
+	</div>
+	<?php endif; // public post type ?>
+	<div class="clear"></div>
+	</div><!-- #minor-publishing-actions -->
+
+	<div id="misc-publishing-actions">
+
+	<div class="misc-pub-section misc-pub-post-status"><label for="post_status"><?php _e('Status:') ?></label>
+	<span id="post-status-display">
+	<?php
+	switch ( $post->post_status ) {
+		case 'private':
+			_e('Privately Published');
+			break;
+		case 'publish':
+			_e('Published');
+			break;
+		case 'future':
+			_e('Scheduled');
+			break;
+		case 'pending':
+			_e('Pending Review');
+			break;
+		case 'draft':
+		case 'auto-draft':
+			_e('Draft');
+			break;
+	}
+	?>
+	</span>
+	<?php if ( 'publish' == $post->post_status || 'private' == $post->post_status || $can_publish ) { ?>
+	<a href="#post_status" <?php if ( 'private' == $post->post_status ) { ?>style="display:none;" <?php } ?>class="edit-post-status hide-if-no-js"><span aria-hidden="true"><?php _e( 'Edit' ); ?></span> <span class="screen-reader-text"><?php _e( 'Edit status' ); ?></span></a>
+
+	<div id="post-status-select" class="hide-if-js">
+	<input type="hidden" name="hidden_post_status" id="hidden_post_status" value="<?php echo esc_attr( ('auto-draft' == $post->post_status ) ? 'draft' : $post->post_status); ?>" />
+	<select name='post_status' id='post_status'>
+	<?php if ( 'publish' == $post->post_status ) : ?>
+	<option<?php selected( $post->post_status, 'publish' ); ?> value='publish'><?php _e('Published') ?></option>
+	<?php elseif ( 'private' == $post->post_status ) : ?>
+	<option<?php selected( $post->post_status, 'private' ); ?> value='publish'><?php _e('Privately Published') ?></option>
+	<?php elseif ( 'future' == $post->post_status ) : ?>
+	<option<?php selected( $post->post_status, 'future' ); ?> value='future'><?php _e('Scheduled') ?></option>
+	<?php endif; ?>
+	<option<?php selected( $post->post_status, 'pending' ); ?> value='pending'><?php _e('Pending Review') ?></option>
+	<?php if ( 'auto-draft' == $post->post_status ) : ?>
+	<option<?php selected( $post->post_status, 'auto-draft' ); ?> value='draft'><?php _e('Draft') ?></option>
+	<?php else : ?>
+	<option<?php selected( $post->post_status, 'draft' ); ?> value='draft'><?php _e('Draft') ?></option>
+	<?php endif; ?>
+	</select>
+	 <a href="#post_status" class="save-post-status hide-if-no-js button"><?php _e('OK'); ?></a>
+	 <a href="#post_status" class="cancel-post-status hide-if-no-js button-cancel"><?php _e('Cancel'); ?></a>
+	</div>
+
+	<?php } ?>
+	</div><!-- .misc-pub-section -->
+
+	<div class="misc-pub-section misc-pub-visibility" id="visibility">
+	<?php _e('Visibility:'); ?> <span id="post-visibility-display"><?php
+
+	if ( 'private' == $post->post_status ) {
+		$post->post_password = '';
+		$visibility = 'private';
+		$visibility_trans = __('Private');
+	} elseif ( !empty( $post->post_password ) ) {
+		$visibility = 'password';
+		$visibility_trans = __('Password protected');
+	} elseif ( $post_type == 'post' && is_sticky( $post->ID ) ) {
+		$visibility = 'public';
+		$visibility_trans = __('Public, Sticky');
+	} else {
+		$visibility = 'public';
+		$visibility_trans = __('Public');
+	}
+
+	echo esc_html( $visibility_trans ); ?></span>
+	<?php if ( $can_publish ) { ?>
+	<a href="#visibility" class="edit-visibility hide-if-no-js"><span aria-hidden="true"><?php _e( 'Edit' ); ?></span> <span class="screen-reader-text"><?php _e( 'Edit visibility' ); ?></span></a>
+
+	<div id="post-visibility-select" class="hide-if-js">
+	<input type="hidden" name="hidden_post_password" id="hidden-post-password" value="<?php echo esc_attr($post->post_password); ?>" />
+	<?php if ($post_type == 'post'): ?>
+	<input type="checkbox" style="display:none" name="hidden_post_sticky" id="hidden-post-sticky" value="sticky" <?php checked(is_sticky($post->ID)); ?> />
+	<?php endif; ?>
+	<input type="hidden" name="hidden_post_visibility" id="hidden-post-visibility" value="<?php echo esc_attr( $visibility ); ?>" />
+	<input type="radio" name="visibility" id="visibility-radio-public" value="public" <?php checked( $visibility, 'public' ); ?> /> <label for="visibility-radio-public" class="selectit"><?php _e('Public'); ?></label><br />
+	<?php if ( $post_type == 'post' && current_user_can( 'edit_others_posts' ) ) : ?>
+	<span id="sticky-span"><input id="sticky" name="sticky" type="checkbox" value="sticky" <?php checked( is_sticky( $post->ID ) ); ?> /> <label for="sticky" class="selectit"><?php _e( 'Stick this post to the front page' ); ?></label><br /></span>
+	<?php endif; ?>
+	<input type="radio" name="visibility" id="visibility-radio-password" value="password" <?php checked( $visibility, 'password' ); ?> /> <label for="visibility-radio-password" class="selectit"><?php _e('Password protected'); ?></label><br />
+	<span id="password-span"><label for="post_password"><?php _e('Password:'); ?></label> <input type="text" name="post_password" id="post_password" value="<?php echo esc_attr($post->post_password); ?>"  maxlength="20" /><br /></span>
+	<input type="radio" name="visibility" id="visibility-radio-private" value="private" <?php checked( $visibility, 'private' ); ?> /> <label for="visibility-radio-private" class="selectit"><?php _e('Private'); ?></label><br />
+
+	<p>
+	 <a href="#visibility" class="save-post-visibility hide-if-no-js button"><?php _e('OK'); ?></a>
+	 <a href="#visibility" class="cancel-post-visibility hide-if-no-js button-cancel"><?php _e('Cancel'); ?></a>
+	</p>
+	</div>
+	<?php } ?>
+
+	</div><!-- .misc-pub-section -->
+
+	<?php
+	/* translators: Publish box date format, see http://php.net/date */
+	$datef = __( 'M j, Y @ G:i' );
+	if ( 0 != $post->ID ) {
+		if ( 'future' == $post->post_status ) { // scheduled for publishing at a future date
+			$stamp = __('Scheduled for: <b>%1$s</b>');
+		} else if ( 'publish' == $post->post_status || 'private' == $post->post_status ) { // already published
+			$stamp = __('Published on: <b>%1$s</b>');
+		} else if ( '0000-00-00 00:00:00' == $post->post_date_gmt ) { // draft, 1 or more saves, no date specified
+			$stamp = __('Publish <b>immediately</b>');
+		} else if ( time() < strtotime( $post->post_date_gmt . ' +0000' ) ) { // draft, 1 or more saves, future date specified
+			$stamp = __('Schedule for: <b>%1$s</b>');
+		} else { // draft, 1 or more saves, date specified
+			$stamp = __('Publish on: <b>%1$s</b>');
+		}
+		$date = date_i18n( $datef, strtotime( $post->post_date ) );
+	} else { // draft (no saves, and thus no date specified)
+		$stamp = __('Publish <b>immediately</b>');
+		$date = date_i18n( $datef, strtotime( current_time('mysql') ) );
+	}
+
+	if ( ! empty( $args['args']['revisions_count'] ) ) :
+		$revisions_to_keep = wp_revisions_to_keep( $post );
+	?>
+	<div class="misc-pub-section misc-pub-revisions">
+	<?php
+		if ( $revisions_to_keep > 0 && $revisions_to_keep <= $args['args']['revisions_count'] ) {
+			echo '<span title="' . esc_attr( sprintf( __( 'Your site is configured to keep only the last %s revisions.' ),
+				number_format_i18n( $revisions_to_keep ) ) ) . '">';
+			printf( __( 'Revisions: %s' ), '<b>' . number_format_i18n( $args['args']['revisions_count'] ) . '+</b>' );
+			echo '</span>';
+		} else {
+			printf( __( 'Revisions: %s' ), '<b>' . number_format_i18n( $args['args']['revisions_count'] ) . '</b>' );
+		}
+	?>
+		<a class="hide-if-no-js" href="<?php echo esc_url( get_edit_post_link( $args['args']['revision_id'] ) ); ?>"><span aria-hidden="true"><?php _ex( 'Browse', 'revisions' ); ?></span> <span class="screen-reader-text"><?php _e( 'Browse revisions' ); ?></span></a>
+	</div>
+	<?php endif;
+	
+	?>
+	<div class="misc-pub-section misc-pub-recurrent" id="recurrence">
+	<?php
+		$r = $recurring_count > 1 ? sprintf( __( 'Yes, %d events', 'am-events' ), $recurring_count ) : ' ' . __( 'No', 'am-events' );
+		_e( 'Recurring:', 'am-events' );
+		echo '<span id="post-recurrence-display"> ' . $r . '</span>';
+	?>
+	</div>
+	<?php
+
+	if ( $can_publish ) : // Contributors don't get to choose the date of publish ?>
+	<div class="misc-pub-section curtime misc-pub-curtime">
+		<span id="timestamp">
+		<?php printf($stamp, $date); ?></span>
+		<a href="#edit_timestamp" class="edit-timestamp hide-if-no-js"><span aria-hidden="true"><?php _e( 'Edit' ); ?></span> <span class="screen-reader-text"><?php _e( 'Edit date and time' ); ?></span></a>
+		<div id="timestampdiv" class="hide-if-js"><?php touch_time(($action == 'edit'), 1); ?></div>
+	</div><?php // /misc-pub-section ?>
+	<?php endif; ?>
+
+	<?php
+	/**
+	 * Fires after the post time/date setting in the Publish meta box.
+	 *
+	 * @since 2.9.0
+	 */
+	do_action( 'post_submitbox_misc_actions' );
+	?>
+	</div>
+	<div class="clear"></div>
+	</div>
+
+	<div id="major-publishing-actions">
+	<?php
+	/**
+	 * Fires at the beginning of the publishing actions section of the Publish meta box.
+	 *
+	 * @since 2.7.0
+	 */
+	do_action( 'post_submitbox_start' );
+	?>
+	
+	<div style="margin-bottom: 10px">
+		<?php 
+			if ($recurring_count > 0) {
+				echo '' . __( 'This is a recurring event. You can update just this one or all events in the series.' ) . '';
+			}
+		?>
+	</div>
+	
+	<div id="delete-action">
+	<?php
+	if ( current_user_can( "delete_post", $post->ID ) ) {
+		if ( !EMPTY_TRASH_DAYS )
+			$delete_text = __('Delete Permanently');
+		else
+			$delete_text = __('Move to Trash');
+		?>
+	<a class="submitdelete deletion" href="<?php echo get_delete_post_link($post->ID); ?>"><?php echo $delete_text; ?></a><?php
+	}
+	?></div>
+
+	<div id="publishing-action">
+	<span class="spinner"></span>
+	<input type="hidden" name="submit_all" id="submit_all" value="no" />
+	<?php
+	if ( !in_array( $post->post_status, array('publish', 'future', 'private') ) || 0 == $post->ID ) {
+		if ( $can_publish ) :
+			if ( !empty($post->post_date_gmt) && time() < strtotime( $post->post_date_gmt . ' +0000' ) ) : ?>
+			<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Schedule') ?>" />
+			<?php submit_button( __( 'Schedule' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) ); ?>
+	<?php	else : ?>
+			<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Publish') ?>" />
+			<?php submit_button( __( 'Publish' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) ); ?>
+			
+			<?php 
+			if ($recurring_count > 1) { 
+				submit_button( __('Publish All', 'am-events'), 'primary button-large', 'publish', false, array( 'accesskey' => 'p', 'onclick' => "document.getElementById('submit_all').value='yes'") );
+			} ?>
+	<?php	endif;
+		else : ?>
+			<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Submit for Review') ?>" />
+			<?php submit_button( __( 'Submit for Review' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) ); ?>
+			<?php
+			if ($recurring_count > 1) { 
+				submit_button( __('Submit All for Review', 'am-events'), 'primary button-large', 'publish', false, array( 'accesskey' => 'p', 'onclick' => "document.getElementById('submit_all').value='yes'") );
+			} ?>
+	<?php
+		endif;
+	} else { ?>
+			<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Update') ?>" />
+			<input name="save" type="submit" class="button button-primary button-large" id="publish" accesskey="p" value="<?php esc_attr_e('Update') ?>" />
+			<?php if ($recurring_count > 1) { ?>
+			<input name="save" type="submit" onclick="document.getElementById('submit_all').value='yes'" class="button button-primary button-large" id="publish" accesskey="p" value="<?php esc_attr_e('Update All', 'am-events') ?>" />
+			<?php } ?>
+	<?php
+	} ?>
+	</div>
+	<div class="clear"></div>
+	</div>
+	</div>
+
+	<?php
+}
+
 /* * ****************************************************************************
  * =MESSAGES
  * *************************************************************************** */
@@ -552,9 +859,9 @@ function am_add_admin_message($message, $error = false)
     if(empty($message)) return false;
 
     if($error) {
-        setcookie('wp-admin-messages-error', $_COOKIE['wp-admin-messages-error'] . '@@' . $message, time()+2);
+		setcookie('wp-admin-messages-error', /*$_COOKIE['wp-admin-messages-error'] . '@@' . */$message, time()+2);
     } else {
-        setcookie('wp-admin-messages-normal', $_COOKIE['wp-admin-messages-normal'] . '@@' . $message, time()+2);
+		setcookie('wp-admin-messages-normal', /*$_COOKIE['wp-admin-messages-normal'] . '@@' .*/ $message, time()+2);
     }
 }
 
@@ -668,12 +975,11 @@ function am_wp_trash_event_recurring($post_id) {
 					wp_trash_post();
 					add_action('wp_trash_post', 'am_wp_trash_event_recurring');
 				}
-				$nonce = wp_create_nonce( 'undo-trash' );
 				$ids = implode(',', $ids_array);
 				// TODO: cookie messes up the undo link
 				//$link = '<a href="' . admin_url( wp_nonce_url( "edit.php?post_type=am_event&doaction=undo&action=untrash&ids=$ids", "bulk-posts" )) . '">' . __('Undo') . '</a>';
 				$link = '';
-				am_add_admin_message( '<p>' . sprintf(__('%d recurrent posts moved to the Trash.', 'am-events'), $post_count) . ' ' . $link . '<p>' );
+				am_add_admin_message( '<p>' . sprintf( __('%d recurrent posts moved to the Trash.', 'am-events'), $post_count) . ' ' . $link . '<p>' );
 				
 			}
 		}
@@ -720,16 +1026,91 @@ function am_save_event($post_id) {
 		// Remove save_post action to avoid infinite loop when calling wp_insert_posts
 		remove_action('save_post', 'am_save_event');
 		
-		//if (!isset($_POST['post_ID']))
-			//return;
+		if (!isset($_POST['post_ID']))
+			return;
+			
+		$post_id = $_POST['post_ID'];
+		$orig_post = get_post($post_id);
 		
-		//$post_id = $_POST['post_ID'];
-		$post = get_post($post_id);
-		if ($_POST && get_post_type($post) === 'am_event') {
+		if ($_POST && get_post_type($orig_post) === 'am_event') {
 
-			// Determine if the specified post is a not revision or auto-save
+			// Determine if the specified post is not a revision or auto-save
 			if (!( wp_is_post_revision($post_id) && wp_is_post_autosave($post_id) )) {
 
+				// Check if 'Update All' has been clicked
+				if (isset($_POST['submit_all']) && $_POST['submit_all'] === 'yes') {
+					// Update all recurring events
+					$recurrence_id = get_post_meta($post_id, 'am_recurrence_id', true);
+					
+					
+					// WordPress changes the status after the save_post action so this little hack is needed
+					$status = $_POST['post_status'];
+					$status = $status === 'publish' ? $status : 'publish';
+					
+					$args = array(
+						'post_type' => 'am_event',
+						'post_status' => 'any',
+						'post_count' => 99999,
+						'posts_per_page' => 99999,
+						'meta_query' => array(
+							array(
+								'key' => 'am_recurrence_id',
+								'value' => $recurrence_id,
+								'compare' => "=",
+							),
+						),
+						'post__not_in' => array($post_id), //exclude current event
+					);
+					
+					$the_query = new WP_Query( $args );
+					$post_count = $the_query->post_count;
+					
+					while ($the_query->have_posts()) {
+						$the_query->the_post();
+						$id = get_the_ID();
+						$recurrent_post = array(
+							'ID' => $id,
+							'post_title' => $orig_post->post_title,
+							'post_content' => $orig_post->post_content,
+							'post_status' => $orig_post->post_status,
+							'post_author' => $orig_post->post_author,
+							'post_excerpt' => $orig_post->post_excerpt,
+							'comment_status' => $orig_post->comment_status,
+							'ping_status' => $orig_post->ping_status,
+							'post_password' => $orig_post->post_password,
+						);
+						wp_update_post( $recurrent_post );
+						
+						wp_set_post_tags($id, wp_get_post_tags($post_id));
+						set_post_thumbnail($id, get_post_thumbnail_id($post_id));
+						
+						// Clear all event categories and venues
+						$all_event_categories = get_terms( 'am_event_categories');
+						$all_venues = get_terms( 'am_venues');
+						foreach ($all_event_categories as $c) {
+							wp_set_post_terms($id, $c->term_id, 'am_event_categories', false);
+						}
+						foreach ($all_venues as $v) {
+							wp_set_post_terms($id, $v->term_id, 'am_venues', false);
+						}
+						
+						// Update event categories and venues to match current post
+						$event_categories = wp_get_post_terms($post_id, 'am_event_categories');
+						$venues = wp_get_post_terms($post_id, 'am_venues');
+						foreach ($event_categories as $c) {
+							wp_set_post_terms($id, $c->term_id, 'am_event_categories', true);
+						}
+						foreach ($venues as $v) {
+							wp_set_post_terms($id, $v->term_id, 'am_venues', true);
+						}
+						
+					}
+					
+					// Notify user when recurrent events have been created.
+					am_add_admin_message( '<p>' . sprintf(__('%d recurring events updated.', 'am-events') . '</p>', $post_count) );
+					
+				}
+			
 				// Check if 'Recurrent Event' has been checked
 				if (isset($_POST['am_recurrent']))
 				{
@@ -740,11 +1121,11 @@ function am_save_event($post_id) {
 						$recurrenceSelection = $_POST['am_recurrence_type'];
 
 						// Check if event category and venue have not been selected
-						$taxonomies = get_post_taxonomies($post_id);
+						/*$taxonomies = get_post_taxonomies($post_id);
 						if (!in_array('am_event_categories', $taxonomies, true)
 								|| !in_array('am_venues', $taxonomies, true)) {
 							return; // do not create recurrent events.
-						}
+						}*/
 
 						// Limit number of created events between 2 and 99
 						if ($recurrent_amount < 2 || $recurrent_amount > 99) {
@@ -763,17 +1144,17 @@ function am_save_event($post_id) {
 
 						for ($i = 1; $i < $recurrent_amount; $i++) {
 							$new_post = array(
-								'post_title' => $post->post_title,
-								'post_content' => $post->post_content,
-								'post_status' => $post->post_status,
-								'post_date' => $post->post_date,
-								'post_author' => $post->post_author,
-								'post_type' => $post->post_type,
-								'post_category' => $post->post_category,
-								'post_excerpt' => $post->post_excerpt,
-								'comment_status' => $post->comment_status,
-								'ping_status' => $post->ping_status,
-								'post_password' => $post->post_password,
+								'post_title' => $orig_post->post_title,
+								'post_content' => $orig_post->post_content,
+								'post_status' => $orig_post->post_status,
+								'post_date' => $orig_post->post_date,
+								'post_author' => $orig_post->post_author,
+								'post_type' => $orig_post->post_type,
+								'post_category' => $orig_post->post_category,
+								'post_excerpt' => $orig_post->post_excerpt,
+								'comment_status' => $orig_post->comment_status,
+								'ping_status' => $orig_post->ping_status,
+								'post_password' => $orig_post->post_password,
 							);
 							$new_post_id = wp_insert_post($new_post);
 							
@@ -808,7 +1189,7 @@ function am_save_event($post_id) {
 						}
 
 						// Notify user when recurrent events have been created.
-					    am_add_admin_message( sprintf(__('Created %d recurrent events.', 'am-events'), $recurrent_amount) );
+					    am_add_admin_message( '<p>' . sprintf(__('Created %d recurrent events.', 'am-events') . '</p>', $recurrent_amount) );
 
 					}
 				}
@@ -1183,6 +1564,37 @@ function am_add_quick_edit($column_name, $post_type) {
 	<?php
     
 }
+
+
+
+
+function am_get_recurring_count($post_id) {
+	$recurrence_id = get_post_meta($post_id, 'am_recurrence_id', true);
+	if (isset($recurrence_id) && $recurrence_id !== '') {
+	
+		$args = array(
+			'post_type' => 'am_event',
+			'post_status' => 'any',
+			'post_count' => 99999,
+			'posts_per_page' => 99999,
+			'meta_query' => array(
+				array(
+					'key' => 'am_recurrence_id',
+					'value' => $recurrence_id,
+					'compare' => "=",
+				),
+			),
+		);
+		
+		$the_query = new WP_Query( $args );
+		return $the_query->post_count;
+		
+	} else {
+		return 0;
+	}
+}
+
+
 
 
 
