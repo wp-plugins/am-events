@@ -977,7 +977,7 @@ function am_wp_trash_event_recurring($post_id) {
 				}
 				$ids = implode(',', $ids_array);
 				// TODO: cookie messes up the undo link
-				//$link = '<a href="' . admin_url( wp_nonce_url( "edit.php?post_type=am_event&doaction=undo&action=untrash&ids=$ids", "bulk-posts" )) . '">' . __('Undo') . '</a>';
+				//$link = '<a href="' . admin_url( wp_nonce_url( "edit.php?post_type=am_event&doaction=undo&action=untrash&ids=$ids", "bulk-posts" )) . '">' . __('Undo', 'am-events') . '</a>';
 				$link = '';
 				am_add_admin_message( '<p>' . sprintf( __('%d recurrent posts moved to the Trash.', 'am-events'), $post_count) . ' ' . $link . '<p>' );
 				
@@ -1042,11 +1042,6 @@ function am_save_event($post_id) {
 					// Update all recurring events
 					$recurrence_id = get_post_meta($post_id, 'am_recurrence_id', true);
 					
-					
-					// WordPress changes the status after the save_post action so this little hack is needed
-					$status = $_POST['post_status'];
-					$status = $status === 'publish' ? $status : 'publish';
-					
 					$args = array(
 						'post_type' => 'am_event',
 						'post_status' => 'any',
@@ -1068,6 +1063,7 @@ function am_save_event($post_id) {
 					while ($the_query->have_posts()) {
 						$the_query->the_post();
 						$id = get_the_ID();
+						remove_action('save_post', 'am_save_custom_meta');
 						$recurrent_post = array(
 							'ID' => $id,
 							'post_title' => $orig_post->post_title,
@@ -1080,6 +1076,7 @@ function am_save_event($post_id) {
 							'post_password' => $orig_post->post_password,
 						);
 						wp_update_post( $recurrent_post );
+						add_action('save_post', 'am_save_custom_meta');
 						
 						wp_set_post_tags($id, wp_get_post_tags($post_id));
 						set_post_thumbnail($id, get_post_thumbnail_id($post_id));
@@ -1118,14 +1115,7 @@ function am_save_event($post_id) {
 				
 					if ($recurrent === 'yes') { // If so, create the events
 						$recurrent_amount = $_POST['am_recurrent_amount'];
-						$recurrenceSelection = $_POST['am_recurrence_type'];
-
-						// Check if event category and venue have not been selected
-						/*$taxonomies = get_post_taxonomies($post_id);
-						if (!in_array('am_event_categories', $taxonomies, true)
-								|| !in_array('am_venues', $taxonomies, true)) {
-							return; // do not create recurrent events.
-						}*/
+						$recurrence_type = $_POST['am_recurrence_type'];
 
 						// Limit number of created events between 2 and 99
 						if ($recurrent_amount < 2 || $recurrent_amount > 99) {
@@ -1161,7 +1151,7 @@ function am_save_event($post_id) {
 							wp_set_post_tags($new_post_id, wp_get_post_tags($post_id));
 							set_post_thumbnail($new_post_id, get_post_thumbnail_id($post_id));
 
-							switch ($recurrenceSelection) {
+							switch ($recurrence_type) {
 								case 'am_weekly':
 									$start->modify('+7 days');
 									$end->modify('+7 days');
@@ -1221,7 +1211,6 @@ function am_create_recurrence_id($post_id) {
 		);
 		$the_query = new WP_Query( $args );
 	} while ($the_query->have_posts());
-	_log($id);
 	return $id;
 }
 
