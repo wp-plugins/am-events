@@ -1034,6 +1034,82 @@ function am_save_event($post_id) {
 		
 		if ($_POST && get_post_type($orig_post) === 'am_event') {
 
+			// Check if 'Recurrent Event' has been checked
+			if (isset($_POST['am_recurrent']))
+			{
+				$recurrent = $_POST['am_recurrent'];
+			
+				if ($recurrent === 'yes') { // If so, create the events
+					$recurrent_amount = $_POST['am_recurrent_amount'];
+					$recurrence_type = $_POST['am_recurrence_type'];
+
+					// Limit number of created events between 2 and 99
+					if ($recurrent_amount < 2 || $recurrent_amount > 99) {
+						return;
+					}
+
+					//change recurrence id
+					$recurrence_id = am_create_recurrence_id($post_id);
+					update_post_meta($post_id, 'am_recurrence_id', $recurrence_id);
+
+					$startdate = get_post_meta($post_id, 'am_startdate', true);
+					$enddate = get_post_meta($post_id, 'am_enddate', true);
+
+					$start = DateTime::createFromFormat(am_get_default_date_format(), $startdate);
+					$end = DateTime::createFromFormat(am_get_default_date_format(), $enddate);
+
+					for ($i = 1; $i < $recurrent_amount; $i++) {
+						$new_post = array(
+							'post_title' => $orig_post->post_title,
+							'post_content' => $orig_post->post_content,
+							'post_status' => $orig_post->post_status,
+							'post_date' => $orig_post->post_date,
+							'post_author' => $orig_post->post_author,
+							'post_type' => $orig_post->post_type,
+							'post_category' => $orig_post->post_category,
+							'post_excerpt' => $orig_post->post_excerpt,
+							'comment_status' => $orig_post->comment_status,
+							'ping_status' => $orig_post->ping_status,
+							'post_password' => $orig_post->post_password,
+						);
+						$new_post_id = wp_insert_post($new_post);
+						
+						wp_set_post_tags($new_post_id, wp_get_post_tags($post_id));
+						set_post_thumbnail($new_post_id, get_post_thumbnail_id($post_id));
+
+						switch ($recurrence_type) {
+							case 'am_weekly':
+								$start->modify('+7 days');
+								$end->modify('+7 days');
+								break;
+							case 'am_biweekly':
+								$start->modify('+14 days');
+								$end->modify('+14 days');
+								break;
+							default:
+								return;
+						}
+
+						update_post_meta($new_post_id, 'am_startdate', $start->format(am_get_default_date_format()));
+						update_post_meta($new_post_id, 'am_enddate', $end->format(am_get_default_date_format()));
+						update_post_meta($new_post_id, 'am_recurrence_id', $recurrence_id);
+
+						$eventCategories = wp_get_post_terms($post_id, 'am_event_categories');
+						$venues = wp_get_post_terms($post_id, 'am_venues');
+						foreach ($eventCategories as $c) {
+							wp_set_post_terms($new_post_id, $c->term_id, 'am_event_categories', true);
+						}
+						foreach ($venues as $v) {
+							wp_set_post_terms($new_post_id, $v->term_id, 'am_venues', true);
+						}
+					}
+
+					// Notify user when recurrent events have been created.
+					am_add_admin_message( '<p>' . sprintf(__('Created %d recurrent events.', 'am-events') . '</p>', $recurrent_amount) );
+
+				}
+			}
+		
 			// Determine if the specified post is not a revision or auto-save
 			if (!( wp_is_post_revision($post_id) && wp_is_post_autosave($post_id) )) {
 
@@ -1063,7 +1139,7 @@ function am_save_event($post_id) {
 					while ($the_query->have_posts()) {
 						$the_query->the_post();
 						$id = get_the_ID();
-						remove_action('save_post', 'am_save_custom_meta');
+						
 						$recurrent_post = array(
 							'ID' => $id,
 							'post_title' => $orig_post->post_title,
@@ -1075,6 +1151,7 @@ function am_save_event($post_id) {
 							'ping_status' => $orig_post->ping_status,
 							'post_password' => $orig_post->post_password,
 						);
+						remove_action('save_post', 'am_save_custom_meta');
 						wp_update_post( $recurrent_post );
 						add_action('save_post', 'am_save_custom_meta');
 						
@@ -1107,82 +1184,7 @@ function am_save_event($post_id) {
 					am_add_admin_message( '<p>' . sprintf(__('%d recurring events updated.', 'am-events') . '</p>', $post_count) );
 					
 				}
-			
-				// Check if 'Recurrent Event' has been checked
-				if (isset($_POST['am_recurrent']))
-				{
-					$recurrent = $_POST['am_recurrent'];
 				
-					if ($recurrent === 'yes') { // If so, create the events
-						$recurrent_amount = $_POST['am_recurrent_amount'];
-						$recurrence_type = $_POST['am_recurrence_type'];
-
-						// Limit number of created events between 2 and 99
-						if ($recurrent_amount < 2 || $recurrent_amount > 99) {
-							return;
-						}
-
-						//change recurrence id
-						$recurrence_id = am_create_recurrence_id($post_id);
-						update_post_meta($post_id, 'am_recurrence_id', $recurrence_id);
-
-						$startdate = get_post_meta($post_id, 'am_startdate', true);
-						$enddate = get_post_meta($post_id, 'am_enddate', true);
-
-						$start = DateTime::createFromFormat(am_get_default_date_format(), $startdate);
-						$end = DateTime::createFromFormat(am_get_default_date_format(), $enddate);
-
-						for ($i = 1; $i < $recurrent_amount; $i++) {
-							$new_post = array(
-								'post_title' => $orig_post->post_title,
-								'post_content' => $orig_post->post_content,
-								'post_status' => $orig_post->post_status,
-								'post_date' => $orig_post->post_date,
-								'post_author' => $orig_post->post_author,
-								'post_type' => $orig_post->post_type,
-								'post_category' => $orig_post->post_category,
-								'post_excerpt' => $orig_post->post_excerpt,
-								'comment_status' => $orig_post->comment_status,
-								'ping_status' => $orig_post->ping_status,
-								'post_password' => $orig_post->post_password,
-							);
-							$new_post_id = wp_insert_post($new_post);
-							
-							wp_set_post_tags($new_post_id, wp_get_post_tags($post_id));
-							set_post_thumbnail($new_post_id, get_post_thumbnail_id($post_id));
-
-							switch ($recurrence_type) {
-								case 'am_weekly':
-									$start->modify('+7 days');
-									$end->modify('+7 days');
-									break;
-								case 'am_biweekly':
-									$start->modify('+14 days');
-									$end->modify('+14 days');
-									break;
-								default:
-									return;
-							}
-
-							update_post_meta($new_post_id, 'am_startdate', $start->format(am_get_default_date_format()));
-							update_post_meta($new_post_id, 'am_enddate', $end->format(am_get_default_date_format()));
-							update_post_meta($new_post_id, 'am_recurrence_id', $recurrence_id);
-
-							$eventCategories = wp_get_post_terms($post_id, 'am_event_categories');
-							$venues = wp_get_post_terms($post_id, 'am_venues');
-							foreach ($eventCategories as $c) {
-								wp_set_post_terms($new_post_id, $c->term_id, 'am_event_categories', true);
-							}
-							foreach ($venues as $v) {
-								wp_set_post_terms($new_post_id, $v->term_id, 'am_venues', true);
-							}
-						}
-
-						// Notify user when recurrent events have been created.
-					    am_add_admin_message( '<p>' . sprintf(__('Created %d recurrent events.', 'am-events') . '</p>', $recurrent_amount) );
-
-					}
-				}
 			}
 		}
 	}

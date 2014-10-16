@@ -2,8 +2,8 @@
 Contributors: Moisture
 Tags: event list, events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
-Tested up to: 3.9.1
-Stable tag: 1.8.0
+Tested up to: 4.0
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,7 +55,7 @@ See 'Other Notes' for a simple tutorial.
 
 = 1.9.0 =
 * Improved handling of recurring events
-* Added start and end dates to quickedit
+* Added start and end dates to quick edit
 
 = 1.8.0 =
 * Added conditional tags for the widget 
@@ -111,7 +111,7 @@ See 'Other Notes' for a simple tutorial.
 = 1.9.0 =
 * Improves handling of recurring events
 * Adds start and end date to quick edit
-* Small improvements
+* Many small improvements
 
 = 1.8.0 =
 * Adds conditional tags for the widget
