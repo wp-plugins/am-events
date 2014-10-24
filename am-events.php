@@ -3,7 +3,7 @@
   Plugin Name: AM Events
   Plugin URI: http://wordpress.org/extend/plugins/am-events/
   Description: Adds a post type for events and a customizable widget for displaying upcoming events.
-  Version: 1.9.0
+  Version: 1.9.1
   Author: Atte Moisio
   Author URI: http://attemoisio.fi
   License: GPL2
@@ -1159,14 +1159,8 @@ function am_save_event($post_id) {
 						set_post_thumbnail($id, get_post_thumbnail_id($post_id));
 						
 						// Clear all event categories and venues
-						$all_event_categories = get_terms( 'am_event_categories');
-						$all_venues = get_terms( 'am_venues');
-						foreach ($all_event_categories as $c) {
-							wp_set_post_terms($id, $c->term_id, 'am_event_categories', false);
-						}
-						foreach ($all_venues as $v) {
-							wp_set_post_terms($id, $v->term_id, 'am_venues', false);
-						}
+						wp_delete_object_term_relationships( $id, 'am_event_categories' );
+						wp_delete_object_term_relationships( $id, 'am_venues' );
 						
 						// Update event categories and venues to match current post
 						$event_categories = wp_get_post_terms($post_id, 'am_event_categories');
