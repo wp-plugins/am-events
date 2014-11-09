@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: am-events\n"
 "POT-Creation-Date: 2014-05-30 16:35+0200\n"
-"PO-Revision-Date: 2014-05-30 17:26+0200\n"
+"PO-Revision-Date: 2014-11-09 12:18+0200\n"
 "Last-Translator: Atte Moisio <atte.moisio@attemoisio.fi>\n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -424,7 +424,7 @@ msgstr "Lisävalinnat:"
 
 #: ../am-events.php:427
 msgid "Create recurring events:"
-msgstr "Toistuvat tapahtumat (%d kpl) luotu. "
+msgstr "Luo toistuvia tapahtumia:"
 
 #: ../am-events.php:432
 msgid "weekly"
