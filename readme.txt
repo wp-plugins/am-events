@@ -53,6 +53,9 @@ See 'Other Notes' for a simple tutorial.
 
 == Changelog ==
 
+= 1.9.2 =
+* Translation fixes
+
 = 1.9.1 =
 * Fixed bug when removing event categories from recurring events.
 
@@ -110,6 +113,9 @@ See 'Other Notes' for a simple tutorial.
 * First released/stable version
 
 == Upgrade Notice ==
+
+= 1.9.2 =
+* Fixes some translations
 
 = 1.9.1 =
 * Fixes a bug when removing event categories from recurring events
