@@ -23,7 +23,7 @@ For integrating AM Events to an existing theme, I suggest creating a [child them
 
 See Other Notes for detailed information and a small tutorial about the custom post type and the widget.
 
-If you think something critical is missing, feel free to send me a request. I'm using this on some of my client's sites so I'll certainly be improving/fixing it for upcoming WordPress versions.
+If you think something critical is missing, feel free to send me a request. I'm using this on some of my clients' sites so I'll certainly be improving/fixing it for upcoming WordPress versions.
 
 The plugin is available in the following languages (pot-file included for additional translations): 
 
