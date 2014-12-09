@@ -182,6 +182,7 @@ Here are the shortcodes available in the upcoming events widget template.
  * [event-venue]
  * [event-category]
  * [content]
+ * [thumbnail]
  * [excerpt]
  * [permalink]
  
