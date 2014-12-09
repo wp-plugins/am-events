@@ -183,6 +183,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 '{{event_category}}',
                 '{{venue}}',
                 '{{content}}',
+				'{{thumbnail}}',
             );
             
             $replace = array(
@@ -219,6 +220,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             'content',        //The event content (number of words can be limited by the 'limit' attribute)
             'permalink',      //The event post permalink
             'excerpt',        //The event excerpt
+			'thumbnail',	  //The event thumbnail
 			'if',			  //Conditional tag
         );
         
@@ -244,15 +246,17 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         extract( shortcode_atts( array(
                 'format'    => '',
                 'limit'     => '0',
+				'size'     => 'post-thumbnail',
                 'link'      => 'false',
 				'cond'      => '',
         ), shortcode_parse_atts( $m[3] ) ) );
         
         //Sanitize the attributes
-        $format    = esc_attr( $format );
-		$cond    = esc_attr( $cond );
-        $limit     = absint( $limit );
-        $link  = ( 'true' === $link );
+        $format = esc_attr( $format );
+		$cond   = esc_attr( $cond );
+		$size   = esc_attr( $size );
+        $limit  = absint( $limit );
+        $link   = ( 'true' === $link );
         
         // Do the appropriate stuff depending on which shortcode we're looking at.
         // See valid shortcode list (above) for explanation of each shortcode
@@ -261,15 +265,19 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 $title = esc_html( trim( get_the_title()));
                 //If a word limit has been set, trim the title to the required length
                 if ( 0 != $limit ) {
-                        preg_match( '/([\S]+\s*){0,' . $limit . '}/', $title , $title );
-                        $title = trim( $title[0] );
+					preg_match( '/([\S]+\s*){0,' . $limit . '}/', $title , $title );
+					$title = trim( $title[0] );
                 }
                 if ($link) {  
                     return $m[1] . '<a href="'. get_permalink() .'">' .$title. '</a>' . $m[6];
                 } else {
                     return $m[1] . $title . $m[6];
                 }
-                
+            case 'thumbnail':
+			
+				$thumbnail = get_the_post_thumbnail(get_the_ID(), $size );
+                return $m[1] . $thumbnail. $m[6];
+				
             case 'content':
                 $content = get_the_content();
                 //If a word limit has been set, trim the title to the required length
