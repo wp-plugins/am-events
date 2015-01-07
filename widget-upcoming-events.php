@@ -4,7 +4,7 @@
  * =COPYRIGHT
  *****************************************************************************/
 
-/*  Copyright 2013  Atte Moisio  (email : atte.moisio@attemoisio.fi)
+/*  Copyright 2015  Atte Moisio  (email : atte.moisio@attemoisio.fi)
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License, version 2, as
