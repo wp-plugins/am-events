@@ -56,7 +56,8 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         /* Before widget (defined by themes). */
         echo $before_widget;
         
-        
+        $taxQuery = array( 'relation' => 'AND' );
+		
         /* Event category filter args */
         $taxCategory = NULL;
         if ($category !== "all") {         
@@ -65,6 +66,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 'field' => 'slug',
                 'terms' => $category,
             );
+			$taxQuery[] = $taxCategory;
         }
         
         /* Venue filter args */
@@ -75,18 +77,15 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 'field' => 'slug',
                 'terms' => $venue,
             );
+			$taxQuery[] = $taxVenue;
         }
-
+		
         /* WP_Query args */
         $args = array(
             'post_type' => 'am_event', // show only am_event cpt
             'post_status' => 'publish', // show only published
             'posts_per_page' => $postcount, // number of events to show
-            'tax_query' => array( // taxonomy and term filter
-                    'relation' => 'AND',
-                    $taxCategory,
-                    $taxVenue,
-            ),
+            'tax_query' => $taxQuery,
             // sort by meta value 'am_startdate' ascending
             'meta_key' => 'am_startdate',
             'orderby' => 'meta_value',
