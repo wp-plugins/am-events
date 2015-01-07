@@ -59,7 +59,6 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         $taxQuery = array( 'relation' => 'AND' );
 		
         /* Event category filter args */
-        $taxCategory = NULL;
         if ($category !== "all") {         
             $taxCategory = array(
                 'taxonomy' => 'am_event_categories',
@@ -70,7 +69,6 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         }
         
         /* Venue filter args */
-        $taxVenue = NULL;
         if ($venue !== "all") {
             $taxVenue = array(
                 'taxonomy' => 'am_venues',
