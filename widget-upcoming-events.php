@@ -62,7 +62,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         if ($category !== "all") {         
             $taxCategory = array(
                 'taxonomy' => 'am_event_categories',
-                'field' => 'name',
+                'field' => 'slug',
                 'terms' => $category,
             );
         }
@@ -72,7 +72,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         if ($venue !== "all") {
             $taxVenue = array(
                 'taxonomy' => 'am_venues',
-                'field' => 'name',
+                'field' => 'slug',
                 'terms' => $venue,
             );
         }
@@ -357,7 +357,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
     }
     
     
-    /**
+   /**
      * Back-end widget form.
      *
      * @see WP_Widget::form()
@@ -402,7 +402,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         
         $args = array( 'hide_empty' => false );
         
-        $types = get_terms('am_event_categories', $args);
+        $categories = get_terms('am_event_categories', $args);
         $venues = get_terms('am_venues', $args);
 
 
@@ -419,9 +419,10 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             <label for="<?php echo $this->get_field_id( 'category' ); ?>"><?php _e('Select Event category:', 'am-events')?></label><br />
             <select id="<?php echo $this->get_field_id( 'category' ); ?>" name="<?php echo $this->get_field_name( 'category' ); ?>">
                 <option value="all" <?php if ( $category === "all" ){ echo 'selected="selected"'; }?>><?php _e('All', 'am-events') ?></option>
-                <?php foreach ($types as $t) { 
-                    $typeName = $t -> name; ?>
-                    <option value="<?php echo $typeName ?>" <?php if ( $category === $typeName ){ echo 'selected="selected"'; }?>><?php echo $typeName ?></option>
+                <?php foreach ($categories as $c) { 
+                    $categorySlug = $c -> slug;
+					$categoryName = $c -> name;					?>
+                    <option value="<?php echo $categorySlug ?>" <?php if ( $category === $categorySlug ){ echo 'selected="selected"'; }?>><?php echo $categoryName ?></option>
                 <?php } ?>
             </select>
             <br />
@@ -432,8 +433,9 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             <select id="<?php echo $this->get_field_id( 'venue' ); ?>" name="<?php echo $this->get_field_name( 'venue' ); ?>">
                 <option value="all" <?php if ( $venue === "all" ){ echo 'selected="selected"'; }?>><?php _e('All', 'am-events') ?></option>
                 <?php foreach ($venues as $v) { 
+					$venueSlug = $v -> slug;
                     $venueName = $v -> name; ?>
-                    <option value="<?php echo $venueName ?>" <?php if ( $venue === $venueName ){ echo 'selected="selected"'; }?>><?php echo $venueName ?></option>
+                    <option value="<?php echo $venueSlug ?>" <?php if ( $venue === $venueSlug ){ echo 'selected="selected"'; }?>><?php echo $venueName ?></option>
                 <?php } ?>
             </select>
             <br />
