@@ -3,7 +3,7 @@ Contributors: Moisture
 Tags: event list, events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
 Tested up to: 4.1
-Stable tag: 1.9.3
+Stable tag: 1.9.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -52,6 +52,9 @@ See 'Other Notes' for a simple tutorial.
 3. Example page with events and the widget.
 
 == Changelog ==
+
+= 1.9.4 =
+* Fixed date localization issues.
 
 = 1.9.3 =
 * Fixed widget category and venue filtering bug
@@ -117,6 +120,9 @@ See 'Other Notes' for a simple tutorial.
 * First released/stable version
 
 == Upgrade Notice ==
+
+= 1.9.4 =
+* Fixes date localization issues.
 
 = 1.9.3 =
 * Fixes widget category and venue filtering bug
