@@ -65,9 +65,9 @@ function am_get_the_startdate( $format = 'Y-m-d H:i:s', $post = 0 ) {
 
         $id = isset( $post->ID ) ? $post->ID : 0;
         $date = get_post_meta($id, 'am_startdate', true);
-        
+
         if ( strlen($format) != 0)
-            $date = date($format, strtotime($date));
+            $date = date_i18n($format, strtotime($date));
         
         return $date;
         
@@ -118,7 +118,7 @@ function am_get_the_enddate( $format = 'Y-m-d H:i:s', $post = 0 ) {
         $date = get_post_meta($id, 'am_enddate', true);
         
         if ( strlen($format) != 0)
-            $date = date($format, strtotime($date));
+            $date = date_i18n($format, strtotime($date));
         
         return $date;
         
