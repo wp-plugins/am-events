@@ -32,6 +32,8 @@ The plugin is available in the following languages (pot-file included for additi
 * Norwegian
 * Finnish
 
+If you like my plugin, please consider [donating](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=YXP9GKA2JU4GS&lc=FI&item_name=Atte%20Moisio&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted)!
+
 == Installation ==
 
 This section describes how to install the plugin and get it working.
