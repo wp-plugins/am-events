@@ -88,8 +88,7 @@
  *
  */
 
-
-
+ 
 /******************************************************************************
  * =ACTION HOOKS
  * *************************************************************************** */
@@ -207,15 +206,17 @@ add_action('admin_enqueue_scripts', 'am_custom_script_edit');
 /**
  * WIDGET
  */
-add_action('widgets_init', 'am_register_widget');
-function am_register_widget() {
+add_action('widgets_init', 'am_register_widgets');
+function am_register_widgets() {
 	register_widget('AM_Upcoming_Events_Widget');
+	register_widget('AM_Event_Calendar_Widget');
 }
 
 /**
  * INCLUDES
  */
 require_once dirname(__FILE__) . '/widget-upcoming-events.php';
+require_once dirname(__FILE__) . '/widget-event-calendar.php';
 require_once dirname(__FILE__) . '/template-tags.php';
 
 
