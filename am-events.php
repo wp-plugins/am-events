@@ -155,6 +155,60 @@ add_action('quick_edit_custom_box',  'am_add_quick_edit', 10, 2);
 add_action('admin_notices', 'am_show_admin_messages');
 add_action('generate_rewrite_rules', 'am_event_datearchives_rewrite_rules');
 
+
+add_action('pre_get_posts','am_alter_event_archive_query');
+
+/*
+ * Modifies event archive page to show events based on start and end dates 
+ * instead of publish date.
+ */
+function am_alter_event_archive_query( $query ){
+    if( $query->is_main_query() && $query->is_post_type_archive( 'am_event' )  ) {     
+
+        $this_year = get_query_var('year', gmdate('Y', current_time('timestamp')));
+        $this_month = get_query_var('month', gmdate('m', current_time('timestamp')));
+        $this_day = get_query_var('day', gmdate('d', current_time('timestamp')));
+        
+        if (is_year()) { // Yearly archive page
+            $start = "$this_year-01-01 00:00:00";
+            $end = "$this_year-12-31 23:59:59";
+            $query->set( 'meta_query', am_get_archive_meta_query($start, $end) );     
+        } else if (is_month()) { // Monthly archive page
+            $start = "$this_year-$this_month-01 00:00:00";
+            $end = "$this_year-$this_month-31 23:59:59";
+            $query->set( 'meta_query', am_get_archive_meta_query($start, $end) );
+        } else if (is_day()) { // Daily archive page
+            $start = "$this_year-$this_month-$this_day 00:00:00";
+            $end = "$this_year-$this_month-$this_day 23:59:59";
+            $query->set( 'meta_query', am_get_archive_meta_query($start, $end) ); 
+        }
+
+        $query->set( 'post_type', 'am_event' );
+        $query->set( 'meta_key', 'am_startdate' );
+        $query->set( 'orderby', 'meta_value' );
+        $query->set( 'order', 'ASC' );
+        $query->set( 'year', null);
+        $query->set( 'monthnum', null);
+        $query->set( 'day', null);
+
+    }
+}
+
+function am_get_archive_meta_query($start_timestamp, $end_timestamp) {
+    return array( 'relation' => 'AND',
+        array(
+            'key' => 'am_enddate',
+            'value' => $start_timestamp,
+            'compare' => '>=',
+        ),
+        array(
+            'key' => 'am_startdate',
+            'value' => $end_timestamp,
+            'compare' => '<=',
+        ),
+    );
+}
+
 function am_get_default_date_format() {
     return 'Y-m-d H:i:s';
 }

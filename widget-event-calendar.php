@@ -281,7 +281,6 @@ function am_get_calendar($initial = true, $echo = true, $category = null, $venue
         $args = array(
             'post_type' => 'am_event', // show only am_event cpt
             'post_status' => 'publish', // show only published
-            'posts_per_page' => 9999,
             'tax_query' => $taxQuery,  
             'meta_query' => array( 'relation' => 'AND', 
 				array(
@@ -348,7 +347,7 @@ function am_get_calendar($initial = true, $echo = true, $category = null, $venue
 				$calendar_output .= '<td>';
 
 			if ( !empty($titles_for_day[$day] )) // any posts today?
-				$calendar_output .= '<a href="' . get_day_link( $thisyear, $thismonth, $day ) . '" title="' . esc_attr( $titles_for_day[ $day ] ) . "\">$day</a>";
+				$calendar_output .= '<a href="' . am_get_event_date_archive_link( $thisyear, $thismonth, $day ) . '" title="' . esc_attr( $titles_for_day[ $day ] ) . "\">$day</a>";
 			else
 				$calendar_output .= $day;
 				

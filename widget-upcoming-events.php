@@ -102,7 +102,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         /* Title of widget (before and after defined by themes). */
         if ( ! empty( $title ) )
                 echo $before_title . $title . $after_title;
-       
+        
         echo $before;
         
         $loop = new WP_Query( $args );
@@ -401,9 +401,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         
         $categories = get_terms('am_event_categories', $args);
         $venues = get_terms('am_venues', $args);
-
-
-          
+     
         ?>
             <!-- Title -->
             <p>
