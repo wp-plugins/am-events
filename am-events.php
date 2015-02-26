@@ -3,7 +3,7 @@
   Plugin Name: AM Events
   Plugin URI: http://wordpress.org/extend/plugins/am-events/
   Description: Adds a post type for events and a customizable widget for displaying upcoming events.
-  Version: 1.9.4
+  Version: 2.0.0
   Author: Atte Moisio
   Author URI: http://attemoisio.fi
   License: GPL2
@@ -13,7 +13,7 @@
  * =COPYRIGHT
  * ****************************************************************************/
 
-/*  Copyright 2013 Atte Moisio  (email : atte.moisio@attemoisio.fi)
+/*  Copyright 2015 Atte Moisio  (email : atte.moisio@attemoisio.fi)
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License, version 2, as
@@ -36,31 +36,32 @@
  * 
  * Custom post type name: 
  * 
- *              'am_event'
+ *      'am_event'
  * 
  * Meta: 
  * 
- *              'am_startdate'
- *              'am_enddate'
+ *      'am_startdate'
+ *      'am_enddate'
  * 
  * Taxonomies: 
  *              
- *              'am_venues'
- *              'am_event_categories'
+ *      'am_venues'
+ *      'am_event_categories'
  * 
  * Widget template shortcodes:
  * 
- *           [event-title]    //The event title
- *           [start-date]     //The start date of the event (uses the date format from the feed options, if it is set. Otherwise uses the default WordPress date format)
- *           [end-date]       //The end date of the event (uses the date format from the feed options, if it is set. Otherwise uses the default WordPress date format)
- *           [event-venue]    //The event venue
- *           [event-category] //The event category
- *           [excerpt] 	      //The event excerpt
- *           [content]        //The event content (number of words can be limited by the 'limit' attribute) 
- *           [if cond="startdate-is-enddate"]
- *           [if cond="startdate-not-enddate"]
- *           [if cond="startday-is-endday"]
- *           [if cond="startday-not-endday"] 
+ *     [event-title]    //The event title
+ *     [start-date]     //The start date of the event (uses the date format from the feed options, if it is set. Otherwise uses the default WordPress date format)
+ *     [end-date]       //The end date of the event (uses the date format from the feed options, if it is set. Otherwise uses the default WordPress date format)
+ *     [event-venue]    //The event venue
+ *     [event-category] //The event category
+ *     [excerpt] 	      //The event excerpt
+ *     [thumbnail]      //The event featured image
+ *     [content]        //The event content (number of words can be limited by the 'limit' attribute) 
+ *     [if cond="startdate-is-enddate"]
+ *     [if cond="startdate-not-enddate"]
+ *     [if cond="startday-is-endday"]
+ *     [if cond="startday-not-endday"] 
  *
  * Template tags:
  *
@@ -88,6 +89,12 @@
  *
  */
 
+/**
+ * INCLUDES
+ */
+require_once dirname(__FILE__) . '/widget-upcoming-events.php';
+require_once dirname(__FILE__) . '/widget-event-calendar.php';
+require_once dirname(__FILE__) . '/template-tags.php';
  
 /******************************************************************************
  * =ACTION HOOKS
@@ -96,25 +103,65 @@
 /**
  * INIT
  */
-// Custom Post Type
-add_action('init', 'am_cpt_init');
-// Language files
+add_action('init', 'am_cpt_init'); // Custom post type init
 add_action('plugins_loaded', 'am_load_language_files');
 add_action('init', 'am_load_language_files');
 
-/**
- * SETTINGS MENU
- */
 
-if ( is_admin() ){ // admin actions
+if ( is_admin() ) { // admin actions
   add_action( 'admin_menu', 'am_plugin_menu' );
   add_action( 'admin_init', 'am_register_settings' );
 } else {
   // non-admin enqueues, actions, and filters
 }
 
+/**
+ *
+ */
+ 
+add_filter('post_row_actions','am_action_row', 10, 2);
+add_filter('parse_query', 'am_convert_id_to_term_in_query');
+add_filter('post_updated_messages', 'am_event_updated_messages');
+add_filter('manage_edit-am_event_sortable_columns', 'am_register_sortable_columns');
+add_filter('manage_am_event_posts_columns', 'am_add_event_columns');
+
+/**
+ * SAVE_POST
+ */
+add_action('save_post', 'am_save_custom_meta');
+add_action('add_meta_boxes', 'am_add_custom_meta_box');
+add_action('admin_menu', 'am_remove_submit_meta_box' );
+add_action('add_meta_boxes', 'am_replace_submit_meta_box' );
+add_action('save_post', 'am_save_event');
+add_action('wp_trash_post', 'am_wp_trash_event_recurring');
+
+/**
+ * SCRIPT AND STYLE
+ */
+add_action('admin_print_styles-post-new.php', 'am_custom_css');
+add_action('admin_print_styles-post.php', 'am_custom_css');
+add_action('admin_print_styles-edit.php', 'am_custom_css');
+add_action('admin_print_scripts-post-new.php', 'am_custom_script_post');
+add_action('admin_print_scripts-post.php', 'am_custom_script_post');
+add_action('admin_footer-edit.php', 'am_admin_edit_event_foot', 11);
+add_action('admin_enqueue_scripts', 'am_custom_script_edit');
+
+add_action('widgets_init', 'am_register_widgets');
+
+add_action('restrict_manage_posts', 'am_restrict_events_by_category');
+add_action('manage_am_event_posts_custom_column', 'am_custom_event_column');
+add_action('load-edit.php', 'am_edit_event_load');
+add_action('quick_edit_custom_box',  'am_add_quick_edit', 10, 2);
+add_action('admin_notices', 'am_show_admin_messages');
+add_action('generate_rewrite_rules', 'am_event_datearchives_rewrite_rules');
+
 function am_get_default_date_format() {
     return 'Y-m-d H:i:s';
+}
+
+function am_register_widgets() {
+	register_widget('AM_Upcoming_Events_Widget');
+	register_widget('AM_Event_Calendar_Widget');
 }
 
 function am_register_settings() { // whitelist options
@@ -175,58 +222,6 @@ function am_plugin_settings() {
         <?php
 }
 
-/**
- *
- */
- 
-add_filter('post_row_actions','am_action_row', 10, 2);
-
-/**
- * SAVE_POST
- */
-add_action('save_post', 'am_save_custom_meta');
-add_action('add_meta_boxes', 'am_add_custom_meta_box');
-add_action('admin_menu', 'am_remove_submit_meta_box' );
-add_action('add_meta_boxes', 'am_replace_submit_meta_box' );
-add_action('save_post', 'am_save_event');
-add_action('wp_trash_post', 'am_wp_trash_event_recurring');
-
-/**
- * SCRIPT AND STYLE
- */
-add_action('admin_print_styles-post-new.php', 'am_custom_css');
-add_action('admin_print_styles-post.php', 'am_custom_css');
-add_action('admin_print_styles-edit.php', 'am_custom_css');
-add_action('admin_print_scripts-post-new.php', 'am_custom_script_post');
-add_action('admin_print_scripts-post.php', 'am_custom_script_post');
-add_action('admin_footer-edit.php', 'am_admin_edit_event_foot', 11);
-add_action('admin_enqueue_scripts', 'am_custom_script_edit');
-
-
-/**
- * WIDGET
- */
-add_action('widgets_init', 'am_register_widgets');
-function am_register_widgets() {
-	register_widget('AM_Upcoming_Events_Widget');
-	register_widget('AM_Event_Calendar_Widget');
-}
-
-/**
- * INCLUDES
- */
-require_once dirname(__FILE__) . '/widget-upcoming-events.php';
-require_once dirname(__FILE__) . '/widget-event-calendar.php';
-require_once dirname(__FILE__) . '/template-tags.php';
-
-
-add_action('restrict_manage_posts', 'am_restrict_events_by_category');
-add_action('manage_am_event_posts_custom_column', 'am_custom_event_column');
-//Only run our customization on the 'edit.php' page in the admin. */
-add_action('load-edit.php', 'am_edit_event_load');
-
-
-
 /* * ****************************************************************************
  * =SCRIPT =STYLE
  * *************************************************************************** */
@@ -240,8 +235,6 @@ function am_custom_script_post() {
                 'jquery-custom', plugins_url('/script/jquery-ui-1.10.2.custom.min.js', __FILE__)
         );
 		
-		
-
 		// JQuery datetime picker from http://trentrichardson.com/examples/timepicker/
 		// datetimepicker localization
 		$localization = array(
@@ -847,10 +840,7 @@ function am_show_admin_messages() {
     }
 }
 
-/** 
-  * Hook into admin notices 
-  */
-add_action('admin_notices', 'am_show_admin_messages');
+
 
 /**
  * User Wrapper
@@ -1224,7 +1214,6 @@ function am_add_event_columns($columns) {
     return array_merge($columns, array('am_startdate' => __('Start Date', 'am-events'),
                 'am_enddate' => __('End Date', 'am-events')));
 }
-add_filter('manage_am_event_posts_columns', 'am_add_event_columns');
 
 function am_custom_event_column($column) {
     global $post;
@@ -1246,8 +1235,6 @@ function am_register_sortable_columns($columns) {
     $columns['am_startdate'] = 'am_startdate';
     return $columns;
 }
-
-add_filter('manage_edit-am_event_sortable_columns', 'am_register_sortable_columns');
 
 function am_edit_event_load() {
     add_filter('request', 'am_sort_events');
@@ -1410,9 +1397,6 @@ function am_register_taxonomy_event_categories() {
     register_taxonomy('am_event_categories', array('am_event'), $args);
 }
 
-/**
- * Add filter to ensure the text Event, or event, is displayed when user updates an event.
- */
 function am_event_updated_messages($messages) {
     global $post, $post_ID;
 
@@ -1436,8 +1420,6 @@ function am_event_updated_messages($messages) {
     return $messages;
 }
 
-add_filter('post_updated_messages', 'am_event_updated_messages');
-
 /**
  * Init custom post type (CPT)
  */
@@ -1448,8 +1430,8 @@ function am_cpt_init() {
 }
 
 /**
- * Function used to get permalinks to work when you activate the plugin.
- * Pay attention to how am_cpt_init is called in the register_activation_hook callback:
+ * Flushes rewrite rules to make permalinks work when activating the plugin.
+ * Pay attention to how am_cpt_init is called in the register_activation_hook callback!
  */
 function am_rewrite_flush() {
     // First, we "add" the custom post type via the above written function.
@@ -1470,7 +1452,7 @@ register_activation_hook(__FILE__, 'am_rewrite_flush');
  * *************************************************************************** */
 
 /**
- * Add event category filtering to the event listing in administration.
+ * Adds event category filtering to the event listing in administration.
  */
 function am_restrict_events_by_category() {
     remove_action('save_post', 'my_metabox_save');
@@ -1502,8 +1484,10 @@ function am_convert_id_to_term_in_query($query) {
         $q_vars[$taxonomy] = $term->slug;
     }
 }
-add_filter('parse_query', 'am_convert_id_to_term_in_query');
 
+/*
+ * Add logging function, if not exists.
+ */
 if(!function_exists('_log')){
   function _log( $message ) {
     if( WP_DEBUG === true ){
@@ -1516,9 +1500,10 @@ if(!function_exists('_log')){
   }
 }
 
-// Add to our admin_init function
-add_action('quick_edit_custom_box',  'am_add_quick_edit', 10, 2);
- 
+
+/*
+ * Adds start and end dates edit.php quickedit.
+ */
 function am_add_quick_edit($column_name, $post_type) {
 
 	static $printNonce = TRUE;
@@ -1551,9 +1536,9 @@ function am_add_quick_edit($column_name, $post_type) {
     
 }
 
-
-
-
+/*
+ * Get's the amount of posts with the same recurrence_id as the given post.
+ */
 function am_get_recurring_count($post_id) {
 	$recurrence_id = get_post_meta($post_id, 'am_recurrence_id', true);
 	if (isset($recurrence_id) && $recurrence_id !== '') {
@@ -1580,8 +1565,53 @@ function am_get_recurring_count($post_id) {
 	}
 }
 
+/**
+ * Sets up rewrites to enable date archives for am_event post type.
+ */
+function am_event_datearchives_rewrite_rules($wp_rewrite) {
+    $rules = am_generate_date_archives('am_event', $wp_rewrite);
+    $wp_rewrite->rules = $rules + $wp_rewrite->rules;
+    return $wp_rewrite;
+}
 
+function am_generate_date_archives($cpt, $wp_rewrite) {
+    $rules = array();
 
+    $post_type = get_post_type_object($cpt);
+    $slug_archive = $post_type->has_archive;
+    if ($slug_archive === false) return $rules;
+    if ($slug_archive === true) {
+        $slug_archive = $post_type->name;
+    }
 
+    $dates = array(
+        array(
+            'rule' => "([0-9]{4})/([0-9]{1,2})/([0-9]{1,2})",
+            'vars' => array('year', 'monthnum', 'day')),
+        array(
+            'rule' => "([0-9]{4})/([0-9]{1,2})",
+            'vars' => array('year', 'monthnum')),
+        array(
+            'rule' => "([0-9]{4})",
+            'vars' => array('year'))
+        );
+
+    foreach ($dates as $data) {
+        $query = 'index.php?post_type='.$cpt;
+        $rule = $slug_archive.'/'.$data['rule'];
+
+        $i = 1;
+        foreach ($data['vars'] as $var) {
+            $query.= '&'.$var.'='.$wp_rewrite->preg_index($i);
+            $i++;
+        }
+
+        $rules[$rule."/?$"] = $query;
+        $rules[$rule."/feed/(feed|rdf|rss|rss2|atom)/?$"] = $query."&feed=".$wp_rewrite->preg_index($i);
+        $rules[$rule."/(feed|rdf|rss|rss2|atom)/?$"] = $query."&feed=".$wp_rewrite->preg_index($i);
+        $rules[$rule."/page/([0-9]{1,})/?$"] = $query."&paged=".$wp_rewrite->preg_index($i);
+    }
+    return $rules;
+}
 
 ?>

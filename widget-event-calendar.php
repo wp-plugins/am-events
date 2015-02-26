@@ -46,234 +46,20 @@ class AM_Event_Calendar_Widget extends WP_Widget {
         $title = apply_filters('widget_title', $instance['title'] );
         $venue = $instance['venue'];
         $category = $instance['category'];
+   
+        /* Before widget (defined by themes). */
+        echo $before_widget;
+                 
+        /* Title of widget (before and after defined by themes). */
+        if ( ! empty( $title ) )
+                echo $before_title . $title . $after_title;
         
         am_get_calendar(true,true,null,null);
-    }
-    
-    /**
-     * Parses the shortcodes, old method used for backward compatibility
-     * @param type $content
-     * @return type
-     */
-    protected function parse_event_old($template) {
-        // get post meta
-            $meta_venues = am_get_the_venue(); 
-            $meta_event_categories = am_get_the_event_category(); 
-            $meta_startdate = am_get_the_startdate();
-            $meta_enddate = am_get_the_enddate();
-
-            // get timestamps of dates
-            $timestamp_start = strtotime($meta_startdate);
-            $timestamp_end = strtotime($meta_enddate);
-            
-            //get all the widget template data
-            $template_startdate = date(_x('m/d/Y', 'upcoming events widget', 'am-events'), $timestamp_start);
-            $template_enddate = date(_x('m/d/Y', 'upcoming events widget', 'am-events'), $timestamp_end);
-
-            $template_starttime = date( _x('H:i', 'upcoming events widget', 'am-events'), $timestamp_start);
-            $template_endtime = date( _x('H:i', 'upcoming events widget', 'am-events'), $timestamp_end);
-
-            $template_startdayname = getWeekDay(date('N', $timestamp_start));
-            $template_enddayname = getWeekDay(date('N', $timestamp_end));
-
-            $template_venue = '';
-            if (count($meta_venues)  > 0)
-                $template_venue = $meta_venues[0]->name;
-            
-            $template_event_category = '';
-            if (count($meta_event_categories) > 0)
-                $template_event_category = $meta_event_categories[0]->name;
-            
-            $template_title = get_the_title();
-            
-            $template_content = get_the_content();
-              
-            // Widget template tags
-            $search = array(
-                '{{start_day_name}}', 
-                '{{start_date}}',
-                '{{start_time}}',
-                '{{end_day_name}}',
-                '{{end_date}}',
-                '{{end_time}}',
-                '{{title}}',
-                '{{event_category}}',
-                '{{venue}}',
-                '{{content}}',
-				'{{thumbnail}}',
-            );
-            
-            $replace = array(
-                $template_startdayname,
-                $template_startdate,
-                $template_starttime,
-                $template_enddayname,
-                $template_enddate,
-                $template_endtime,
-                $template_title,
-                $template_event_category,
-                $template_venue,
-                $template_content,
-            );
-            
-            return str_replace($search, $replace, $template);
-    }
-    
-    /**
-     * Parses the shortcodes
-     * @param type $content
-     * @return type
-     * @since 1.4.0
-     */
-    protected function parse_event($content) {
         
-        //Array of valid shortcodes
-        $shortcodes = array(
-            'event-title',    //The event title
-            'start-date',     //The start date of the event (uses the date format from the feed options, if it is set. Otherwise uses the default WordPress date format)
-            'end-date',       //The end date of the event (uses the date format from the feed options, if it is set. Otherwise uses the default WordPress date format)
-            'event-venue',    //The event venue
-            'event-category', //The event category
-            'content',        //The event content (number of words can be limited by the 'limit' attribute)
-            'permalink',      //The event post permalink
-            'excerpt',        //The event excerpt
-			'thumbnail',	  //The event thumbnail
-			'if',			  //Conditional tag
-        );
-        
-        $regex = 
-            '/\\[(\\[?)(' 
-            . implode( '|', $shortcodes ) 
-            . ')(?![\\w-])([^\\]\\/]*(?:\\/(?!\\])[^\\]\\/]*)*?)(?:(\\/)\\]|\\](?:([^\\[]*+(?:\\[(?!\\/\\2\\])[^\\[]*+)*+)\\[\\/\\2\\])?)(\\]?)/s';
-    
-        return preg_replace_callback( $regex, array( $this, 'process_shortcode' ), $content );
-        
+        /* After widget (defined by themes). */
+        echo $after_widget;
     }
 
-    /**
-     * Parses a shortcode, returning the appropriate event information
-     * Much of this code is 'borrowed' from WordPress' own shortcode handling stuff!
-     */
-    protected function process_shortcode( $m ) {
-        
-        if ( '[' == $m[1] && ']' == $m[6] )
-                return substr( $m[0], 1, -1 );
-     
-        //Extract any attributes contained in the shortcode
-        extract( shortcode_atts( array(
-                'format'    => '',
-                'limit'     => '0',
-				'size'     => 'post-thumbnail',
-                'link'      => 'false',
-				'cond'      => '',
-        ), shortcode_parse_atts( $m[3] ) ) );
-        
-        //Sanitize the attributes
-        $format = esc_attr( $format );
-		$cond   = esc_attr( $cond );
-		$size   = esc_attr( $size );
-        $limit  = absint( $limit );
-        $link   = ( 'true' === $link );
-        
-        // Do the appropriate stuff depending on which shortcode we're looking at.
-        // See valid shortcode list (above) for explanation of each shortcode
-	switch ( $m[2] ) {
-            case 'event-title':
-                $title = esc_html( trim( get_the_title()));
-                //If a word limit has been set, trim the title to the required length
-                if ( 0 != $limit ) {
-					preg_match( '/([\S]+\s*){0,' . $limit . '}/', $title , $title );
-					$title = trim( $title[0] );
-                }
-                if ($link) {  
-                    return $m[1] . '<a href="'. get_permalink() .'">' .$title. '</a>' . $m[6];
-                } else {
-                    return $m[1] . $title . $m[6];
-                }
-            case 'thumbnail':
-			
-				$thumbnail = get_the_post_thumbnail(get_the_ID(), $size );
-                return $m[1] . $thumbnail. $m[6];
-				
-            case 'content':
-                $content = get_the_content();
-                //If a word limit has been set, trim the title to the required length
-                if ( 0 != $limit ) {
-                        preg_match( '/([\S]+\s*){0,' . $limit . '}/', $content, $content );
-                        $content = trim( $content[0] );
-                }
-                return $m[1] . $content . $m[6];
-            case 'permalink':
-                return $m[1] . get_permalink() . $m[6];
-            case 'excerpt':
-                $excerpt = get_the_excerpt();
-                if ( 0 != $limit ) {
-                        preg_match( '/([\S]+\s*){0,' . $limit . '}/', $excerpt, $excerpt );
-                        $excerpt = trim( $excerpt[0] );
-                }
-                return $m[1] . get_the_excerpt() . $m[6];
-            case 'event-category':
-                $categoryArray = am_get_the_event_category();
-                if (count($categoryArray) > 0) {
-                    if ($link)
-                        return $m[1] . '<a href="'. get_term_link($categoryArray[0]) . '">' . $categoryArray[0]->name . '</a>' . $m[6];
-                    else
-                        return $m[1] . $categoryArray[0]->name . $m[6];
-                } else {
-                    return '-';
-                }
-            case 'event-venue':
-                $venueArray = am_get_the_venue();
-                if (count($venueArray) > 0) {
-                    if ($link)
-                        return $m[1] . '<a href="'. get_term_link($venueArray[0]) . '">' . $venueArray[0]->name . '</a>' . $m[6];
-                    else
-                        return $m[1] . $venueArray[0]->name . $m[6];
-                }
-                else {
-                    return '-';
-                }
-            case 'start-date':
-                $startdate = am_get_the_startdate();
-                $format = $format === '' ? "m/d/Y H:i" : $format;
-                return $m[1] . date_i18n( $format, strtotime($startdate) ) . $m[6];
-            case 'end-date':
-                $enddate = am_get_the_enddate();
-                $format = $format === '' ? "m/d/Y H:i" : $format;
-                return $m[1] . date_i18n( $format, strtotime($enddate) ) . $m[6];
-			case 'if':
-				switch ($cond) {
-				
-					case 'startdate-not-enddate':
-						$result = am_get_the_startdate() !== am_get_the_enddate() ? $m[1] . $m[5] . $m[6] : '';
-						return $this->parse_event($result);
-					
-					case 'startday-not-endday':
-						$start_day = date('mdY', strtotime(am_get_the_startdate()));
-						$end_day = date('mdY', strtotime(am_get_the_enddate()));
-						$result = $start_day !== $end_day ? $m[1] . $m[5] . $m[6] : '';
-						return $this->parse_event($result);
-					
-					case 'startdate-is-enddate':
-						$result = am_get_the_startdate() === am_get_the_enddate() ? $m[1] . $m[5] . $m[6] : '';
-						return $this->parse_event($result);
-					
-					case 'startday-is-endday':
-						$start_day = date('mdY', strtotime(am_get_the_startdate()));
-						$end_day = date('mdY', strtotime(am_get_the_enddate()));
-						$result = $start_day === $end_day ? $m[1] . $m[5] . $m[6] : '';
-						return $this->parse_event($result);
-					
-					default:
-						return $this->parse_event($m[1] . $m[5] . $m[6]);
-				}
-				
-                
-        }
-        
-    }
-    
-    
    /**
      * Back-end widget form.
      *
@@ -282,28 +68,11 @@ class AM_Event_Calendar_Widget extends WP_Widget {
      * @param array $instance Previously saved values from database.
      */
     public function form( $instance ) {
-        
-        $default_template = "<h3>[event-title link=true]</h3>
-
-<p>
-    [start-date format='D d.m.Y H:s'] - 
-    [end-date format='D d.m.Y H:s']
-</p>
-
-<p>[event-category], [event-venue]</p>
-
-<p> [content limit=25]... <a href=\"[permalink]\">read more...</a> </p>";
                 
         $defaults = array( 
             'title' => __('Upcoming Events', 'am-events'),
             'category' => 'all', 
-            'venue' => 'all', 
-            'postcount' => '3', 
-			'offset' => 86400, // 24 hours
-            'emptyevents' => '<p>No upcoming events</p>',
-            'template' => $default_template, 
-            'after' => '<p><a href="#">' . __('See More Events ->', 'am-events') . '</a></p>', 
-            'before' => '',  
+            'venue' => 'all',
             );
         $instance = wp_parse_args( (array) $instance, $defaults );
 
@@ -311,19 +80,12 @@ class AM_Event_Calendar_Widget extends WP_Widget {
         $title      = $instance[ 'title' ];
         $category   = $instance[ 'category' ];
         $venue      = $instance[ 'venue' ];
-        $emptyevents= $instance[ 'emptyevents' ];
-        $template   = $instance[ 'template' ];
-        $before     = $instance[ 'before' ];
-        $after      = $instance[ 'after' ];
-		$offset     = $instance[ 'offset' ];
-        
+ 
         $args = array( 'hide_empty' => false );
         
         $categories = get_terms('am_event_categories', $args);
         $venues = get_terms('am_venues', $args);
 
-
-          
         ?>
             <!-- Title -->
             <p>
@@ -357,40 +119,7 @@ class AM_Event_Calendar_Widget extends WP_Widget {
             </select>
             <br />
             <br />
-            
-            <label for="<?php echo $this->get_field_id( 'postcount' ); ?>"><?php _e('Number of events:', 'am-events')?></label><br />
-            <input type="number" id="<?php echo $this->get_field_id('postcount') ?>" name="<?php echo $this->get_field_name('postcount') ?>" type="number" min="1" value="<?php echo $instance['postcount']; ?>" />      
-            <br />
-            <br />
-			
-			<label for="<?php echo $this->get_field_id( 'offset' ); ?>"><?php _e('Keep passed events visible for:', 'am-events')?></label><br />
-			<select id="<?php echo $this->get_field_id( 'offset' ); ?>" name="<?php echo $this->get_field_name( 'offset' ); ?>">
-				<option value="0" <?php if ( $offset === 0 ){ echo 'selected="selected"'; }?>><?php _e("Don't keep visible", 'am-events') ?></option>
-				<option value="3600" <?php if ( $offset === 3600 ){ echo 'selected="selected"'; }?>><?php _e("1 Hour", 'am-events') ?></option>
-				<option value="86400" <?php if ( $offset === 86400){ echo 'selected="selected"'; }?>><?php _e("24 Hours", 'am-events') ?></option>
-				<option value="604800" <?php if ( $offset === 604800){ echo 'selected="selected"'; }?>><?php _e("1 Week", 'am-events') ?></option>
-			</select>
-			<br />
-            <br />
-            
-            <label for="<?php echo $this->get_field_id( 'before' ); ?>"><?php _e('Display before events:', 'am-events')?></label><br />
-            <textarea class="widefat" rows="2" id="<?php echo $this->get_field_id('before') ?>" name="<?php echo $this->get_field_name( 'before' ) ?>"><?php echo $before ?></textarea>
-            <br/>
-            <br />
-            
-            <label for="<?php echo $this->get_field_id( 'template' ); ?>"><?php _e('Template for single event:', 'am-events')?></label><br />
-            <textarea class="widefat" rows="10" id="<?php echo $this->get_field_id('template') ?>" name="<?php echo $this->get_field_name( 'template' ) ?>"><?php echo $template ?></textarea>
-            <br />
-            <br />
-            
-            <label for="<?php echo $this->get_field_id( 'emptyevents' ); ?>"><?php _e('Display when no events are found:', 'am-events')?></label><br />
-            <textarea class="widefat" rows="2" id="<?php echo $this->get_field_id('emptyevents') ?>" name="<?php echo $this->get_field_name( 'emptyevents' ) ?>"><?php echo $emptyevents ?></textarea>
-            <br />
-            <br />
-            
-            <label for="<?php echo $this->get_field_id( 'after' ); ?>"><?php _e('Display after events:', 'am-events')?></label><br />
-            <textarea class="widefat" rows="2" id="<?php echo $this->get_field_id('after') ?>" name="<?php echo $this->get_field_name( 'after' ) ?>"><?php echo $after ?></textarea>
-
+          
         <?php 
     }
 
@@ -410,12 +139,6 @@ class AM_Event_Calendar_Widget extends WP_Widget {
            $instance['title'] = strip_tags( $new_instance['title'] );
            $instance['category'] = $new_instance['category'] ;
            $instance['venue'] = $new_instance['venue'];
-           $instance['postcount'] = strip_tags( $new_instance['postcount'] );
-           $instance['template'] = $new_instance['template'];
-           $instance['before'] = $new_instance['before'];
-           $instance['after'] = $new_instance['after'];
-		   $instance['offset'] = intval(strip_tags($new_instance['offset']));
-           $instance['emptyevents'] = $new_instance['emptyevents'];
            
            return $instance;
    }
@@ -437,51 +160,53 @@ class AM_Event_Calendar_Widget extends WP_Widget {
 function am_get_calendar($initial = true, $echo = true, $category = null, $venue = null) {
 		global $wpdb, $m, $monthnum, $year, $wp_locale, $posts;
 
+        // TODO: remove before release
+        delete_get_calendar_cache();
+        
 		$key = md5( $m . $monthnum . $year );
-		if ( $cache = wp_cache_get( 'am_get_calendar', 'am_calendar' ) ) {
-				if ( is_array($cache) && isset( $cache[ $key ] ) ) {
-						if ( $echo ) {
-								/** This filter is documented in wp-includes/general-template.php */
-								echo apply_filters( 'am_get_calendar', $cache[$key] );
-								return;
-						} else {
-								/** This filter is documented in wp-includes/general-template.php */
-								return apply_filters( 'am_get_calendar', $cache[$key] );
-						}
-				}
+		if ( $cache = wp_cache_get( 'get_calendar', 'calendar' ) ) {
+            if ( is_array($cache) && isset( $cache[ $key ] ) ) {
+                if ( $echo ) {
+                    /** This filter is documented in wp-includes/general-template.php */
+                    echo apply_filters( 'get_calendar', $cache[$key] );
+                    return;
+                } else {
+                    /** This filter is documented in wp-includes/general-template.php */
+                    return apply_filters( 'get_calendar', $cache[$key] );
+                }
+            }
 		}
 
 		if ( !is_array($cache) )
-				$cache = array();
+            $cache = array();
 
 		if ( isset($_GET['w']) )
-				$w = ''.intval($_GET['w']);
+            $w = ''.intval($_GET['w']);
 
 		// week_begins = 0 stands for Sunday
 		$week_begins = intval(get_option('start_of_week'));
 
 		// Let's figure out when we are
 		if ( !empty($monthnum) && !empty($year) ) {
-				$thismonth = ''.zeroise(intval($monthnum), 2);
-				$thisyear = ''.intval($year);
+            $thismonth = ''.zeroise(intval($monthnum), 2);
+            $thisyear = ''.intval($year);
 		} elseif ( !empty($w) ) {
-				// We need to get the month from MySQL
-				$thisyear = ''.intval(substr($m, 0, 4));
-				$d = (($w - 1) * 7) + 6; //it seems MySQL's weeks disagree with PHP's
-				$thismonth = $wpdb->get_var("SELECT DATE_FORMAT((DATE_ADD('{$thisyear}0101', INTERVAL $d DAY) ), '%m')");
+            // We need to get the month from MySQL
+            $thisyear = ''.intval(substr($m, 0, 4));
+            $d = (($w - 1) * 7) + 6; //it seems MySQL's weeks disagree with PHP's
+            $thismonth = $wpdb->get_var("SELECT DATE_FORMAT((DATE_ADD('{$thisyear}0101', INTERVAL $d DAY) ), '%m')");
 		} elseif ( !empty($m) ) {
-				$thisyear = ''.intval(substr($m, 0, 4));
-				if ( strlen($m) < 6 )
-								$thismonth = '01';
-				else
-								$thismonth = ''.zeroise(intval(substr($m, 4, 2)), 2);
+            $thisyear = ''.intval(substr($m, 0, 4));
+            if ( strlen($m) < 6 )
+                $thismonth = '01';
+            else
+                $thismonth = ''.zeroise(intval(substr($m, 4, 2)), 2);
 		} else {
-				$thisyear = gmdate('Y', current_time('timestamp'));
-				$thismonth = gmdate('m', current_time('timestamp'));
+            $thisyear = gmdate('Y', current_time('timestamp'));
+            $thismonth = gmdate('m', current_time('timestamp'));
 		}
 
 		$unixmonth = mktime(0, 0 , 0, $thismonth, 1, $thisyear);
-		$last_day = date('t', $unixmonth);
 
 		$previous_year = gmdate('Y', strtotime('-1 month', current_time('timestamp')));
 		$previous_month = gmdate('m', strtotime('-1 month', current_time('timestamp')));
@@ -499,13 +224,13 @@ function am_get_calendar($initial = true, $echo = true, $category = null, $venue
 		$myweek = array();
 
 		for ( $wdcount=0; $wdcount<=6; $wdcount++ ) {
-				$myweek[] = $wp_locale->get_weekday(($wdcount+$week_begins)%7);
+			$myweek[] = $wp_locale->get_weekday(($wdcount+$week_begins)%7);
 		}
 
 		foreach ( $myweek as $wd ) {
-				$day_name = (true == $initial) ? $wp_locale->get_weekday_initial($wd) : $wp_locale->get_weekday_abbrev($wd);
-				$wd = esc_attr($wd);
-				$calendar_output .= "\n\t\t<th scope=\"col\" title=\"$wd\">$day_name</th>";
+            $day_name = (true == $initial) ? $wp_locale->get_weekday_initial($wd) : $wp_locale->get_weekday_abbrev($wd);
+			$wd = esc_attr($wd);
+			$calendar_output .= "\n\t\t<th scope=\"col\" title=\"$wd\">$day_name</th>";
 		}
 		
 		$calendar_output .= '
@@ -515,10 +240,10 @@ function am_get_calendar($initial = true, $echo = true, $category = null, $venue
 		<tfoot>
 		<tr>';
 
-		$calendar_output .= "\n\t\t".'<td colspan="3" id="prev"><a href="' . get_month_link($previous_year, $previous_month) . '">&laquo; ' . $wp_locale->get_month_abbrev($wp_locale->get_month($previous_month)) . '</a></td>';
+		$calendar_output .= "\n\t\t".'<td colspan="3" id="prev"><a href="' . am_get_event_date_archive_link( $previous_year, $previous_month ) . '">&laquo; ' . $wp_locale->get_month_abbrev($wp_locale->get_month($previous_month)) . '</a></td>';
 		$calendar_output .= "\n\t\t".'<td class="pad">&nbsp;</td>';
 
-		$calendar_output .= "\n\t\t".'<td colspan="3" id="next"><a href="' . get_month_link($next_year, $next_month) . '">' . $wp_locale->get_month_abbrev($wp_locale->get_month($next_month)) . ' &raquo;</a></td>';
+		$calendar_output .= "\n\t\t".'<td colspan="3" id="next"><a href="' . am_get_event_date_archive_link( $next_year, $next_month ) . '">' . $wp_locale->get_month_abbrev($wp_locale->get_month($next_month)) . ' &raquo;</a></td>';
 
 		$calendar_output .= '
 		</tr>
@@ -549,33 +274,25 @@ function am_get_calendar($initial = true, $echo = true, $category = null, $venue
 			$taxQuery[] = $taxVenue;
         }
 		
-		$first_second_of_month = date("m-$thismonth-Y 00:00:00", current_time('timestamp'));
-		$last_second_of_month  = date('m-t-Y 12:59:59', current_time('timestamp'));
+		$first_second_of_month = date("Y-$thismonth-01 00:00:00", current_time('timestamp'));
+		$last_second_of_month  = date("Y-$thismonth-t 23:59:59", current_time('timestamp'));
 		
         /* WP_Query args */
         $args = array(
             'post_type' => 'am_event', // show only am_event cpt
             'post_status' => 'publish', // show only published
-            'posts_per_page' => 9999, // number of events to show
-            'tax_query' => $taxQuery,
-            // sort by meta value 'am_startdate' ascending
-            'meta_key' => 'am_startdate',
-            'orderby' => 'meta_value',
-            'order' => 'ASC',
+            'posts_per_page' => 9999,
+            'tax_query' => $taxQuery,  
             'meta_query' => array( 'relation' => 'AND', 
 				array(
                 'key' => 'am_startdate',
-                 // display events with an end date greater than 
-                 // the current time - 24hrs
                 'value' => $last_second_of_month,                
-                'compare' => "<" // startdate > value
+                'compare' => "<"
 				),
 				array(
                 'key' => 'am_enddate',
-                 // display events with an end date greater than 
-                 // the current time - 24hrs
                 'value' => $first_second_of_month,                
-                'compare' => ">" // startdate > value
+                'compare' => ">"
 				),
             ),
             
@@ -586,36 +303,34 @@ function am_get_calendar($initial = true, $echo = true, $category = null, $venue
 		else
 			$ak_title_separator = ', ';
 
-		$ak_titles_for_day = array();
+		$titles_for_day = array();
 		
 		$query = new WP_Query( $args );
 		$events = $query->get_posts();
 		
-		$dayswithevent = array();
+        $titles_for_day = array();
 		if ( $events ) {
 			foreach ( (array) $events as $event ) {
 
 				/** This filter is documented in wp-includes/post-template.php */
 				$event_title = esc_attr( apply_filters( 'the_title', $event->post_title, $event->ID ) );
 
-				$start_day = am_get_the_startdate('d', $event->ID);
-				$end_day = am_get_the_enddate('d', $event->ID);
+				$start_day = intval(am_get_the_startdate('d', $event->ID));
+				$end_day = intval(am_get_the_enddate('d', $event->ID));
 				
-				if ( empty($ak_titles_for_day["day_$day"]))
-					$ak_titles_for_day["day_$day"] = '';
-				if ( empty($ak_titles_for_day["day_$day"]) ) // first one
-					$ak_titles_for_day["$day"] = $post_title;
+				if ( empty($titles_for_day[$start_day]) )
+					$titles_for_day[$start_day] = ''.$event_title;
 				else
-					$ak_titles_for_day["$day"] .= $ak_title_separator . $post_title;
+					$titles_for_day[$start_day] .= $ak_title_separator . $event_title;
+                   
+				if ( empty($titles_for_day[$end_day]) ) // first one
+					$titles_for_day[$end_day] = ''.$event_title;
+				else
+					$titles_for_day[$end_day] .= $ak_title_separator . $event_title;
 					
-				if ( !in_array($start_day, $daywithpost) )
-					$dayswithevent[] = intval($start_day);
-					
-				if ( !in_array($end_day, $daywithpost) )
-					$dayswithevent[] = intval($end_day);
 			}
 		}
-
+        
 		// See how much we should pad in the beginning
 		$pad = calendar_week_mod(date('w', $unixmonth)-$week_begins);
 		if ( 0 != $pad )
@@ -632,8 +347,8 @@ function am_get_calendar($initial = true, $echo = true, $category = null, $venue
 			else
 				$calendar_output .= '<td>';
 
-			if ( in_array($day, $dayswithevent) ) // any posts today?
-				$calendar_output .= '<a href="' . get_day_link( $thisyear, $thismonth, $day ) . '" title="' . esc_attr( $ak_titles_for_day[ $day ] ) . "\">$day</a>";
+			if ( !empty($titles_for_day[$day] )) // any posts today?
+				$calendar_output .= '<a href="' . get_day_link( $thisyear, $thismonth, $day ) . '" title="' . esc_attr( $titles_for_day[ $day ] ) . "\">$day</a>";
 			else
 				$calendar_output .= $day;
 				
@@ -650,7 +365,7 @@ function am_get_calendar($initial = true, $echo = true, $category = null, $venue
 		$calendar_output .= "\n\t</tr>\n\t</tbody>\n\t</table>";
 
 		$cache[ $key ] = $calendar_output;
-		wp_cache_set( 'am_get_calendar', $cache, 'calendar' );
+		wp_cache_set( 'get_calendar', $cache, 'calendar' );
 
 		if ( $echo ) {
 			/**
@@ -667,4 +382,41 @@ function am_get_calendar($initial = true, $echo = true, $category = null, $venue
 		}
 
 }
+
+/**
+ * This allows us to generate any archive link - plain, yearly, monthly, daily
+ * 
+ * @param int $year
+ * @param int $month (optional)
+ * @param int $day (optional)
+ * @return string
+ */
+function am_get_event_date_archive_link( $year, $month = 0, $day = 0 ) {
+    global $wp_rewrite;
+    
+    $post_type_obj = get_post_type_object( 'am_event' );
+    $post_type_slug = $post_type_obj->rewrite['slug'] ? $post_type_obj->rewrite['slug'] : $post_type_obj->name;
+    if( $day ) { // day archive link
+        // set to today's values if not provided
+        if ( !$year )
+            $year = gmdate('Y', current_time('timestamp'));
+        if ( !$month )
+            $month = gmdate('m', current_time('timestamp'));
+        $link = $wp_rewrite->get_day_permastruct();
+    } else if ( $month ) { // month archive link
+        if ( !$year )
+            $year = gmdate('Y', current_time('timestamp'));
+        $link = $wp_rewrite->get_month_permastruct();
+    } else { // year archive link
+        $link = $wp_rewrite->get_year_permastruct();
+    }
+    if ( !empty($link) ) {
+        $link = str_replace('%year%', $year, $link);
+        $link = str_replace('%monthnum%', zeroise(intval($month), 2), $link );
+        $link = str_replace('%day%', zeroise(intval($day), 2), $link );
+        return home_url( "$post_type_slug$link" );
+    }
+    return home_url( "$post_type_slug" );
+}
+
 ?>

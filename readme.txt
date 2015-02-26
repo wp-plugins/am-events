@@ -55,18 +55,22 @@ See 'Other Notes' for a simple tutorial.
 
 == Changelog ==
 
+= 2.0.0 =
+* Added new event calendar widget
+* Enabled date archives for event posts
+
 = 1.9.4 =
-* Fixed date localization issues.
+* Fixed date localization issues
 
 = 1.9.3 =
 * Fixed widget category and venue filtering bug
 
 = 1.9.2 =
-* Translation fixes
+* Translation fixes.
 * Added thumbnail shortcode to widget
 
 = 1.9.1 =
-* Fixed bug when removing event categories from recurring events.
+* Fixed bug when removing event categories from recurring events
 
 = 1.9.0 =
 * Improved handling of recurring events
@@ -121,7 +125,13 @@ See 'Other Notes' for a simple tutorial.
 = 1.0.0 =
 * First released/stable version
 
+
+
 == Upgrade Notice ==
+
+= 2.0.0 =
+* Adds a new event calendar widget
+* Enables date archives for events
 
 = 1.9.4 =
 * Fixes date localization issues.
