@@ -233,6 +233,7 @@ Here are the shortcodes available in the upcoming events widget template.
  * [thumbnail]
  * [excerpt]
  * [permalink]
+ * [meta]
  
 Conditional shortcodes:
 
@@ -240,7 +241,6 @@ Conditional shortcodes:
  * [if cond="startdate-not-enddate"]
  * [if cond="startday-is-endday"]
  * [if cond="startday-not-endday"]
- 
  
 
 
