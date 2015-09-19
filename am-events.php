@@ -547,7 +547,7 @@ function am_save_custom_meta($post_id) {
 		else
 			return;
 			
-		do_action( 'am_save_event', $event_post_id );
+		do_action( 'am_save_event', $post_id );
 
 	}
 }

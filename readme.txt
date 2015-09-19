@@ -2,7 +2,7 @@
 Contributors: Moisture
 Tags: event list, events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
-Tested up to: 4.3
+Tested up to: 4.3.1
 Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -57,6 +57,7 @@ See 'Other Notes' for a simple tutorial.
 
 = 1.10.0 =
 * Added hooks for including extra fields to event posts
+* Added [meta] shortcode for widget
 
 = 1.9.8 =
 * Fixed problem with tags
@@ -142,6 +143,7 @@ See 'Other Notes' for a simple tutorial.
 
 = 1.10.0 =
 * Adds hooks for including extra fields to event posts
+* Adds [meta] shortcode for widget
 
 = 1.9.8 =
 * Fixes problems with tags

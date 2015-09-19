@@ -222,6 +222,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
             'permalink',      //The event post permalink
             'excerpt',        //The event excerpt
 			'thumbnail',	  //The event thumbnail
+			'meta',			  //Custom meta field
 			'if',			  //Conditional tag
         );
         
@@ -247,8 +248,9 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         extract( shortcode_atts( array(
                 'format'    => '',
                 'limit'     => '0',
-				'size'     => 'post-thumbnail',
+				'size'      => 'post-thumbnail',
                 'link'      => 'false',
+				'key'  => '',
 				'cond'      => '',
         ), shortcode_parse_atts( $m[3] ) ) );
         
@@ -256,6 +258,7 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
         $format = esc_attr( $format );
 		$cond   = esc_attr( $cond );
 		$size   = esc_attr( $size );
+		$key  = esc_attr( $key );
         $limit  = absint( $limit );
         $link   = ( 'true' === $link );
         
@@ -325,6 +328,9 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
                 $enddate = am_get_the_enddate();
                 $format = $format === '' ? "m/d/Y H:i" : $format;
                 return $m[1] . date_i18n( $format, strtotime($enddate) ) . $m[6];
+			case 'meta':
+                $meta = get_post_meta ( get_the_ID(), $key, true );
+                return $m[1] . $meta . $m[6];
 			case 'if':
 				switch ($cond) {
 				
