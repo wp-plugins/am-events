@@ -3,7 +3,7 @@
   Plugin Name: AM Events
   Plugin URI: http://wordpress.org/extend/plugins/am-events/
   Description: Adds a post type for events and a customizable widget for displaying upcoming events.
-  Version: 2.0.0
+  Version: 1.10.0
   Author: Atte Moisio
   Author URI: http://attemoisio.fi
   License: GPL2
@@ -33,35 +33,35 @@
 
 /************************************************************************************
  * VARIABLE NAMES, TAXONOMY NAMES, WIDGET SHORTCODES AND TEMPLATE TAGS FOR REFERENCE
- * 
- * Custom post type name: 
- * 
+ *
+ * Custom post type name:
+ *
  *      'am_event'
- * 
- * Meta: 
- * 
+ *
+ * Meta:
+ *
  *      'am_startdate'
  *      'am_enddate'
- * 
- * Taxonomies: 
- *              
+ *
+ * Taxonomies:
+ *
  *      'am_venues'
  *      'am_event_categories'
- * 
+ *
  * Widget template shortcodes:
- * 
+ *
  *     [event-title]    //The event title
  *     [start-date]     //The start date of the event (uses the date format from the feed options, if it is set. Otherwise uses the default WordPress date format)
  *     [end-date]       //The end date of the event (uses the date format from the feed options, if it is set. Otherwise uses the default WordPress date format)
  *     [event-venue]    //The event venue
  *     [event-category] //The event category
- *     [excerpt] 	      //The event excerpt
+ *     [excerpt] 	    //The event excerpt
  *     [thumbnail]      //The event featured image
- *     [content]        //The event content (number of words can be limited by the 'limit' attribute) 
+ *     [content]        //The event content (number of words can be limited by the 'limit' attribute)
  *     [if cond="startdate-is-enddate"]
  *     [if cond="startdate-not-enddate"]
  *     [if cond="startday-is-endday"]
- *     [if cond="startday-not-endday"] 
+ *     [if cond="startday-not-endday"]
  *
  * Template tags:
  *
@@ -71,14 +71,14 @@
  *              am_get_the_startdate( $format = 'Y-m-d H:i:s', $post = 0 )
  *              am_the_enddate($format = 'Y-m-d H:i:s', $before = '', $after = '', $echo = true)
  *              am_get_the_enddate( $format = 'Y-m-d H:i:s', $post = 0 )
- * 
+ *
  *     Venues:
  *
  *              am_get_the_venue( $id = false )
  *              am_in_venue( $venue, $post = null )
  *              am_get_the_venue_list( $separator = '', $parents='', $post_id = false )
  *              am_the_venue( $separator = '', $parents='', $post_id = false )
- * 
+ *
  *     Event categories:
  *
  *              am_get_the_event_category( $id = false )
@@ -93,9 +93,9 @@
  * INCLUDES
  */
 require_once dirname(__FILE__) . '/widget-upcoming-events.php';
-require_once dirname(__FILE__) . '/widget-event-calendar.php';
+//require_once dirname(__FILE__) . '/widget-event-calendar.php';
 require_once dirname(__FILE__) . '/template-tags.php';
- 
+
 /******************************************************************************
  * =ACTION HOOKS
  * *************************************************************************** */
@@ -118,7 +118,7 @@ if ( is_admin() ) { // admin actions
 /**
  *
  */
- 
+
 add_filter('post_row_actions','am_action_row', 10, 2);
 add_filter('parse_query', 'am_convert_id_to_term_in_query');
 add_filter('post_updated_messages', 'am_event_updated_messages');
@@ -159,39 +159,44 @@ add_action('generate_rewrite_rules', 'am_event_datearchives_rewrite_rules');
 add_action('pre_get_posts','am_alter_event_archive_query');
 
 /*
- * Modifies event archive page to show events based on start and end dates 
+ * Modifies event archive page to show events based on start and end dates
  * instead of publish date.
  */
 function am_alter_event_archive_query( $query ){
-    if( $query->is_main_query() && $query->is_post_type_archive( 'am_event' )  ) {     
+    if( $query->is_main_query() && $query->is_post_type_archive( 'am_event' )  ) {
 
         $this_year = get_query_var('year', gmdate('Y', current_time('timestamp')));
         $this_month = get_query_var('month', gmdate('m', current_time('timestamp')));
         $this_day = get_query_var('day', gmdate('d', current_time('timestamp')));
-        
+
         if (is_year()) { // Yearly archive page
             $start = "$this_year-01-01 00:00:00";
             $end = "$this_year-12-31 23:59:59";
-            $query->set( 'meta_query', am_get_archive_meta_query($start, $end) );     
+            $query->set( 'meta_query', am_get_archive_meta_query($start, $end) );
+			am_pre_modify_query($query);
         } else if (is_month()) { // Monthly archive page
             $start = "$this_year-$this_month-01 00:00:00";
             $end = "$this_year-$this_month-31 23:59:59";
             $query->set( 'meta_query', am_get_archive_meta_query($start, $end) );
+			am_pre_modify_query($query);
         } else if (is_day()) { // Daily archive page
             $start = "$this_year-$this_month-$this_day 00:00:00";
             $end = "$this_year-$this_month-$this_day 23:59:59";
-            $query->set( 'meta_query', am_get_archive_meta_query($start, $end) ); 
+            $query->set( 'meta_query', am_get_archive_meta_query($start, $end) );
+			am_pre_modify_query($query);
         }
 
-        $query->set( 'post_type', 'am_event' );
-        $query->set( 'meta_key', 'am_startdate' );
-        $query->set( 'orderby', 'meta_value' );
-        $query->set( 'order', 'ASC' );
-        $query->set( 'year', null);
-        $query->set( 'monthnum', null);
-        $query->set( 'day', null);
-
     }
+}
+
+function am_pre_modify_query($query) {
+	$query->set( 'post_type', 'am_event' );
+	$query->set( 'meta_key', 'am_startdate' );
+	$query->set( 'orderby', 'meta_value' );
+	$query->set( 'order', 'ASC' );
+	$query->set( 'year', null);
+	$query->set( 'monthnum', null);
+	$query->set( 'day', null);
 }
 
 function am_get_archive_meta_query($start_timestamp, $end_timestamp) {
@@ -215,7 +220,7 @@ function am_get_default_date_format() {
 
 function am_register_widgets() {
 	register_widget('AM_Upcoming_Events_Widget');
-	register_widget('AM_Event_Calendar_Widget');
+	//register_widget('AM_Event_Calendar_Widget');
 }
 
 function am_register_settings() { // whitelist options
@@ -231,12 +236,12 @@ function am_plugin_settings() {
 	if ( !current_user_can( 'manage_options' ) )  {
 		wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 	}
-        
+
         ?>
 	<div class="wrap">
         <h2><?php _e( 'AM Events settings', 'am_events' ) ?></h2>
-        <form method="post" action="options.php"> 
-            
+        <form method="post" action="options.php">
+
         <?php
         settings_fields( 'am-events-settings-group' );
         do_settings_sections( 'am-events-settings-group' );
@@ -248,29 +253,29 @@ function am_plugin_settings() {
 		<?php } ?>
         <table><tbody>
             <tr>
-                <td><label for="am_rewrite_slug"><?php _e( 'Slug for event posts', 'am_events' ) ?></label> </td>  
+                <td><label for="am_rewrite_slug"><?php _e( 'Slug for event posts', 'am_events' ) ?></label> </td>
                 <td>
 					<input id="am_rewrite_slug" valuechanged="" type="text" name="am_rewrite_slug" value="<?php echo get_option('am_rewrite_slug', 'am_event'); ?>" />
-					
+
 				</td>
 
 			</tr>
 			<tr></tr>
             <tr>
-                <td><label for="am_timepicker_minutestep"><?php _e( 'Timepicker minute step', 'am-events' ) ?></label> </td>   
+                <td><label for="am_timepicker_minutestep"><?php _e( 'Timepicker minute step', 'am-events' ) ?></label> </td>
                 <td><input id="am_timepicker_minutestep" valuechanged="" type="number" min="1" max="59" name="am_timepicker_minutestep" value="<?php echo get_option('am_timepicker_minutestep', 15); ?>" /></td>
 			</tr>
 
 			</tr>
         </tbody></table>
-		
 
-        
+
+
         <?php submit_button(); ?>
         </form>
         <span id="slug-instructions" style="display:none"></span>
-        
-        
+
+
 	</div>
 
         <?php
@@ -279,20 +284,20 @@ function am_plugin_settings() {
 /* * ****************************************************************************
  * =SCRIPT =STYLE
  * *************************************************************************** */
- 
+
 function am_custom_script_post() {
     global $post;
     if ($post->post_type === 'am_event' && is_admin()) {
-		
+
 		// include JQuery
         wp_enqueue_script(
                 'jquery-custom', plugins_url('/script/jquery-ui-1.10.2.custom.min.js', __FILE__)
         );
-		
+
 		// JQuery datetime picker from http://trentrichardson.com/examples/timepicker/
 		// datetimepicker localization
 		$localization = array(
-		
+
             // Date picker
             'clearText' => _x('Clear', 'date picker', 'am-events'), //Display text for clear link
             'clearStatus' => _x('Erase the current date', 'date picker', 'am-events'), //Status text for clear link
@@ -323,7 +328,7 @@ function am_custom_script_post() {
             'firstDay' => 1, //The first day of the week, Sun = 0, Mon = 1, ...
             'initStatus' => _x('Select a date', 'date picker', 'am-events'), //Initial Status text on opening
             'isRTL' => false, //True if right-to-left language, false if left-to-right
-            
+
             // Time picker
             'minuteStep' => get_option('am_timepicker_minutestep', 15),
             'currentText' => _x('Now', 'time picker', 'am-events'),
@@ -343,7 +348,7 @@ function am_custom_script_post() {
             'timezoneText' => _x('Time Zone', 'time picker', 'am-events'),
             'isRTL' => false
         );
-        
+
 		// Add Timepicker script
         wp_register_script('jquery-ui-timepicker', plugins_url('/script/jquery-ui-timepicker-addon.js', __FILE__));
         wp_localize_script('jquery-ui-timepicker', 'localization', $localization); //pass any values to javascript
@@ -361,11 +366,11 @@ function am_custom_script_post() {
 function am_custom_script_edit($hook) {
 	if( 'edit.php' != $hook )
         return;
-	
+
 	$localization = array(
 		'confirmation' => __( 'Are you sure you want to move this and all other events in the series to the Trash?', 'am-events'),
 	);
-	
+
 	wp_register_script('am_edit_script', plugins_url('/script/admin-edit.js', __FILE__));
 	wp_localize_script('am_edit_script', 'localization', $localization); //pass any values to javascript
 	wp_enqueue_script( 'am_edit_script');
@@ -408,7 +413,7 @@ function am_remove_submit_meta_box() {
 function am_replace_submit_meta_box() {
     add_meta_box('submitdiv', __('Publish'), 'am_post_submit_meta_box', 'am_event', 'side', 'high', null);
 }
- 
+
 /**
  * Custom meta box for events
  */
@@ -432,7 +437,7 @@ function am_meta_box_content($post) {
     // Nonce for verification.
     if (function_exists('am_nonce'))
         wp_nonce_field(plugin_basename(__FILE__), 'am_nonce');
-    
+
     // The actual fields for data entry
     // Use get_post_meta to retrieve an existing value from the database and use the value for the form
     // DATE FIELDS
@@ -446,13 +451,13 @@ function am_meta_box_content($post) {
         $startDate = date(_x('m/d/Y H:i','administration', 'am-events'), strtotime($metaStartDate));
     if ($metaEndDate !== '')
         $endDate = date(_x('m/d/Y H:i','administration', 'am-events'), strtotime($metaEndDate));
-	
+
     // Echo content of the meta box
     ?>
     <table>
         <tr>
             <td align="right">
-                <label for="am_startdate"> 
+                <label for="am_startdate">
                     <?php _e("Start Date:", 'am-events') ?>
                 </label>
             </td>
@@ -479,7 +484,7 @@ function am_meta_box_content($post) {
 
         <input type="radio" name="am_recurrence_type" value="am_weekly" checked /><span><?php _e('weekly', 'am-events') ?></span><br />
         <input type="radio" name="am_recurrence_type" value="am_biweekly" /><span><?php _e('every two weeks', 'am-events') ?></span><br />
-        
+
         <br />
 
         <input style="width: 60px" name="am_recurrent_amount" type="number" min="1" max="99" id="am_recurrent_amount"></input>
@@ -498,24 +503,24 @@ function am_meta_box_content($post) {
  */
 function am_save_custom_meta($post_id) {
     global $post;
-	
+
 	if (isset($_GET['action']) && $_GET['action'] == 'trash')
 		return;
 
 	// Verification check.
 	if ( isset($_POST['am_nonce']) && !wp_verify_nonce( $_POST['am_nonce'], plugin_basename(__FILE__) ) )
 		return;
-	
+
 	// And they're of the right level?
 	if (!current_user_can('edit_posts'))
 		return;
 	/*
-	 * check if the $_POST variable is set, 
-	 * meaning that the form been submitted, 
+	 * check if the $_POST variable is set,
+	 * meaning that the form been submitted,
 	 * and if so then update our post meta options using update_post_meta().
 	 */
 	if ($_POST && get_post_type($post) === 'am_event') {
-
+	
 		// Has the field been used?
 		$temp1 = trim($_POST['am_startdate']);
 		if (empty($temp1))
@@ -541,7 +546,9 @@ function am_save_custom_meta($post_id) {
 			update_post_meta($post_id, 'am_enddate', $enddate);
 		else
 			return;
-		
+			
+		do_action( 'am_save_event', $event_post_id );
+
 	}
 }
 
@@ -737,7 +744,7 @@ function am_post_submit_meta_box($post, $args = array() ) {
 		<a class="hide-if-no-js" href="<?php echo esc_url( get_edit_post_link( $args['args']['revision_id'] ) ); ?>"><span aria-hidden="true"><?php _ex( 'Browse', 'revisions' ); ?></span> <span class="screen-reader-text"><?php _e( 'Browse revisions' ); ?></span></a>
 	</div>
 	<?php endif;
-	
+
 	?>
 	<div class="misc-pub-section misc-pub-recurrent" id="recurrence">
 	<?php
@@ -778,15 +785,15 @@ function am_post_submit_meta_box($post, $args = array() ) {
 	 */
 	do_action( 'post_submitbox_start' );
 	?>
-	
+
 	<div style="margin-bottom: 10px">
-		<?php 
+		<?php
 			if ($recurring_count > 0) {
 				echo '' . __( 'This is a recurring event. You can update just this one or all events in the series.' ) . '';
 			}
 		?>
 	</div>
-	
+
 	<div id="delete-action">
 	<?php
 	if ( current_user_can( "delete_post", $post->ID ) ) {
@@ -811,9 +818,9 @@ function am_post_submit_meta_box($post, $args = array() ) {
 	<?php	else : ?>
 			<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Publish') ?>" />
 			<?php submit_button( __( 'Publish' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) ); ?>
-			
-			<?php 
-			if ($recurring_count > 1) { 
+
+			<?php
+			if ($recurring_count > 1) {
 				submit_button( __('Publish All', 'am-events'), 'primary button-large', 'publish', false, array( 'accesskey' => 'p', 'onclick' => "document.getElementById('submit_all').value='yes'") );
 			} ?>
 	<?php	endif;
@@ -821,7 +828,7 @@ function am_post_submit_meta_box($post, $args = array() ) {
 			<input name="original_publish" type="hidden" id="original_publish" value="<?php esc_attr_e('Submit for Review') ?>" />
 			<?php submit_button( __( 'Submit for Review' ), 'primary button-large', 'publish', false, array( 'accesskey' => 'p' ) ); ?>
 			<?php
-			if ($recurring_count > 1) { 
+			if ($recurring_count > 1) {
 				submit_button( __('Submit All for Review', 'am-events'), 'primary button-large', 'publish', false, array( 'accesskey' => 'p', 'onclick' => "document.getElementById('submit_all').value='yes'") );
 			} ?>
 	<?php
@@ -859,7 +866,7 @@ function am_show_message($message, $errormsg = false)
     }
 
     echo "$message";
-	
+
 	echo "</div>";
 }
 
@@ -867,11 +874,11 @@ function am_show_message($message, $errormsg = false)
  * Display custom messages
  */
 function am_show_admin_messages() {
-    
+
     if(isset($_COOKIE['wp-admin-messages-normal'])) {
 
         //setcookie('wp-admin-messages-normal', null);
-        
+
         $messages = strtok($_COOKIE['wp-admin-messages-normal'], "@@");
 
         while ($messages !== false) {
@@ -879,7 +886,7 @@ function am_show_admin_messages() {
             $messages = strtok("@@");
         }
 
-        
+
     }
 
     if(isset($_COOKIE['wp-admin-messages-error'])) {
@@ -919,14 +926,14 @@ function am_add_admin_message($message, $error = false)
  */
 function am_action_row($actions, $post){
     //check for your post type
-	
+
     if ($post->post_type === 'am_event'){
-		if ($post->post_status !== 'trash') { 
+		if ($post->post_status !== 'trash') {
 			$post_type = 'am_event';
 			$recurrence_id = get_post_meta($post->ID, 'am_recurrence_id', true);
 			if (isset($recurrence_id) && $recurrence_id) {
 				$class = 'submitdelete recurrent recurrent-' . $recurrence_id;;
-				
+
 				$title = esc_attr( __( 'Move this and all recurring items to trash', 'am-events' ) );
 				$span_id = "trash-recurring-event" . $post->ID;
 				$href = get_delete_post_link( $post->ID );
@@ -980,10 +987,10 @@ function am_array_insert_after($key, array &$array, $new_key, $new_value) {
  * @return type
  */
 function am_wp_trash_event_recurring($post_id) {
-	
-	if (!isset($_GET['recurrent'])) 
+
+	if (!isset($_GET['recurrent']))
 		return;
-	
+
 	$recurrent = $_GET['recurrent'];
 	if ($recurrent === 'yes') {
 		$post_type = get_post_type( $post_id );
@@ -991,14 +998,14 @@ function am_wp_trash_event_recurring($post_id) {
 		if( $post_type == 'am_event' && in_array($post_status, array('publish','draft','future')) ) {
 			$recurrence_id = get_post_meta($post_id, 'am_recurrence_id', true);
 			if (isset($recurrence_id) && $recurrence_id !== '') {
-			
+
 				// clear recurrence id to avoid infinite loop
 				//update_post_meta($post_id, 'am_recurrence_id', '');
 				$args = array(
 					'post_type' => 'am_event',
 					'post_status' => 'any',
-					'post_count' => 9999,
-					'posts_per_page' => 9999,
+					'post_count' => -1,
+					'posts_per_page' => -1,
 					'meta_query' => array(
 						array(
 							'key' => 'am_recurrence_id',
@@ -1008,7 +1015,7 @@ function am_wp_trash_event_recurring($post_id) {
 					),
 					'post__not_in' => array($post_id), //exclude current event
 				);
-				
+
 				$the_query = new WP_Query( $args );
 				$post_count = $the_query->post_count;
 				$ids_array = array();
@@ -1025,7 +1032,7 @@ function am_wp_trash_event_recurring($post_id) {
 				//$link = '<a href="' . admin_url( wp_nonce_url( "edit.php?post_type=am_event&doaction=undo&action=untrash&ids=$ids", "bulk-posts" )) . '">' . __('Undo', 'am-events') . '</a>';
 				$link = '';
 				am_add_admin_message( '<p>' . sprintf( __('%d recurrent posts moved to the Trash.', 'am-events'), $post_count) . ' ' . $link . '<p>' );
-				
+
 			}
 		}
 	}
@@ -1046,8 +1053,8 @@ function am_save_event($post_id) {
 	// Quick edit
 	$_POST += array("am_quickedit_nonce" => '');
 	if ( wp_verify_nonce( $_POST["am_quickedit_nonce"], plugin_basename( __FILE__ ) ) ) {
-		// verify if this is an auto save routine. If it is our form has not been submitted, so we dont want
-		// to do anything
+	
+		// verify if this is an auto save routine. If it is, our form has not been submitted, so we don't want to do anything
 		if ( $_POST['post_type'] !== 'am_event' ) {
 			return;
 		}
@@ -1055,35 +1062,28 @@ function am_save_event($post_id) {
 			return;
 		}
 
-		if ( isset( $_REQUEST['am_startdate'] ) ) {
-			$startdate = strtotime($_REQUEST['am_startdate'] );
-			if ($startdate)
-				update_post_meta( $post_id, 'am_startdate', date( am_get_default_date_format(), $startdate) );
-		}
-		if ( isset( $_REQUEST['am_enddate'] ) ) {
-			$enddate = strtotime($_REQUEST['am_enddate'] );
-			if ($enddate)
-				update_post_meta( $post_id, 'am_enddate', date( am_get_default_date_format(), $enddate));
-		}
+		am_update_post_meta_date($post_id, 'am_startdate');
+		am_update_post_meta_date($post_id, 'am_enddate');
+	
 	}
 	// Normal edit
 	else {
 		// Remove save_post action to avoid infinite loop when calling wp_insert_posts
 		remove_action('save_post', 'am_save_event');
-		
+
 		if (!isset($_POST['post_ID']))
 			return;
-			
+
 		$post_id = $_POST['post_ID'];
 		$orig_post = get_post($post_id);
-		
+
 		if ($_POST && get_post_type($orig_post) === 'am_event') {
 
 			// Check if 'Recurrent Event' has been checked
 			if (isset($_POST['am_recurrent']))
 			{
 				$recurrent = $_POST['am_recurrent'];
-			
+
 				if ($recurrent === 'yes') { // If so, create the events
 					$recurrent_amount = $_POST['am_recurrent_amount'];
 					$recurrence_type = $_POST['am_recurrence_type'];
@@ -1118,8 +1118,8 @@ function am_save_event($post_id) {
 							'post_password' => $orig_post->post_password,
 						);
 						$new_post_id = wp_insert_post($new_post);
-						
-						wp_set_post_tags($new_post_id, wp_get_post_tags($post_id));
+
+                        am_copy_replace_tags($post_id, $new_post_id);
 						set_post_thumbnail($new_post_id, get_post_thumbnail_id($post_id));
 
 						switch ($recurrence_type) {
@@ -1139,14 +1139,11 @@ function am_save_event($post_id) {
 						update_post_meta($new_post_id, 'am_enddate', $end->format(am_get_default_date_format()));
 						update_post_meta($new_post_id, 'am_recurrence_id', $recurrence_id);
 
-						$eventCategories = wp_get_post_terms($post_id, 'am_event_categories');
-						$venues = wp_get_post_terms($post_id, 'am_venues');
-						foreach ($eventCategories as $c) {
-							wp_set_post_terms($new_post_id, $c->term_id, 'am_event_categories', true);
-						}
-						foreach ($venues as $v) {
-							wp_set_post_terms($new_post_id, $v->term_id, 'am_venues', true);
-						}
+                        am_copy_replace_terms($post_id, $new_post_id, 'am_event_categories');
+                        am_copy_replace_terms($post_id, $new_post_id, 'am_venues');
+						
+						do_action( 'am_copy_event', $post_id, $new_post_id );
+
 					}
 
 					// Notify user when recurrent events have been created.
@@ -1154,7 +1151,7 @@ function am_save_event($post_id) {
 
 				}
 			}
-		
+
 			// Determine if the specified post is not a revision or auto-save
 			if (!( wp_is_post_revision($post_id) && wp_is_post_autosave($post_id) )) {
 
@@ -1162,12 +1159,12 @@ function am_save_event($post_id) {
 				if (isset($_POST['submit_all']) && $_POST['submit_all'] === 'yes') {
 					// Update all recurring events
 					$recurrence_id = get_post_meta($post_id, 'am_recurrence_id', true);
-					
+
 					$args = array(
 						'post_type' => 'am_event',
 						'post_status' => 'any',
-						'post_count' => 99999,
-						'posts_per_page' => 99999,
+						'post_count' => -1,
+						'posts_per_page' => -1,
 						'meta_query' => array(
 							array(
 								'key' => 'am_recurrence_id',
@@ -1177,14 +1174,14 @@ function am_save_event($post_id) {
 						),
 						'post__not_in' => array($post_id), //exclude current event
 					);
-					
+
 					$the_query = new WP_Query( $args );
 					$post_count = $the_query->post_count;
-					
+
 					while ($the_query->have_posts()) {
 						$the_query->the_post();
 						$id = get_the_ID();
-						
+
 						$recurrent_post = array(
 							'ID' => $id,
 							'post_title' => $orig_post->post_title,
@@ -1200,35 +1197,51 @@ function am_save_event($post_id) {
 						wp_update_post( $recurrent_post );
 						add_action('save_post', 'am_save_custom_meta');
 						
-						wp_set_post_tags($id, wp_get_post_tags($post_id));
+                        am_copy_replace_tags($post_id, $id);
 						set_post_thumbnail($id, get_post_thumbnail_id($post_id));
-						
-						// Clear all event categories and venues
-						wp_delete_object_term_relationships( $id, 'am_event_categories' );
-						wp_delete_object_term_relationships( $id, 'am_venues' );
-						
-						// Update event categories and venues to match current post
-						$event_categories = wp_get_post_terms($post_id, 'am_event_categories');
-						$venues = wp_get_post_terms($post_id, 'am_venues');
-						foreach ($event_categories as $c) {
-							wp_set_post_terms($id, $c->term_id, 'am_event_categories', true);
-						}
-						foreach ($venues as $v) {
-							wp_set_post_terms($id, $v->term_id, 'am_venues', true);
-						}
+
+                        am_copy_replace_terms($post_id, $id, 'am_event_categories');
+                        am_copy_replace_terms($post_id, $id, 'am_venues');
+
+						do_action( 'am_copy_event', $post_id, $id );
 						
 					}
-					
+
 					// Notify user when recurrent events have been created.
 					am_add_admin_message( '<p>' . sprintf(__('%d recurring events updated.', 'am-events') . '</p>', $post_count) );
-					
+
 				}
-				
+
 			}
 		}
 	}
 
-    
+}
+
+function am_update_post_meta_date($post_id, $meta_key) {
+	if ( isset( $_REQUEST[$meta_key] ) ) {
+		$enddate = strtotime($_REQUEST[$meta_key] );
+		if ($enddate)
+			update_post_meta( $post_id, $meta_key, date( am_get_default_date_format(), $enddate));
+	}
+}
+
+/**
+ * Copies and replaces terms from one post to another.
+ */
+function am_copy_replace_terms($from, $to, $taxonomy) {
+	wp_delete_object_term_relationships( $to, $taxonomy );
+	$terms = wp_get_post_terms($from, $taxonomy);
+	foreach ($terms as $term) {
+		wp_set_post_terms($to, $term->term_id, $taxonomy, true);
+	}
+}
+
+/**
+ * Copies and replaces all tags from one post to another.
+ */
+function am_copy_replace_tags($from, $to) {
+    wp_set_post_tags($to, wp_get_post_tags($from, array('fields' => 'ids')), false);
 }
 
 
@@ -1295,7 +1308,7 @@ function am_edit_event_load() {
 }
 
 /**
- *  Used to sort the events in the administration. 
+ *  Used to sort the events in the administration.
  */
 function am_sort_events($vars) {
 
@@ -1366,13 +1379,12 @@ function am_register_post_type() {
         'labels' => $labels,
         'description' => __('Type for events', 'am-events'),
         'supports' => array('title', 'editor', 'thumbnail', 'excerpt'),
-        'taxonomies' => array('am_event_category', 'am_venue'),
+        'taxonomies' => array('am_event_category', 'am_venue', 'post_tag'),
         'rewrite' => array( 'slug' => get_option('am_rewrite_slug', 'am_event') ),
     );
-    
-    
 
     register_post_type('am_event', $args);
+
 }
 
 /*
@@ -1490,7 +1502,7 @@ function am_cpt_init() {
 function am_rewrite_flush() {
     // First, we "add" the custom post type via the above written function.
     // Note: "add" is written with quotes, as CPTs don't get added to the DB,
-    // They are only referenced in the post_type column with a post entry, 
+    // They are only referenced in the post_type column with a post entry,
     // when you add a post of this CPT.
     am_cpt_init();
 
@@ -1502,7 +1514,7 @@ function am_rewrite_flush() {
 register_activation_hook(__FILE__, 'am_rewrite_flush');
 
 /* * ****************************************************************************
- * =TAXONOMY FILTER 
+ * =TAXONOMY FILTER
  * *************************************************************************** */
 
 /**
@@ -1567,13 +1579,13 @@ function am_add_quick_edit($column_name, $post_type) {
     }
 
 	?>
-	
+
 	<fieldset class="inline-edit-col-left inline-edit-event">
 	  <div class="inline-edit-col column-<?php echo $column_name ?>">
 		<label class="inline-edit-group">
-		<?php 
+		<?php
 		 switch ( $column_name ) {
-		 
+
 		 case 'am_startdate':
 			 ?><span class="title"><?php _e("Start Date", 'am-events') ?></span><span class="input-text-wrap"><input name="am_startdate" type="text" /></span><?php
 			 break;
@@ -1585,9 +1597,9 @@ function am_add_quick_edit($column_name, $post_type) {
 		</label>
 	  </div>
 	</fieldset>
-	
+
 	<?php
-    
+
 }
 
 /*
@@ -1596,7 +1608,7 @@ function am_add_quick_edit($column_name, $post_type) {
 function am_get_recurring_count($post_id) {
 	$recurrence_id = get_post_meta($post_id, 'am_recurrence_id', true);
 	if (isset($recurrence_id) && $recurrence_id !== '') {
-	
+
 		$args = array(
 			'post_type' => 'am_event',
 			'post_status' => 'any',
@@ -1610,10 +1622,10 @@ function am_get_recurring_count($post_id) {
 				),
 			),
 		);
-		
+
 		$the_query = new WP_Query( $args );
 		return $the_query->post_count;
-		
+
 	} else {
 		return 0;
 	}

@@ -25,8 +25,12 @@ class AM_Upcoming_Events_Widget extends WP_Widget {
     /**
     * Register widget with WordPress.
     */
-    function AM_Upcoming_Events_Widget() {
-        parent::WP_Widget('am_upcoming_events', 'AM Upcoming Events', array('description' => __( 'Display upcoming events', 'am-events' )), array('width' => 400));
+    public function __construct() {
+        parent::__construct(
+				'am_upcoming_events', 
+				'AM Upcoming Events', 
+				array('description' => __( 'Display upcoming events', 'am-events' )), 
+				array('width' => 400));
     }
 
     /**

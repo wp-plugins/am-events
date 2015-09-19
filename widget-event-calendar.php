@@ -25,8 +25,12 @@ class AM_Event_Calendar_Widget extends WP_Widget {
     /**
     * Register widget with WordPress.
     */
-    function AM_Event_Calendar_Widget() {
-        parent::WP_Widget('am_event_calendar', 'AM Event Calendar', array('description' => __( 'Display event calendar', 'am-events' )), array('width' => 400));
+    public function __construct() {
+        parent::__construct(
+				'am_event_calendar', 
+				'AM Event Calendar', 
+				array('description' => __( 'Display event calendar', 'am-events' )), 
+				array('width' => 400));
     }
 
     /**

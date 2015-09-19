@@ -2,8 +2,8 @@
 Contributors: Moisture
 Tags: event list, events, upcoming events, event list, custom post type, custom taxonomy, plugin, widget
 Requires at least: 3.3.1
-Tested up to: 4.1
-Stable tag: 1.9.4
+Tested up to: 4.3
+Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,9 +55,20 @@ See 'Other Notes' for a simple tutorial.
 
 == Changelog ==
 
-= 2.0.0 =
-* Added new event calendar widget
-* Enabled date archives for event posts
+= 1.10.0 =
+* Added hooks for including extra fields to event posts
+
+= 1.9.8 =
+* Fixed problem with tags
+
+= 1.9.7 =
+* Fixed admin panel event list ordering
+
+= 1.9.6 =
+* Fixed tags being stripped from recurring events
+
+= 1.9.5 =
+* Fixed compatibility with WordPress 4.3
 
 = 1.9.4 =
 * Fixed date localization issues
@@ -129,9 +140,20 @@ See 'Other Notes' for a simple tutorial.
 
 == Upgrade Notice ==
 
-= 2.0.0 =
-* Adds a new event calendar widget
-* Enables date archives for events
+= 1.10.0 =
+* Adds hooks for including extra fields to event posts
+
+= 1.9.8 =
+* Fixes problems with tags
+
+= 1.9.7 =
+* Fixes admin panel event list ordering
+
+= 1.9.6 =
+* Fixes tags being stripped from recurring events
+
+= 1.9.5 =
+* Fixes compatibility with WordPress 4.3
 
 = 1.9.4 =
 * Fixes date localization issues.
